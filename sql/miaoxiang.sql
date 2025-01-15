@@ -35,6 +35,18 @@ values('【请填写功能名称】导出', @parentId, '5',  '#', '', 1, 0, 'F',
 -- 菜单 SQL
 INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `route_name`, `is_frame`, `is_cache`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2000, '项目管理', 0, 0, 'project', 'projectManager/index.vue', NULL, '', 1, 0, 'C', '0', '0', '', 'clipboard', 'admin', '2025-01-08 16:45:53', 'admin', '2025-01-11 14:22:09', '');
 
+CREATE TABLE project (
+                         id INT AUTO_INCREMENT PRIMARY KEY COMMENT '项目ID，自动递增',
+                         model_id INT NOT NULL COMMENT '模型ID',
+                         project_name VARCHAR(255) NOT NULL COMMENT '项目名称',
+                         description TEXT COMMENT '描述',
+                         create_time DATETIME COMMENT '创建时间，默认为当前时间',
+                         create_by VARCHAR(100) COMMENT '创建人',
+                         update_time DATETIME COMMENT '更新时间，默认为当前时间，并在更新时自动更新',
+                         update_by VARCHAR(100) COMMENT '更新人'
+);
+
+
 -- 按钮父菜单ID
 SELECT @parentId := 2000;
 

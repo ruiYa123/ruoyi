@@ -22,22 +22,22 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 项目Controller
+ * 【请填写功能名称】Controller
  *
  * @author ruoyi
- * @date 2025-01-13
+ * @date 2025-01-15
  */
 @RestController
-@RequestMapping("/system/projects")
+@RequestMapping("/system/project")
 public class ProjectController extends BaseController
 {
     @Autowired
     private IProjectService projectService;
 
     /**
-     * 查询项目列表
+     * 查询【请填写功能名称】列表
      */
-    @PreAuthorize("@ss.hasPermi('system:projects:list')")
+    @PreAuthorize("@ss.hasPermi('system:project:list')")
     @GetMapping("/list")
     public TableDataInfo list(Project project)
     {
@@ -47,22 +47,22 @@ public class ProjectController extends BaseController
     }
 
     /**
-     * 导出项目列表
+     * 导出【请填写功能名称】列表
      */
-    @PreAuthorize("@ss.hasPermi('system:projects:export')")
-    @Log(title = "项目", businessType = BusinessType.EXPORT)
+    @PreAuthorize("@ss.hasPermi('system:project:export')")
+    @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Project project)
     {
         List<Project> list = projectService.selectProjectList(project);
         ExcelUtil<Project> util = new ExcelUtil<Project>(Project.class);
-        util.exportExcel(response, list, "项目数据");
+        util.exportExcel(response, list, "【请填写功能名称】数据");
     }
 
     /**
-     * 获取项目详细信息
+     * 获取【请填写功能名称】详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:projects:query')")
+    @PreAuthorize("@ss.hasPermi('system:project:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -70,10 +70,10 @@ public class ProjectController extends BaseController
     }
 
     /**
-     * 新增项目
+     * 新增【请填写功能名称】
      */
-    @PreAuthorize("@ss.hasPermi('system:projects:add')")
-    @Log(title = "项目", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('system:project:add')")
+    @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Project project)
     {
@@ -81,10 +81,10 @@ public class ProjectController extends BaseController
     }
 
     /**
-     * 修改项目
+     * 修改【请填写功能名称】
      */
-    @PreAuthorize("@ss.hasPermi('system:projects:edit')")
-    @Log(title = "项目", businessType = BusinessType.UPDATE)
+    @PreAuthorize("@ss.hasPermi('system:project:edit')")
+    @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Project project)
     {
@@ -92,11 +92,11 @@ public class ProjectController extends BaseController
     }
 
     /**
-     * 删除项目
+     * 删除【请填写功能名称】
      */
-    @PreAuthorize("@ss.hasPermi('system:projects:remove')")
-    @Log(title = "项目", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @PreAuthorize("@ss.hasPermi('system:project:remove')")
+    @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(projectService.deleteProjectByIds(ids));

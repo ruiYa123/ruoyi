@@ -9,22 +9,22 @@ import com.ruoyi.system.domain.Project;
 import com.ruoyi.system.service.IProjectService;
 
 /**
- * 项目Service业务层处理
- * 
+ * 【请填写功能名称】Service业务层处理
+ *
  * @author ruoyi
- * @date 2025-01-13
+ * @date 2025-01-15
  */
 @Service
-public class ProjectServiceImpl implements IProjectService 
+public class ProjectServiceImpl implements IProjectService
 {
     @Autowired
     private ProjectMapper projectMapper;
 
     /**
-     * 查询项目
-     * 
-     * @param id 项目主键
-     * @return 项目
+     * 查询【请填写功能名称】
+     *
+     * @param id 【请填写功能名称】主键
+     * @return 【请填写功能名称】
      */
     @Override
     public Project selectProjectById(Long id)
@@ -33,10 +33,10 @@ public class ProjectServiceImpl implements IProjectService
     }
 
     /**
-     * 查询项目列表
-     * 
-     * @param project 项目
-     * @return 项目
+     * 查询【请填写功能名称】列表
+     *
+     * @param project 【请填写功能名称】
+     * @return 【请填写功能名称】
      */
     @Override
     public List<Project> selectProjectList(Project project)
@@ -45,9 +45,9 @@ public class ProjectServiceImpl implements IProjectService
     }
 
     /**
-     * 新增项目
-     * 
-     * @param project 项目
+     * 新增【请填写功能名称】
+     *
+     * @param project 【请填写功能名称】
      * @return 结果
      */
     @Override
@@ -58,21 +58,22 @@ public class ProjectServiceImpl implements IProjectService
     }
 
     /**
-     * 修改项目
-     * 
-     * @param project 项目
+     * 修改【请填写功能名称】
+     *
+     * @param project 【请填写功能名称】
      * @return 结果
      */
     @Override
     public int updateProject(Project project)
     {
+        project.setUpdateTime(DateUtils.getNowDate());
         return projectMapper.updateProject(project);
     }
 
     /**
-     * 批量删除项目
-     * 
-     * @param ids 需要删除的项目主键
+     * 批量删除【请填写功能名称】
+     *
+     * @param ids 需要删除的【请填写功能名称】主键
      * @return 结果
      */
     @Override
@@ -82,9 +83,9 @@ public class ProjectServiceImpl implements IProjectService
     }
 
     /**
-     * 删除项目信息
-     * 
-     * @param id 项目主键
+     * 删除【请填写功能名称】信息
+     *
+     * @param id 【请填写功能名称】主键
      * @return 结果
      */
     @Override
