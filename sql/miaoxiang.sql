@@ -65,3 +65,39 @@ values('项目删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:pr
 
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('项目导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:projects:export',       '#', 'admin', sysdate(), '', null, '');
+
+
+CREATE TABLE model (
+                       id INT AUTO_INCREMENT PRIMARY KEY COMMENT '模型ID，自动递增',
+                       model_name VARCHAR(255) NOT NULL COMMENT '模型名称',
+                       epoch INT NOT NULL COMMENT '训练次数',
+                       batch_size INT NOT NULL COMMENT '批大小',
+                       img_size INT NOT NULL COMMENT '图像大小',
+                       description TEXT COMMENT '描述',
+                       create_time DATETIME COMMENT '创建时间',
+                       create_by VARCHAR(100) COMMENT '创建人',
+                       update_time DATETIME COMMENT '更新时间',
+                       update_by VARCHAR(100) COMMENT '更新人'
+);
+
+INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `route_name`, `is_frame`, `is_cache`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2009, '项目导出', 2000, 5, '#', '', NULL, '', 1, 0, 'F', '0', '0', 'system:projects:export', '#', 'admin', '2025-01-13 13:55:22', '', NULL, '');
+
+
+-- 按钮父菜单ID
+SELECT @parentId := 2003;
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:model:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:model:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:model:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:model:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('模型导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:model:export',       '#', 'admin', sysdate(), '', null, '');
