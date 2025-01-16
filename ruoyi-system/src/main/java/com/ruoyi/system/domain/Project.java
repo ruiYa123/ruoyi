@@ -6,10 +6,10 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 【请填写功能名称】对象 project
+ * 项目对象 project
  *
  * @author ruoyi
- * @date 2025-01-15
+ * @date 2025-01-16
  */
 public class Project extends BaseEntity
 {
@@ -17,10 +17,6 @@ public class Project extends BaseEntity
 
     /** 项目ID，自动递增 */
     private Long id;
-
-    /** 模型ID */
-    @Excel(name = "模型ID")
-    private Long modelId;
 
     /** 项目名称 */
     @Excel(name = "项目名称")
@@ -38,15 +34,6 @@ public class Project extends BaseEntity
     public Long getId()
     {
         return id;
-    }
-    public void setModelId(Long modelId)
-    {
-        this.modelId = modelId;
-    }
-
-    public Long getModelId()
-    {
-        return modelId;
     }
     public void setProjectName(String projectName)
     {
@@ -71,7 +58,6 @@ public class Project extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
-                .append("modelId", getModelId())
                 .append("projectName", getProjectName())
                 .append("description", getDescription())
                 .append("createTime", getCreateTime())

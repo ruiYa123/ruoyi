@@ -22,10 +22,10 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 【请填写功能名称】Controller
+ * 模型Controller
  *
  * @author ruoyi
- * @date 2025-01-15
+ * @date 2025-01-16
  */
 @RestController
 @RequestMapping("/system/model")
@@ -35,7 +35,7 @@ public class ModelController extends BaseController
     private IModelService modelService;
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询模型列表
      */
     @PreAuthorize("@ss.hasPermi('system:model:list')")
     @GetMapping("/list")
@@ -47,20 +47,20 @@ public class ModelController extends BaseController
     }
 
     /**
-     * 导出【请填写功能名称】列表
+     * 导出模型列表
      */
     @PreAuthorize("@ss.hasPermi('system:model:export')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
+    @Log(title = "模型", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Model model)
     {
         List<Model> list = modelService.selectModelList(model);
         ExcelUtil<Model> util = new ExcelUtil<Model>(Model.class);
-        util.exportExcel(response, list, "【请填写功能名称】数据");
+        util.exportExcel(response, list, "模型数据");
     }
 
     /**
-     * 获取【请填写功能名称】详细信息
+     * 获取模型详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:model:query')")
     @GetMapping(value = "/{id}")
@@ -70,10 +70,10 @@ public class ModelController extends BaseController
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增模型
      */
     @PreAuthorize("@ss.hasPermi('system:model:add')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
+    @Log(title = "模型", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Model model)
     {
@@ -81,10 +81,10 @@ public class ModelController extends BaseController
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改模型
      */
     @PreAuthorize("@ss.hasPermi('system:model:edit')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
+    @Log(title = "模型", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Model model)
     {
@@ -92,11 +92,11 @@ public class ModelController extends BaseController
     }
 
     /**
-     * 删除【请填写功能名称】
+     * 删除模型
      */
     @PreAuthorize("@ss.hasPermi('system:model:remove')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @Log(title = "模型", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(modelService.deleteModelByIds(ids));

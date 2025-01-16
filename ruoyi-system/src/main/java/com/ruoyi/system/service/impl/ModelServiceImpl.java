@@ -9,22 +9,22 @@ import com.ruoyi.system.domain.Model;
 import com.ruoyi.system.service.IModelService;
 
 /**
- * 【请填写功能名称】Service业务层处理
- * 
+ * 模型Service业务层处理
+ *
  * @author ruoyi
- * @date 2025-01-15
+ * @date 2025-01-16
  */
 @Service
-public class ModelServiceImpl implements IModelService 
+public class ModelServiceImpl implements IModelService
 {
     @Autowired
     private ModelMapper modelMapper;
 
     /**
-     * 查询【请填写功能名称】
-     * 
-     * @param id 【请填写功能名称】主键
-     * @return 【请填写功能名称】
+     * 查询模型
+     *
+     * @param id 模型主键
+     * @return 模型
      */
     @Override
     public Model selectModelById(Long id)
@@ -33,10 +33,10 @@ public class ModelServiceImpl implements IModelService
     }
 
     /**
-     * 查询【请填写功能名称】列表
-     * 
-     * @param model 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * 查询模型列表
+     *
+     * @param model 模型
+     * @return 模型
      */
     @Override
     public List<Model> selectModelList(Model model)
@@ -45,9 +45,9 @@ public class ModelServiceImpl implements IModelService
     }
 
     /**
-     * 新增【请填写功能名称】
-     * 
-     * @param model 【请填写功能名称】
+     * 新增模型
+     *
+     * @param model 模型
      * @return 结果
      */
     @Override
@@ -58,9 +58,9 @@ public class ModelServiceImpl implements IModelService
     }
 
     /**
-     * 修改【请填写功能名称】
-     * 
-     * @param model 【请填写功能名称】
+     * 修改模型
+     *
+     * @param model 模型
      * @return 结果
      */
     @Override
@@ -71,9 +71,9 @@ public class ModelServiceImpl implements IModelService
     }
 
     /**
-     * 批量删除【请填写功能名称】
-     * 
-     * @param ids 需要删除的【请填写功能名称】主键
+     * 批量删除模型
+     *
+     * @param ids 需要删除的模型主键
      * @return 结果
      */
     @Override
@@ -83,9 +83,9 @@ public class ModelServiceImpl implements IModelService
     }
 
     /**
-     * 删除【请填写功能名称】信息
-     * 
-     * @param id 【请填写功能名称】主键
+     * 删除模型信息
+     *
+     * @param id 模型主键
      * @return 结果
      */
     @Override

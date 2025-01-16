@@ -9,10 +9,10 @@ import com.ruoyi.system.domain.Project;
 import com.ruoyi.system.service.IProjectService;
 
 /**
- * 【请填写功能名称】Service业务层处理
+ * 项目Service业务层处理
  *
  * @author ruoyi
- * @date 2025-01-15
+ * @date 2025-01-16
  */
 @Service
 public class ProjectServiceImpl implements IProjectService
@@ -21,10 +21,10 @@ public class ProjectServiceImpl implements IProjectService
     private ProjectMapper projectMapper;
 
     /**
-     * 查询【请填写功能名称】
+     * 查询项目
      *
-     * @param id 【请填写功能名称】主键
-     * @return 【请填写功能名称】
+     * @param id 项目主键
+     * @return 项目
      */
     @Override
     public Project selectProjectById(Long id)
@@ -33,10 +33,10 @@ public class ProjectServiceImpl implements IProjectService
     }
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询项目列表
      *
-     * @param project 【请填写功能名称】
-     * @return 【请填写功能名称】
+     * @param project 项目
+     * @return 项目
      */
     @Override
     public List<Project> selectProjectList(Project project)
@@ -45,9 +45,9 @@ public class ProjectServiceImpl implements IProjectService
     }
 
     /**
-     * 新增【请填写功能名称】
+     * 新增项目
      *
-     * @param project 【请填写功能名称】
+     * @param project 项目
      * @return 结果
      */
     @Override
@@ -58,9 +58,9 @@ public class ProjectServiceImpl implements IProjectService
     }
 
     /**
-     * 修改【请填写功能名称】
+     * 修改项目
      *
-     * @param project 【请填写功能名称】
+     * @param project 项目
      * @return 结果
      */
     @Override
@@ -71,9 +71,9 @@ public class ProjectServiceImpl implements IProjectService
     }
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除项目
      *
-     * @param ids 需要删除的【请填写功能名称】主键
+     * @param ids 需要删除的项目主键
      * @return 结果
      */
     @Override
@@ -83,9 +83,9 @@ public class ProjectServiceImpl implements IProjectService
     }
 
     /**
-     * 删除【请填写功能名称】信息
+     * 删除项目信息
      *
-     * @param id 【请填写功能名称】主键
+     * @param id 项目主键
      * @return 结果
      */
     @Override

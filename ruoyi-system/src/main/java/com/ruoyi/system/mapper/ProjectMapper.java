@@ -4,55 +4,55 @@ import java.util.List;
 import com.ruoyi.system.domain.Project;
 
 /**
- * 【请填写功能名称】Mapper接口
+ * 项目Mapper接口
  *
  * @author ruoyi
- * @date 2025-01-15
+ * @date 2025-01-16
  */
 public interface ProjectMapper
 {
     /**
-     * 查询【请填写功能名称】
+     * 查询项目
      *
-     * @param id 【请填写功能名称】主键
-     * @return 【请填写功能名称】
+     * @param id 项目主键
+     * @return 项目
      */
     public Project selectProjectById(Long id);
 
     /**
-     * 查询【请填写功能名称】列表
+     * 查询项目列表
      *
-     * @param project 【请填写功能名称】
-     * @return 【请填写功能名称】集合
+     * @param project 项目
+     * @return 项目集合
      */
     public List<Project> selectProjectList(Project project);
 
     /**
-     * 新增【请填写功能名称】
+     * 新增项目
      *
-     * @param project 【请填写功能名称】
+     * @param project 项目
      * @return 结果
      */
     public int insertProject(Project project);
 
     /**
-     * 修改【请填写功能名称】
+     * 修改项目
      *
-     * @param project 【请填写功能名称】
+     * @param project 项目
      * @return 结果
      */
     public int updateProject(Project project);
 
     /**
-     * 删除【请填写功能名称】
+     * 删除项目
      *
-     * @param id 【请填写功能名称】主键
+     * @param id 项目主键
      * @return 结果
      */
     public int deleteProjectById(Long id);
 
     /**
-     * 批量删除【请填写功能名称】
+     * 批量删除项目
      *
      * @param ids 需要删除的数据主键集合
      * @return 结果

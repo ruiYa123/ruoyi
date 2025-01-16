@@ -6,7 +6,6 @@
 
     <resultMap type="Project" id="ProjectResult">
         <result property="id"    column="id"    />
-        <result property="modelId"    column="model_id"    />
         <result property="projectName"    column="project_name"    />
         <result property="description"    column="description"    />
         <result property="createTime"    column="create_time"    />
@@ -16,13 +15,12 @@
     </resultMap>
 
     <sql id="selectProjectVo">
-        select id, model_id, project_name, description, create_time, create_by, update_time, update_by from project
+        select id, project_name, description, create_time, create_by, update_time, update_by from project
     </sql>
 
     <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
         <include refid="selectProjectVo"/>
         <where>
-            <if test="modelId != null "> and model_id = #{modelId}</if>
             <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
         </where>
@@ -36,7 +34,6 @@
     <insert id="insertProject" parameterType="Project" useGeneratedKeys="true" keyProperty="id">
         insert into project
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="modelId != null">model_id,</if>
             <if test="projectName != null and projectName != ''">project_name,</if>
             <if test="description != null">description,</if>
             <if test="createTime != null">create_time,</if>
@@ -45,7 +42,6 @@
             <if test="updateBy != null">update_by,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="modelId != null">#{modelId},</if>
             <if test="projectName != null and projectName != ''">#{projectName},</if>
             <if test="description != null">#{description},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -58,7 +54,6 @@
     <update id="updateProject" parameterType="Project">
         update project
         <trim prefix="SET" suffixOverrides=",">
-            <if test="modelId != null">model_id = #{modelId},</if>
             <if test="projectName != null and projectName != ''">project_name = #{projectName},</if>
             <if test="description != null">description = #{description},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
