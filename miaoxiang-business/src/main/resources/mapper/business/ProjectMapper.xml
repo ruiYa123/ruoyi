@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ProjectMapper">
+    
+    <resultMap type="Project" id="ProjectResult">
+        <result property="id"    column="id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="description"    column="description"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectProjectVo">
+        select id, project_name, description, create_time, create_by, update_time, update_by from project
+    </sql>
+
+    <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
+        <include refid="selectProjectVo"/>
+        <where>  
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectById" parameterType="Long" resultMap="ProjectResult">
+        <include refid="selectProjectVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProject" parameterType="Project" useGeneratedKeys="true" keyProperty="id">
+        insert into project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name,</if>
+            <if test="description != null">description,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">#{projectName},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProject" parameterType="Project">
+        update project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectName != null and projectName != ''">project_name = #{projectName},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProjectById" parameterType="Long">
+        delete from project where id = #{id}
+    </delete>
+
+    <delete id="deleteProjectByIds" parameterType="String">
+        delete from project where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

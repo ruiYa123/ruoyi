@@ -218,6 +218,12 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>miaoxiang-business</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
 <!--            np-->
 
         </dependencies>
@@ -230,7 +236,7 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
-<!--        <module>miaoxiang-businness</module>-->
+        <module>miaoxiang-business</module>
     </modules>
     <packaging>pom</packaging>
 

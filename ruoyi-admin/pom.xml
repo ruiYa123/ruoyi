@@ -60,10 +60,10 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-generator</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.ruoyi</groupId>-->
-<!--            <artifactId>miaoxiang-businness</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>miaoxiang-business</artifactId>
+        </dependency>
 
     </dependencies>
 

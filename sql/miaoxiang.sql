@@ -46,45 +46,25 @@ CREATE TABLE project (
 );
 
 
--- 按钮父菜单ID
-SELECT @parentId := 2001;
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('任务查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('任务新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('任务修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('任务删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('任务导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:export',       '#', 'admin', sysdate(), '', null, '');
-
 
 -- 按钮父菜单ID
 SELECT @parentId := 2000;
 
 -- 按钮 SQL
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('项目查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:projects:query',        '#', 'admin', sysdate(), '', null, '');
+values('模型查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'miaoxiang-business:model:query',        '#', 'admin', sysdate(), '', null, '');
 
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('项目新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:projects:add',          '#', 'admin', sysdate(), '', null, '');
+values('模型新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'miaoxiang-business:model:add',          '#', 'admin', sysdate(), '', null, '');
 
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('项目修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:projects:edit',         '#', 'admin', sysdate(), '', null, '');
+values('模型修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'miaoxiang-business:model:edit',         '#', 'admin', sysdate(), '', null, '');
 
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('项目删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:projects:remove',       '#', 'admin', sysdate(), '', null, '');
+values('模型删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'miaoxiang-business:model:remove',       '#', 'admin', sysdate(), '', null, '');
 
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('项目导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:projects:export',       '#', 'admin', sysdate(), '', null, '');
-
+values('模型导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'miaoxiang-business:model:export',       '#', 'admin', sysdate(), '', null, '');
 
 CREATE TABLE model (
                        id INT AUTO_INCREMENT PRIMARY KEY COMMENT '模型ID，自动递增',
@@ -132,6 +112,25 @@ CREATE TABLE assignment (
                             create_time DATETIME COMMENT '创建时间',
                             create_by VARCHAR(100) COMMENT '创建人',
                             update_time DATETIME COMMENT '更新时间',
-                            update_by VARCHAR(100) COMMENT '更新人',
-                            PRIMARY KEY (id)
+                            update_by VARCHAR(100) COMMENT '更新人'
 ) COMMENT='任务表';
+
+-- 按钮父菜单ID
+SELECT @parentId := 2001;
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('任务查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('任务新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('任务修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('任务删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('任务导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:export',       '#', 'admin', sysdate(), '', null, '');
+
