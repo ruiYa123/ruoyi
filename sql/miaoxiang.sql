@@ -134,3 +134,39 @@ values('任务删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'system:as
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('任务导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:export',       '#', 'admin', sysdate(), '', null, '');
 
+CREATE TABLE assignment_train (
+                                  id INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+                                  assignment_id INT NOT NULL COMMENT '任务ID',
+                                  state VARCHAR(50) NOT NULL COMMENT '状态',
+                                  progress DECIMAL(5,2) NOT NULL COMMENT '进度',
+                                  description TEXT COMMENT '备注',
+                                  create_time DATETIME COMMENT '创建时间',
+                                  create_by VARCHAR(100) COMMENT '创建人',
+                                  update_time DATETIME COMMENT '更新时间',
+                                  update_by VARCHAR(100) COMMENT '更新人'
+) COMMENT='任务训练';
+
+
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('任务训练', '3', '1', 'train', 'business/train/index', 1, 0, 'C', '0', '0', 'business:train:list', '#', 'admin', sysdate(), '', null, '任务训练菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('任务训练查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'business:train:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('任务训练新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'business:train:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('任务训练修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'business:train:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('任务训练删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'business:train:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('任务训练导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'business:train:export',       '#', 'admin', sysdate(), '', null, '');

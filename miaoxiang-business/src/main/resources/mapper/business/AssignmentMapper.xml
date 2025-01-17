@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.business.mapper.AssignmentMapper">
-    
+
     <resultMap type="Assignment" id="AssignmentResult">
         <result property="id"    column="id"    />
         <result property="assignmentName"    column="assignment_name"    />
@@ -25,12 +25,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, assignment_name, project_id, model_id, preTrain_mode, epoch, batch_size, img_size, description, state, create_time, create_by, update_time, update_by from assignment
     </sql>
 
+    <select id="getStateCounts" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM assignment WHERE state = 0
+        UNION ALL
+        SELECT COUNT(*) FROM assignment WHERE state = 1
+        UNION ALL
+        SELECT COUNT(*) FROM assignment WHERE state = 2
+    </select>
+
+
     <select id="selectAssignmentList" parameterType="Assignment" resultMap="AssignmentResult">
         <include refid="selectAssignmentVo"/>
-        <where>  
+        <where>
             <if test="assignmentName != null  and assignmentName != ''"> and assignment_name like concat('%', #{assignmentName}, '%')</if>
-            <if test="projectId != null  and projectId != ''"> and project_id = #{projectId}</if>
-            <if test="modelId != null  and modelId != ''"> and model_id = #{modelId}</if>
+            <if test="projectId != null"> and project_id = #{projectId}</if>
+            <if test="modelId != null"> and model_id = #{modelId}</if>
             <if test="pretrainMode != null  and pretrainMode != ''"> and preTrain_mode = #{pretrainMode}</if>
             <if test="epoch != null  and epoch != ''"> and epoch = #{epoch}</if>
             <if test="batchSize != null  and batchSize != ''"> and batch_size = #{batchSize}</if>
@@ -39,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="state != null "> and state = #{state}</if>
         </where>
     </select>
-    
+
     <select id="selectAssignmentById" parameterType="Long" resultMap="AssignmentResult">
         <include refid="selectAssignmentVo"/>
         where id = #{id}
@@ -49,8 +58,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into assignment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="assignmentName != null and assignmentName != ''">assignment_name,</if>
-            <if test="projectId != null and projectId != ''">project_id,</if>
-            <if test="modelId != null and modelId != ''">model_id,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="modelId != null">model_id,</if>
             <if test="pretrainMode != null and pretrainMode != ''">preTrain_mode,</if>
             <if test="epoch != null and epoch != ''">epoch,</if>
             <if test="batchSize != null and batchSize != ''">batch_size,</if>
@@ -64,8 +73,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="assignmentName != null and assignmentName != ''">#{assignmentName},</if>
-            <if test="projectId != null and projectId != ''">#{projectId},</if>
-            <if test="modelId != null and modelId != ''">#{modelId},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="modelId != null">#{modelId},</if>
             <if test="pretrainMode != null and pretrainMode != ''">#{pretrainMode},</if>
             <if test="epoch != null and epoch != ''">#{epoch},</if>
             <if test="batchSize != null and batchSize != ''">#{batchSize},</if>
@@ -83,8 +92,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update assignment
         <trim prefix="SET" suffixOverrides=",">
             <if test="assignmentName != null and assignmentName != ''">assignment_name = #{assignmentName},</if>
-            <if test="projectId != null and projectId != ''">project_id = #{projectId},</if>
-            <if test="modelId != null and modelId != ''">model_id = #{modelId},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="modelId != null">model_id = #{modelId},</if>
             <if test="pretrainMode != null and pretrainMode != ''">preTrain_mode = #{pretrainMode},</if>
             <if test="epoch != null and epoch != ''">epoch = #{epoch},</if>
             <if test="batchSize != null and batchSize != ''">batch_size = #{batchSize},</if>
@@ -104,7 +113,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteAssignmentByIds" parameterType="String">
-        delete from assignment where id in 
+        delete from assignment where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

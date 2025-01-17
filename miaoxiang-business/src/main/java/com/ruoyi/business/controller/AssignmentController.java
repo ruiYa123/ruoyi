@@ -23,7 +23,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 任务Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-01-16
  */
@@ -44,6 +44,13 @@ public class AssignmentController extends BaseController
         startPage();
         List<Assignment> list = assignmentService.selectAssignmentList(assignment);
         return getDataTable(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:assignment:list')")
+    @GetMapping("/counts")
+    public AjaxResult getCounts()
+    {
+        return success(assignmentService.getStateCounts());
     }
 
     /**

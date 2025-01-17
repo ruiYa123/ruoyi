@@ -10,19 +10,19 @@ import com.ruoyi.business.service.IAssignmentService;
 
 /**
  * 任务Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2025-01-16
  */
 @Service
-public class AssignmentServiceImpl implements IAssignmentService 
+public class AssignmentServiceImpl implements IAssignmentService
 {
     @Autowired
     private AssignmentMapper assignmentMapper;
 
     /**
      * 查询任务
-     * 
+     *
      * @param id 任务主键
      * @return 任务
      */
@@ -34,7 +34,7 @@ public class AssignmentServiceImpl implements IAssignmentService
 
     /**
      * 查询任务列表
-     * 
+     *
      * @param assignment 任务
      * @return 任务
      */
@@ -46,7 +46,7 @@ public class AssignmentServiceImpl implements IAssignmentService
 
     /**
      * 新增任务
-     * 
+     *
      * @param assignment 任务
      * @return 结果
      */
@@ -59,7 +59,7 @@ public class AssignmentServiceImpl implements IAssignmentService
 
     /**
      * 修改任务
-     * 
+     *
      * @param assignment 任务
      * @return 结果
      */
@@ -72,7 +72,7 @@ public class AssignmentServiceImpl implements IAssignmentService
 
     /**
      * 批量删除任务
-     * 
+     *
      * @param ids 需要删除的任务主键
      * @return 结果
      */
@@ -84,7 +84,7 @@ public class AssignmentServiceImpl implements IAssignmentService
 
     /**
      * 删除任务信息
-     * 
+     *
      * @param id 任务主键
      * @return 结果
      */
@@ -92,5 +92,10 @@ public class AssignmentServiceImpl implements IAssignmentService
     public int deleteAssignmentById(Long id)
     {
         return assignmentMapper.deleteAssignmentById(id);
+    }
+
+    @Override
+    public List<Integer> getStateCounts() {
+        return assignmentMapper.getStateCounts();
     }
 }

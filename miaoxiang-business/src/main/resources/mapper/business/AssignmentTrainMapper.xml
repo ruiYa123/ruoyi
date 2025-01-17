@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.AssignmentTrainMapper">
+    
+    <resultMap type="AssignmentTrain" id="AssignmentTrainResult">
+        <result property="id"    column="id"    />
+        <result property="assignmentId"    column="assignment_id"    />
+        <result property="state"    column="state"    />
+        <result property="progress"    column="progress"    />
+        <result property="description"    column="description"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectAssignmentTrainVo">
+        select id, assignment_id, state, progress, description, create_time, create_by, update_time, update_by from assignment_train
+    </sql>
+
+    <select id="selectAssignmentTrainList" parameterType="AssignmentTrain" resultMap="AssignmentTrainResult">
+        <include refid="selectAssignmentTrainVo"/>
+        <where>  
+            <if test="assignmentId != null "> and assignment_id = #{assignmentId}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="progress != null "> and progress = #{progress}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+        </where>
+    </select>
+    
+    <select id="selectAssignmentTrainById" parameterType="Long" resultMap="AssignmentTrainResult">
+        <include refid="selectAssignmentTrainVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAssignmentTrain" parameterType="AssignmentTrain" useGeneratedKeys="true" keyProperty="id">
+        insert into assignment_train
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="assignmentId != null">assignment_id,</if>
+            <if test="state != null and state != ''">state,</if>
+            <if test="progress != null">progress,</if>
+            <if test="description != null">description,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="assignmentId != null">#{assignmentId},</if>
+            <if test="state != null and state != ''">#{state},</if>
+            <if test="progress != null">#{progress},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAssignmentTrain" parameterType="AssignmentTrain">
+        update assignment_train
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assignmentId != null">assignment_id = #{assignmentId},</if>
+            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="progress != null">progress = #{progress},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAssignmentTrainById" parameterType="Long">
+        delete from assignment_train where id = #{id}
+    </delete>
+
+    <delete id="deleteAssignmentTrainByIds" parameterType="String">
+        delete from assignment_train where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
