@@ -170,3 +170,19 @@ values('任务训练删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'bus
 
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('任务训练导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'business:train:export',       '#', 'admin', sysdate(), '', null, '');
+
+
+CREATE TABLE resources (
+                           id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+                           img_name VARCHAR(255) NOT NULL COMMENT '图片名称',
+                           assignment_id BIGINT NOT NULL COMMENT '关联的任务ID',
+                           img_path VARCHAR(500) NOT NULL COMMENT '图片存储路径',
+                           img_size BIGINT NOT NULL COMMENT '图片大小（字节）',
+                           description TEXT COMMENT '图片描述',
+                           state TINYINT NOT NULL DEFAULT 0 COMMENT '图片状态（0-未打标，1-已打标）',
+                           create_time DATETIME COMMENT '创建时间',
+                           create_by VARCHAR(100) COMMENT '创建人',
+                           update_time DATETIME COMMENT '更新时间',
+                           update_by VARCHAR(100) COMMENT '更新人'
+) COMMENT = '资源';
+

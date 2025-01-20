@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ResourcesMapper">
+    
+    <resultMap type="Resources" id="ResourcesResult">
+        <result property="id"    column="id"    />
+        <result property="imgName"    column="img_name"    />
+        <result property="assignmentId"    column="assignment_id"    />
+        <result property="imgPath"    column="img_path"    />
+        <result property="imgSize"    column="img_size"    />
+        <result property="description"    column="description"    />
+        <result property="state"    column="state"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectResourcesVo">
+        select id, img_name, assignment_id, img_path, img_size, description, state, create_time, create_by, update_time, update_by from resources
+    </sql>
+
+    <select id="selectResourcesList" parameterType="Resources" resultMap="ResourcesResult">
+        <include refid="selectResourcesVo"/>
+        <where>  
+            <if test="imgName != null  and imgName != ''"> and img_name like concat('%', #{imgName}, '%')</if>
+            <if test="assignmentId != null "> and assignment_id = #{assignmentId}</if>
+            <if test="imgPath != null  and imgPath != ''"> and img_path = #{imgPath}</if>
+            <if test="imgSize != null "> and img_size = #{imgSize}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="state != null "> and state = #{state}</if>
+        </where>
+    </select>
+    
+    <select id="selectResourcesById" parameterType="Long" resultMap="ResourcesResult">
+        <include refid="selectResourcesVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertResources" parameterType="Resources" useGeneratedKeys="true" keyProperty="id">
+        insert into resources
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="imgName != null and imgName != ''">img_name,</if>
+            <if test="assignmentId != null">assignment_id,</if>
+            <if test="imgPath != null and imgPath != ''">img_path,</if>
+            <if test="imgSize != null">img_size,</if>
+            <if test="description != null">description,</if>
+            <if test="state != null">state,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="imgName != null and imgName != ''">#{imgName},</if>
+            <if test="assignmentId != null">#{assignmentId},</if>
+            <if test="imgPath != null and imgPath != ''">#{imgPath},</if>
+            <if test="imgSize != null">#{imgSize},</if>
+            <if test="description != null">#{description},</if>
+            <if test="state != null">#{state},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateResources" parameterType="Resources">
+        update resources
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="imgName != null and imgName != ''">img_name = #{imgName},</if>
+            <if test="assignmentId != null">assignment_id = #{assignmentId},</if>
+            <if test="imgPath != null and imgPath != ''">img_path = #{imgPath},</if>
+            <if test="imgSize != null">img_size = #{imgSize},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteResourcesById" parameterType="Long">
+        delete from resources where id = #{id}
+    </delete>
+
+    <delete id="deleteResourcesByIds" parameterType="String">
+        delete from resources where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
