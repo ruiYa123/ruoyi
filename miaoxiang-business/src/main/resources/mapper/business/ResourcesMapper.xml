@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.business.mapper.ResourcesMapper">
-    
+
     <resultMap type="Resources" id="ResourcesResult">
         <result property="id"    column="id"    />
         <result property="imgName"    column="img_name"    />
@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectResourcesList" parameterType="Resources" resultMap="ResourcesResult">
         <include refid="selectResourcesVo"/>
-        <where>  
+        <where>
             <if test="imgName != null  and imgName != ''"> and img_name like concat('%', #{imgName}, '%')</if>
             <if test="assignmentId != null "> and assignment_id = #{assignmentId}</if>
             <if test="imgPath != null  and imgPath != ''"> and img_path = #{imgPath}</if>
@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="state != null "> and state = #{state}</if>
         </where>
     </select>
-    
+
     <select id="selectResourcesById" parameterType="Long" resultMap="ResourcesResult">
         <include refid="selectResourcesVo"/>
         where id = #{id}
@@ -67,6 +67,40 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <insert id="batchInsertResources" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into resources
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="list[0].imgName != null and list[0].imgName != ''">img_name,</if>
+            <if test="list[0].assignmentId != null">assignment_id,</if>
+            <if test="list[0].imgPath != null and list[0].imgPath != ''">img_path,</if>
+            <if test="list[0].imgSize != null">img_size,</if>
+            <if test="list[0].description != null">description,</if>
+            <if test="list[0].state != null">state,</if>
+            <if test="list[0].createTime != null">create_time,</if>
+            <if test="list[0].createBy != null">create_by,</if>
+            <if test="list[0].updateTime != null">update_time,</if>
+            <if test="list[0].updateBy != null">update_by,</if>
+        </trim>
+        values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.imgName != null and item.imgName != ''">#{item.imgName},</if>
+                <if test="item.assignmentId != null">#{item.assignmentId},</if>
+                <if test="item.imgPath != null and item.imgPath != ''">#{item.imgPath},</if>
+                <if test="item.imgSize != null">#{item.imgSize},</if>
+                <if test="item.description != null">#{item.description},</if>
+                <if test="item.state != null">#{item.state},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.createBy != null">#{item.createBy},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+                <if test="item.updateBy != null">#{item.updateBy},</if>
+            </trim>
+        </foreach>
+    </insert>
+
+
+
+
     <update id="updateResources" parameterType="Resources">
         update resources
         <trim prefix="SET" suffixOverrides=",">
@@ -89,7 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteResourcesByIds" parameterType="String">
-        delete from resources where id in 
+        delete from resources where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
