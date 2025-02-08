@@ -186,3 +186,36 @@ CREATE TABLE resources (
                            update_by VARCHAR(100) COMMENT '更新人'
 ) COMMENT = '资源';
 
+CREATE TABLE train_log (
+                     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+                     assignment_id BIGINT NOT NULL COMMENT '关联的任务ID',
+                     assignment_train_id BIGINT NOT NULL COMMENT '关联的训练任务ID',
+                     content TEXT COMMENT '日志内容',
+                     create_time DATETIME COMMENT '创建时间',
+                     create_by VARCHAR(100) COMMENT '创建人',
+                     update_time DATETIME COMMENT '更新时间',
+                     update_by VARCHAR(100) COMMENT '更新人'
+) COMMENT = '日志表';
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('训练日志', '3', '1', 'trainLog', 'business/trainLog/index', 1, 0, 'C', '0', '0', 'business:trainLog:list', '#', 'admin', sysdate(), '', null, '训练日志菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('训练日志查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'business:trainLog:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('训练日志新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'business:trainLog:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('训练日志修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'business:trainLog:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('训练日志删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'business:trainLog:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('训练日志导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'business:trainLog:export',       '#', 'admin', sysdate(), '', null, '');

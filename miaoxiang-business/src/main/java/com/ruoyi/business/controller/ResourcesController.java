@@ -68,31 +68,13 @@ public class ResourcesController extends BaseController
     /**
      * 新增资源
      */
-//    @PreAuthorize("@ss.hasPermi('business:resources:add')")
-//    @Log(title = "资源", businessType = BusinessType.INSERT)
-//    @PostMapping
-//    public AjaxResult add(@RequestParam("imgName") String imgName,
-//                          @RequestParam("assignmentId") Long assignmentId,
-//                          @RequestParam("state") Long state,
-//                          @RequestParam("description") String description,
-//                          @RequestParam("assignmentName") String assignmentName,
-//                          @RequestParam("projectName") String projectName,
-//                          @RequestPart("files[]") List<MultipartFile> files)
-//    {
-//        Resources resources = new Resources();
-//        resources.setAssignmentId(assignmentId);
-//        resources.setImgName(imgName);
-//        resources.setState(state);
-//        resources.setDescription(description);
-//        return toAjax(resourcesService.insertResources(resources,assignmentName, projectName, files));
-//    }
-
     @PreAuthorize("@ss.hasPermi('business:resources:add')")
     @Log(title = "资源", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@ModelAttribute ResourcesRequest resourcesRequest,
                           @RequestPart("files[]") List<MultipartFile> files)
     {
+        resourcesRequest.setCreateBy(getUsername());
         return toAjax(resourcesService.insertResources(resourcesRequest, files));
     }
 
@@ -104,6 +86,7 @@ public class ResourcesController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Resources resources)
     {
+        resources.setUpdateBy(getUsername());
         return toAjax(resourcesService.updateResources(resources));
     }
 

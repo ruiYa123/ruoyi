@@ -23,7 +23,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 项目Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-01-16
  */
@@ -77,6 +77,7 @@ public class ProjectController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Project project)
     {
+        project.setCreateBy(getUsername());
         return toAjax(projectService.insertProject(project));
     }
 
@@ -88,6 +89,7 @@ public class ProjectController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Project project)
     {
+        project.setUpdateBy(getUsername());
         return toAjax(projectService.updateProject(project));
     }
 

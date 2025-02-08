@@ -1,5 +1,6 @@
 package com.ruoyi.business.service.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -130,8 +131,27 @@ public class ResourcesServiceImpl implements IResourcesService
     @Override
     public int deleteResourcesByIds(Long[] ids)
     {
-        return resourcesMapper.deleteResourcesByIds(ids);
+        List<String> paths = resourcesMapper.selectImgPathsByIds(ids);
+        int rows = resourcesMapper.deleteResourcesByIds(ids);
+        for (String path : paths) {
+            deleteFile(path);
+        }
+        return rows;
     }
+
+    private void deleteFile(String path) {
+        File file = new File(path);
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("Deleted file: " + path);
+            } else {
+                System.out.println("Failed to delete file: " + path);
+            }
+        } else {
+            System.out.println("File not found: " + path);
+        }
+    }
+
 
     /**
      * 删除资源信息

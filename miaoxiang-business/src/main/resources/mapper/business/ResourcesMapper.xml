@@ -118,6 +118,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
+    <select id="selectImgPathsByIds" parameterType="String" resultType="String">
+        SELECT img_path FROM resources WHERE id IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
     <delete id="deleteResourcesById" parameterType="Long">
         delete from resources where id = #{id}
     </delete>

@@ -1,5 +1,6 @@
 package com.ruoyi.business.controller;
 
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,6 +48,15 @@ public class AssignmentController extends BaseController
     }
 
     @PreAuthorize("@ss.hasPermi('business:assignment:list')")
+    @GetMapping("/listAll")
+    public AjaxResult listAll(Assignment assignment)
+    {
+        List<Assignment> list = assignmentService.selectAssignmentList(assignment);
+        Collections.reverse(list);
+        return success(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:assignment:list')")
     @GetMapping("/counts")
     public AjaxResult getCounts()
     {
@@ -84,6 +94,7 @@ public class AssignmentController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Assignment assignment)
     {
+        assignment.setCreateBy(getUsername());
         return toAjax(assignmentService.insertAssignment(assignment));
     }
 
@@ -95,6 +106,7 @@ public class AssignmentController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Assignment assignment)
     {
+        assignment.setUpdateBy(getUsername());
         return toAjax(assignmentService.updateAssignment(assignment));
     }
 

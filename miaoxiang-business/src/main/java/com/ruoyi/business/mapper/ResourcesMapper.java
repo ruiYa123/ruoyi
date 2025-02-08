@@ -19,6 +19,8 @@ public interface ResourcesMapper
      */
     public Resources selectResourcesById(Long id);
 
+    public List<String> selectImgPathsByIds(Long[] ids);
+
     /**
      * 查询资源列表
      *
