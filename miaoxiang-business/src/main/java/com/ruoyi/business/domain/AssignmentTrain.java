@@ -10,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 任务训练对象 assignment_train
  * 
  * @author ruoyi
- * @date 2025-01-17
+ * @date 2025-02-08
  */
 public class AssignmentTrain extends BaseEntity
 {
@@ -25,7 +25,7 @@ public class AssignmentTrain extends BaseEntity
 
     /** 状态 */
     @Excel(name = "状态")
-    private String state;
+    private Long state;
 
     /** 进度 */
     @Excel(name = "进度")
@@ -53,12 +53,12 @@ public class AssignmentTrain extends BaseEntity
     {
         return assignmentId;
     }
-    public void setState(String state) 
+    public void setState(Long state) 
     {
         this.state = state;
     }
 
-    public String getState() 
+    public Long getState() 
     {
         return state;
     }

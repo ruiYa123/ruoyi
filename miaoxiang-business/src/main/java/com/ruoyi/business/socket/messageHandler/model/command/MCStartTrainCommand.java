@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ruoyi.business.socket.messageHandler.model.BaseRequest;
 import lombok.Data;
 
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.MC_START_TRAIN;
+
 @Data
 public class MCStartTrainCommand extends BaseRequest {
     @JsonProperty("ClientName")
@@ -31,7 +33,7 @@ public class MCStartTrainCommand extends BaseRequest {
     }
 
     public MCStartTrainCommand() {
-        this.setCommandStr("MC_StartTrain");
+        this.setCommandStr(MC_START_TRAIN.getCommandStr());
     }
 }
 

@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectAssignmentTrainVo"/>
         <where>  
             <if test="assignmentId != null "> and assignment_id = #{assignmentId}</if>
-            <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="state != null "> and state = #{state}</if>
             <if test="progress != null "> and progress = #{progress}</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
         </where>
@@ -39,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into assignment_train
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="assignmentId != null">assignment_id,</if>
-            <if test="state != null and state != ''">state,</if>
+            <if test="state != null">state,</if>
             <if test="progress != null">progress,</if>
             <if test="description != null">description,</if>
             <if test="createTime != null">create_time,</if>
@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="assignmentId != null">#{assignmentId},</if>
-            <if test="state != null and state != ''">#{state},</if>
+            <if test="state != null">#{state},</if>
             <if test="progress != null">#{progress},</if>
             <if test="description != null">#{description},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -63,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update assignment_train
         <trim prefix="SET" suffixOverrides=",">
             <if test="assignmentId != null">assignment_id = #{assignmentId},</if>
-            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="state != null">state = #{state},</if>
             <if test="progress != null">progress = #{progress},</if>
             <if test="description != null">description = #{description},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

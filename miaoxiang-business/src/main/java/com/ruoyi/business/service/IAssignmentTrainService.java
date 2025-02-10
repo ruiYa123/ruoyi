@@ -7,7 +7,7 @@ import com.ruoyi.business.domain.AssignmentTrain;
  * 任务训练Service接口
  * 
  * @author ruoyi
- * @date 2025-01-17
+ * @date 2025-02-08
  */
 public interface IAssignmentTrainService 
 {

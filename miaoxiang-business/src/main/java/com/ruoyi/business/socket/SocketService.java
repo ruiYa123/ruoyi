@@ -87,12 +87,10 @@ public class SocketService {
 
     public void addClient(String clientKey, PrintWriter out) {
         clientMap.put(clientKey, out);
-        log.info(String.valueOf(clientMap));
     }
 
     public static void removeClient(String clientKey) {
         clientMap.remove(clientKey);
-        log.info(String.valueOf(clientMap));
     }
 
     public static void sendMessageToClientByAddress(String ip, int port, String message) {

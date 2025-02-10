@@ -7,7 +7,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 客户端对象 client
- * 
+ *
  * @author ruoyi
  * @date 2025-01-16
  */
@@ -28,54 +28,54 @@ public class Client extends BaseEntity
 
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Long port;
+    private int port;
 
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private Long state;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setName(String name) 
+    public void setName(String name)
     {
         this.name = name;
     }
 
-    public String getName() 
+    public String getName()
     {
         return name;
     }
-    public void setIp(String ip) 
+    public void setIp(String ip)
     {
         this.ip = ip;
     }
 
-    public String getIp() 
+    public String getIp()
     {
         return ip;
     }
-    public void setPort(Long port) 
+    public void setPort(int port)
     {
         this.port = port;
     }
 
-    public Long getPort() 
+    public int getPort()
     {
         return port;
     }
-    public void setState(Long state) 
+    public void setState(Long state)
     {
         this.state = state;
     }
 
-    public Long getState() 
+    public Long getState()
     {
         return state;
     }

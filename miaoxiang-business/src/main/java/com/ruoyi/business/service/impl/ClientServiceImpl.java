@@ -47,6 +47,11 @@ public class ClientServiceImpl implements IClientService
         return clientMapper.selectClientList(client);
     }
 
+    @Override
+    public Client selectClient(Client client) {
+        return clientMapper.selectClient(client);
+    }
+
     /**
      * 新增客户端
      *
@@ -61,24 +66,33 @@ public class ClientServiceImpl implements IClientService
     }
 
     @Override
-    public int addClient(Client client)
+    public Long addClient(Client client)
     {
         Client clientSearchVO = new Client();
-        clientSearchVO.setIp(client.getIp());
-        clientSearchVO.setPort(client.getPort());
-        log.info("clientSearchVO:{}",clientSearchVO);
-        log.info("-----------");
+        clientSearchVO.setName(client.getName());
         Client clientResult = clientMapper.selectClient(clientSearchVO);
-        log.info("clientResult1:{}",clientResult);
-        log.info("-----");
         if (clientResult == null) {
-            return clientMapper.insertClient(client);
+            client.setCreateTime(DateUtils.getNowDate());
+            clientMapper.insertClient(client);
         } else {
-            BeanUtils.copyProperties(client, clientResult);
-            log.info("clientResult2:{}",clientResult);
-            return clientMapper.updateClient(clientResult);
+            client.setId(clientResult.getId());
+            client.setUpdateTime(DateUtils.getNowDate());
+            clientMapper.updateClient(client);
         }
+        log.info(String.valueOf(client.getId()));
+        return client.getId();
 
+    }
+
+    @Override
+    public void offLineClient(Client client) {
+        Client clientSearchVO = new Client();
+        clientSearchVO.setName(client.getName());
+        Client clientResult = clientMapper.selectClient(clientSearchVO);
+        if (clientResult != null) {
+            clientResult.setState(-1L);
+            clientMapper.updateClient(clientResult);
+        }
     }
 
     /**

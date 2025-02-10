@@ -27,6 +27,8 @@ public interface IClientService
      */
     public List<Client> selectClientList(Client client);
 
+    public Client selectClient(Client client);
+
     /**
      * 新增客户端
      *
@@ -35,8 +37,9 @@ public interface IClientService
      */
     public int insertClient(Client client);
 
-    public int addClient(Client client);
+    public Long addClient(Client client);
 
+    public void offLineClient(Client client);
     /**
      * 修改客户端
      *

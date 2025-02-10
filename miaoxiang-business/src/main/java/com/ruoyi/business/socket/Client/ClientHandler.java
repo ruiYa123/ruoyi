@@ -32,28 +32,22 @@ public class ClientHandler extends Thread {
         }
     }
 
+    @Override
     public void run() {
-        while (true) {
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    log.info("Received JSON data from client: {}", inputLine);
-                    handleClientMessage(inputLine);
-                }
-                log.info("Client has closed the connection: {}", clientKey);
-                break;
-            } catch (IOException e) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                log.info("Received JSON data from client {}: {}", clientKey, inputLine);
+                handleClientMessage(inputLine);
+            }
+        } catch (IOException e) {
+            if ("Socket closed".equals(e.getMessage())) {
+                log.info("Socket客户端已关闭: {}", clientKey);
+            } else {
                 log.warn("IOException occurred while reading input for client {}: {}", clientKey, e.getMessage());
             }
-        }
-
-        try {
-            log.info("客户端连接断开");
-            clientSocket.close();
-            SocketService.removeClient(clientKey);
-            log.info("Client socket closed and resources cleaned up for client: {}", clientKey);
-        } catch (IOException e) {
-            log.error("Error closing client socket for client {}: {}", clientKey, e.getMessage());
+        } finally {
+            cleanup();
         }
     }
 
@@ -62,21 +56,33 @@ public class ClientHandler extends Thread {
             String commandStr = JsonUtil.getField(jsonData, "CommandStr").toString();
             BaseMessageHandler handler = messageHandlerMap.get(commandStr);
             if (handler != null) {
-                handler.handle(jsonData);
+                handler.handle(jsonData, ip, port);
             } else {
-                log.info("未知的命令: {}", commandStr);
-                ErrorResponse errorResponse = new ErrorResponse();
-                errorResponse.setMessage("Unrecognized commandStr");
-                errorResponse.setState(1);
-                SocketService.sendMessageToClientByAddress(this.ip, this.port, JsonUtil.toJson(errorResponse));
+                log.warn("Unrecognized commandStr from client {}: {}", clientKey, commandStr);
+                sendErrorResponse("Unrecognized commandStr");
             }
         } catch (Exception e) {
-            log.info("消息处理错误：:", e);
-            ErrorResponse errorResponse = new ErrorResponse();
-            errorResponse.setMessage(e.getMessage());
-            errorResponse.setState(1);
-            SocketService.sendMessageToClientByAddress(this.ip, this.port, JsonUtil.toJson(errorResponse));
+            log.error("Error processing message from client {}: {}", clientKey, e.getMessage(), e);
+            sendErrorResponse(e.getMessage());
         }
     }
 
+    private void sendErrorResponse(String message) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setMessage(message);
+        errorResponse.setState(1);
+        SocketService.sendMessageToClientByAddress(this.ip, this.port, JsonUtil.toJson(errorResponse));
+    }
+
+    private void cleanup() {
+        try {
+            log.info("清理Socket客户端资源中: {}", clientKey);
+            clientSocket.close();
+            SocketService.removeClient(clientKey);
+            log.info("Socket客户端资源清理完毕: {}", clientKey);
+        } catch (IOException e) {
+            log.error("Error closing client socket for client {}: {}", clientKey, e.getMessage());
+        }
+    }
 }
+

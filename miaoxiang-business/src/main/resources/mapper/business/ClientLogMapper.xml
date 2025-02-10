@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.business.mapper.ClientLogMapper">
+    
+    <resultMap type="ClientLog" id="ClientLogResult">
+        <result property="id"    column="id"    />
+        <result property="clientId"    column="client_id"    />
+        <result property="commandStr"    column="command_str"    />
+        <result property="content"    column="content"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+    </resultMap>
+
+    <sql id="selectClientLogVo">
+        select id, client_id, command_str, content, create_time, create_by from client_log
+    </sql>
+
+    <select id="selectClientLogList" parameterType="ClientLog" resultMap="ClientLogResult">
+        <include refid="selectClientLogVo"/>
+        <where>  
+            <if test="clientId != null "> and client_id = #{clientId}</if>
+            <if test="commandStr != null  and commandStr != ''"> and command_str = #{commandStr}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+    
+    <select id="selectClientLogById" parameterType="Long" resultMap="ClientLogResult">
+        <include refid="selectClientLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertClientLog" parameterType="ClientLog" useGeneratedKeys="true" keyProperty="id">
+        insert into client_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="clientId != null">client_id,</if>
+            <if test="commandStr != null">command_str,</if>
+            <if test="content != null">content,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="clientId != null">#{clientId},</if>
+            <if test="commandStr != null">#{commandStr},</if>
+            <if test="content != null">#{content},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClientLog" parameterType="ClientLog">
+        update client_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="clientId != null">client_id = #{clientId},</if>
+            <if test="commandStr != null">command_str = #{commandStr},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteClientLogById" parameterType="Long">
+        delete from client_log where id = #{id}
+    </delete>
+
+    <delete id="deleteClientLogByIds" parameterType="String">
+        delete from client_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

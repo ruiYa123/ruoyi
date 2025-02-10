@@ -25,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 任务训练Controller
  * 
  * @author ruoyi
- * @date 2025-01-17
+ * @date 2025-02-08
  */
 @RestController
 @RequestMapping("/business/train")

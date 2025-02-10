@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ruoyi.business.socket.messageHandler.model.BaseRequest;
 import lombok.Data;
 
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.MC_PAUSE_TRAIN;
+
 @Data
 public class MCPauseTrainCommand extends BaseRequest {
     @JsonProperty("ClientName")
     private String clientName;
 
     public MCPauseTrainCommand() {
-        this.setCommandStr("MC_PauseTrain");
+        this.setCommandStr(MC_PAUSE_TRAIN.getCommandStr());
     }
 }
 

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ruoyi.business.socket.messageHandler.model.BaseRequest;
 import lombok.Data;
 
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.MC_CHANGE_TRAIN_PARA;
+
 @Data
 public class MCChangeTrainParaCommand extends BaseRequest {
     @JsonProperty("ProjectName")
@@ -29,6 +31,6 @@ public class MCChangeTrainParaCommand extends BaseRequest {
     }
 
     public MCChangeTrainParaCommand() {
-        this.setCommandStr("MC_ChangeTrainPara");
+        this.setCommandStr(MC_CHANGE_TRAIN_PARA.getCommandStr());
     }
 }

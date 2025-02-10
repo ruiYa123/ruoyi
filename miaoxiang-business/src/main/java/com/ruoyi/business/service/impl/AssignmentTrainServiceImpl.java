@@ -12,7 +12,7 @@ import com.ruoyi.business.service.IAssignmentTrainService;
  * 任务训练Service业务层处理
  * 
  * @author ruoyi
- * @date 2025-01-17
+ * @date 2025-02-08
  */
 @Service
 public class AssignmentTrainServiceImpl implements IAssignmentTrainService 

@@ -14,7 +14,7 @@ public class ClientAddEvent extends BaseMessage {
     private String ip;
 
     @JsonProperty("Port")
-    private Long port;
+    private int port;
 
     @JsonProperty("State")
     private Long state;

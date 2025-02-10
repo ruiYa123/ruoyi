@@ -23,7 +23,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 训练日志Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-02-07
  */

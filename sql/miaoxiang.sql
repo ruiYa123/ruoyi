@@ -219,3 +219,37 @@ values('训练日志删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'bus
 
 insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
 values('训练日志导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'business:trainLog:export',       '#', 'admin', sysdate(), '', null, '');
+
+
+CREATE TABLE client_log (
+                            id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+                            client_id BIGINT NOT NULL COMMENT '关联的客户端ID',
+                            command_str VARCHAR(255) COMMENT '客户端执行的命令字符串',
+                            content TEXT COMMENT '日志详细内容',
+                            create_time DATETIME COMMENT '创建时间',
+                            create_by VARCHAR(100) COMMENT '创建人'
+) COMMENT = '客户端操作日志表';
+
+
+-- 菜单 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('客户端操作日志', '3', '1', 'log', 'business/log/index', 1, 0, 'C', '0', '0', 'business:log:list', '#', 'admin', sysdate(), '', null, '客户端操作日志菜单');
+
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+-- 按钮 SQL
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('客户端操作日志查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'business:log:query',        '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('客户端操作日志新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'business:log:add',          '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('客户端操作日志修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'business:log:edit',         '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('客户端操作日志删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'business:log:remove',       '#', 'admin', sysdate(), '', null, '');
+
+insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
+values('客户端操作日志导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'business:log:export',       '#', 'admin', sysdate(), '', null, '');
