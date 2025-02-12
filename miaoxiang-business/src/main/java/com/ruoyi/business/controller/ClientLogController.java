@@ -23,12 +23,12 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 客户端操作日志Controller
- * 
+ *
  * @author ruoyi
- * @date 2025-02-08
+ * @date 2025-02-11
  */
 @RestController
-@RequestMapping("/business/log")
+@RequestMapping("/business/clientLog")
 public class ClientLogController extends BaseController
 {
     @Autowired
@@ -37,7 +37,7 @@ public class ClientLogController extends BaseController
     /**
      * 查询客户端操作日志列表
      */
-    @PreAuthorize("@ss.hasPermi('business:log:list')")
+    @PreAuthorize("@ss.hasPermi('business:clientLog:list')")
     @GetMapping("/list")
     public TableDataInfo list(ClientLog clientLog)
     {
@@ -49,7 +49,7 @@ public class ClientLogController extends BaseController
     /**
      * 导出客户端操作日志列表
      */
-    @PreAuthorize("@ss.hasPermi('business:log:export')")
+    @PreAuthorize("@ss.hasPermi('business:clientLog:export')")
     @Log(title = "客户端操作日志", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, ClientLog clientLog)
@@ -62,7 +62,7 @@ public class ClientLogController extends BaseController
     /**
      * 获取客户端操作日志详细信息
      */
-    @PreAuthorize("@ss.hasPermi('business:log:query')")
+    @PreAuthorize("@ss.hasPermi('business:clientLog:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -72,7 +72,7 @@ public class ClientLogController extends BaseController
     /**
      * 新增客户端操作日志
      */
-    @PreAuthorize("@ss.hasPermi('business:log:add')")
+    @PreAuthorize("@ss.hasPermi('business:clientLog:add')")
     @Log(title = "客户端操作日志", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ClientLog clientLog)
@@ -83,7 +83,7 @@ public class ClientLogController extends BaseController
     /**
      * 修改客户端操作日志
      */
-    @PreAuthorize("@ss.hasPermi('business:log:edit')")
+    @PreAuthorize("@ss.hasPermi('business:clientLog:edit')")
     @Log(title = "客户端操作日志", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ClientLog clientLog)
@@ -94,9 +94,9 @@ public class ClientLogController extends BaseController
     /**
      * 删除客户端操作日志
      */
-    @PreAuthorize("@ss.hasPermi('business:log:remove')")
+    @PreAuthorize("@ss.hasPermi('business:clientLog:remove')")
     @Log(title = "客户端操作日志", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(clientLogService.deleteClientLogByIds(ids));

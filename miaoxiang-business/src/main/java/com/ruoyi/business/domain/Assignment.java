@@ -36,15 +36,15 @@ public class Assignment extends BaseEntity
 
     /** 训练次数 */
     @Excel(name = "训练次数")
-    private String epoch;
+    private Integer epoch;
 
     /** 每次训练的批大小 */
     @Excel(name = "每次训练的批大小")
-    private String batchSize;
+    private Integer batchSize;
 
     /** 输入图像的大小 */
     @Excel(name = "输入图像的大小")
-    private String imgSize;
+    private Integer imgSize;
 
     /** 描述 */
     @Excel(name = "描述")
@@ -52,7 +52,7 @@ public class Assignment extends BaseEntity
 
     /** 任务状态 */
     @Excel(name = "任务状态")
-    private Long state;
+    private Integer state;
 
     public void setId(Long id)
     {
@@ -99,30 +99,30 @@ public class Assignment extends BaseEntity
     {
         return pretrainMode;
     }
-    public void setEpoch(String epoch)
+    public void setEpoch(Integer epoch)
     {
         this.epoch = epoch;
     }
 
-    public String getEpoch()
+    public Integer getEpoch()
     {
         return epoch;
     }
-    public void setBatchSize(String batchSize)
+    public void setBatchSize(Integer batchSize)
     {
         this.batchSize = batchSize;
     }
 
-    public String getBatchSize()
+    public Integer getBatchSize()
     {
         return batchSize;
     }
-    public void setImgSize(String imgSize)
+    public void setImgSize(Integer imgSize)
     {
         this.imgSize = imgSize;
     }
 
-    public String getImgSize()
+    public Integer getImgSize()
     {
         return imgSize;
     }
@@ -135,12 +135,12 @@ public class Assignment extends BaseEntity
     {
         return description;
     }
-    public void setState(Long state)
+    public void setState(Integer state)
     {
         this.state = state;
     }
 
-    public Long getState()
+    public Integer getState()
     {
         return state;
     }

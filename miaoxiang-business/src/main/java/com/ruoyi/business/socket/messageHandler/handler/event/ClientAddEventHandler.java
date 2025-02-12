@@ -17,11 +17,14 @@ public class ClientAddEventHandler extends AbstractMessageHandler {
     @Override
     public void handle(String jsonMessage, String ip, int port) {
         ClientAddEvent message = JsonUtil.fromJson(jsonMessage, ClientAddEvent.class);
+        message.setIp(ip);
+        message.setPort(port);
         log.info("{} 客户端上线，状态：{}", message.getName(), message.getState());
         Client client = new Client();
         BeanUtils.copyProperties(message, client);
         Long clientId = clientService.addClient(client);
         setClientLog(clientId, jsonMessage);
+        clientUpdater.updateClients();
     }
 
     @Override

@@ -7,7 +7,7 @@ import com.ruoyi.business.domain.ClientLog;
  * 客户端操作日志Mapper接口
  * 
  * @author ruoyi
- * @date 2025-02-08
+ * @date 2025-02-11
  */
 public interface ClientLogMapper 
 {

@@ -1,14 +1,11 @@
 package com.ruoyi.business.socket.messageHandler.handler.event;
 
 import com.ruoyi.business.domain.Client;
-import com.ruoyi.business.service.IClientService;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
-import com.ruoyi.business.socket.messageHandler.handler.BaseMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.Events.ClientOfflineEvent;
 import com.ruoyi.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIENT_OFFLINE;
@@ -25,6 +22,13 @@ public class ClientOffLineEventHandler extends AbstractMessageHandler {
         BeanUtils.copyProperties(message, client);
         clientService.offLineClient(client);
         setClientLog(message.getName(), jsonMessage);
+    }
+
+    public void handleDisconnect(String ip, int port) {
+        Client client = new Client();
+        client.setIp(ip);
+        client.setPort(port);
+        clientService.offLineClient(client);
     }
 
     @Override

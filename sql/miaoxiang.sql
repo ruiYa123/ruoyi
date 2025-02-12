@@ -108,6 +108,7 @@ CREATE TABLE assignment (
                             epoch INT UNSIGNED NOT NULL COMMENT '训练次数',
                             batch_size INT UNSIGNED NOT NULL COMMENT '每次训练的批大小',
                             img_size INT UNSIGNED NOT NULL COMMENT '输入图像的大小',
+                            state INT UNSIGNED NOT NULL COMMENT '任务状态',
                             description TEXT COMMENT '描述',
                             create_time DATETIME COMMENT '创建时间',
                             create_by VARCHAR(100) COMMENT '创建人',
@@ -225,6 +226,7 @@ CREATE TABLE client_log (
                             id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
                             client_id BIGINT NOT NULL COMMENT '关联的客户端ID',
                             command_str VARCHAR(255) COMMENT '客户端执行的命令字符串',
+                            state INT NOT NULL DEFAULT 0 COMMENT'日志状态',
                             content TEXT COMMENT '日志详细内容',
                             create_time DATETIME COMMENT '创建时间',
                             create_by VARCHAR(100) COMMENT '创建人'

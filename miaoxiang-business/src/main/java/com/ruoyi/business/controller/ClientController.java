@@ -23,9 +23,9 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 客户端Controller
- * 
+ *
  * @author ruoyi
- * @date 2025-01-16
+ * @date 2025-02-11
  */
 @RestController
 @RequestMapping("/business/client")
@@ -44,6 +44,14 @@ public class ClientController extends BaseController
         startPage();
         List<Client> list = clientService.selectClientList(client);
         return getDataTable(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:client:list')")
+    @GetMapping("/listAll")
+    public AjaxResult listAll()
+    {
+        List<Client> list = clientService.selectClientList(new Client());
+        return success(list);
     }
 
     /**
@@ -96,7 +104,7 @@ public class ClientController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('business:client:remove')")
     @Log(title = "客户端", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(clientService.deleteClientByIds(ids));

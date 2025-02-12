@@ -8,13 +8,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="clientId"    column="client_id"    />
         <result property="commandStr"    column="command_str"    />
+        <result property="state"    column="state"    />
         <result property="content"    column="content"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
     </resultMap>
 
     <sql id="selectClientLogVo">
-        select id, client_id, command_str, content, create_time, create_by from client_log
+        select id, client_id, command_str, state, content, create_time, create_by from client_log
     </sql>
 
     <select id="selectClientLogList" parameterType="ClientLog" resultMap="ClientLogResult">
@@ -22,6 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="clientId != null "> and client_id = #{clientId}</if>
             <if test="commandStr != null  and commandStr != ''"> and command_str = #{commandStr}</if>
+            <if test="state != null "> and state = #{state}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
         </where>
     </select>
@@ -36,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="clientId != null">client_id,</if>
             <if test="commandStr != null">command_str,</if>
+            <if test="state != null">state,</if>
             <if test="content != null">content,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
@@ -43,6 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="clientId != null">#{clientId},</if>
             <if test="commandStr != null">#{commandStr},</if>
+            <if test="state != null">#{state},</if>
             <if test="content != null">#{content},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -54,6 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="clientId != null">client_id = #{clientId},</if>
             <if test="commandStr != null">command_str = #{commandStr},</if>
+            <if test="state != null">state = #{state},</if>
             <if test="content != null">content = #{content},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>

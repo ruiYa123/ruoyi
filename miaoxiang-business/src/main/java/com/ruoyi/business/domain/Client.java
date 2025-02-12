@@ -9,30 +9,30 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 客户端对象 client
  *
  * @author ruoyi
- * @date 2025-01-16
+ * @date 2025-02-11
  */
 public class Client extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** id */
     private Long id;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    /** 客户端名称 */
+    @Excel(name = "客户端名称")
     private String name;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    /** 客户端ip */
+    @Excel(name = "客户端ip")
     private String ip;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private int port;
+    /** 客户端端口 */
+    @Excel(name = "客户端端口")
+    private Integer port;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Long state;
+    /** 状态 */
+    @Excel(name = "状态")
+    private Integer state;
 
     public void setId(Long id)
     {
@@ -61,21 +61,21 @@ public class Client extends BaseEntity
     {
         return ip;
     }
-    public void setPort(int port)
+    public void setPort(Integer port)
     {
         this.port = port;
     }
 
-    public int getPort()
+    public Integer getPort()
     {
         return port;
     }
-    public void setState(Long state)
+    public void setState(Integer state)
     {
         this.state = state;
     }
 
-    public Long getState()
+    public Integer getState()
     {
         return state;
     }
@@ -83,12 +83,12 @@ public class Client extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("name", getName())
-            .append("ip", getIp())
-            .append("port", getPort())
-            .append("state", getState())
-            .append("createTime", getCreateTime())
-            .toString();
+                .append("id", getId())
+                .append("name", getName())
+                .append("ip", getIp())
+                .append("port", getPort())
+                .append("state", getState())
+                .append("createTime", getCreateTime())
+                .toString();
     }
 }

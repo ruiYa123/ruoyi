@@ -76,6 +76,15 @@ public class ClientServiceImpl implements IClientService
             clientMapper.insertClient(client);
         } else {
             client.setId(clientResult.getId());
+            if(client.getPort() == null) {
+                client.setPort(clientResult.getPort());
+            }
+            if(client.getIp() == null) {
+                client.setIp(clientResult.getIp());
+            }
+            if(client.getState() == null) {
+                client.setState(clientResult.getState());
+            }
             client.setUpdateTime(DateUtils.getNowDate());
             clientMapper.updateClient(client);
         }
@@ -87,10 +96,16 @@ public class ClientServiceImpl implements IClientService
     @Override
     public void offLineClient(Client client) {
         Client clientSearchVO = new Client();
-        clientSearchVO.setName(client.getName());
+        if (client.getName() != null) {
+            clientSearchVO.setName(client.getName());
+        } else if (client.getIp() != null && client.getPort() != null) {
+            clientSearchVO.setIp(client.getIp());
+            clientSearchVO.setPort(client.getPort());
+        }
         Client clientResult = clientMapper.selectClient(clientSearchVO);
-        if (clientResult != null) {
-            clientResult.setState(-1L);
+        if (clientResult != null && clientResult.getState() != -1) {
+            log.info("与{}断开连接", clientResult.getName());
+            clientResult.setState(-1);
             clientMapper.updateClient(clientResult);
         }
     }

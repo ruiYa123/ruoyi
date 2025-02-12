@@ -2,7 +2,9 @@ package com.ruoyi.business.socket;
 
 import com.ruoyi.business.socket.Client.ClientFactory;
 import com.ruoyi.business.socket.Client.ClientHandler;
+import com.ruoyi.business.socket.messageHandler.handler.event.ClientOffLineEventHandler;
 import com.ruoyi.common.exception.UtilException;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,46 +17,48 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
 public class SocketService {
-    private final ServerSocket serverSocket;
+    private ServerSocket serverSocket;
     @Autowired
     private ClientFactory clientFactory;
     private static final ConcurrentHashMap<String, PrintWriter> clientMap = new ConcurrentHashMap<>();
 
+    @Value(value = "${socket.port}")
+    private int port;
 
-    public SocketService() {
+    @PostConstruct
+    public void init() {
         try {
-            serverSocket = new ServerSocket(12345);
+            serverSocket = new ServerSocket(port);
+            Thread thread = new Thread(this::start, "SOCKET-SERVER");
+            thread.start();
         } catch (IOException e) {
             throw new UtilException("Socket服务启动失败： " + e.getMessage());
         }
     }
 
-    @PostConstruct
-    public void init() {
-        Thread thread = new Thread(this::start, "SOCKET-SERVER");
-        thread.start();
-    }
-
     @PreDestroy
     public void shutdown() {
-        log.info("正在关闭SOCKET服务器...");
+        log.info("正在关闭SOCKET服务...");
         try {
-            serverSocket.close();
             clientMap.values().forEach(PrintWriter::close);
             clientMap.clear();
-            log.info("SOCKET服务器已关闭。");
+            serverSocket.close();
+            log.info("SOCKET服务已关闭。");
         } catch (IOException e) {
-            log.error("关闭SOCKET服务器时出错: {}", e.getMessage());
+            log.error("关闭SOCKET服务时出错: {}", e.getMessage());
         }
     }
 
 
     public void start() {
-        log.info("SOCKET服务器已启动，等待客户端连接...");
+        log.info("SOCKET服务({})已启动，等待客户端连接...", this.port);
         while (!serverSocket.isClosed()) {
             try {
                 Socket clientSocket = serverSocket.accept();
@@ -73,7 +77,7 @@ public class SocketService {
     public void handleNewClient(Socket clientSocket) {
         try {
             String clientKey = clientSocket.getInetAddress().getHostAddress() + ":" + clientSocket.getPort();
-            System.out.println("客户端已连接: " + clientKey);
+            log.info("客户端已连接: {}", clientKey);
 
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             addClient(clientKey, out);
@@ -95,11 +99,27 @@ public class SocketService {
 
     public static void sendMessageToClientByAddress(String ip, int port, String message) {
         String clientKey = ip + ":" + port;
-        PrintWriter out = clientMap.get(clientKey);
-        if (out != null) {
-            out.println(message);
-        } else {
-            System.out.println("未找到指定客户端: " + clientKey);
-        }
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleWithFixedDelay(new Runnable() {
+            int attempt = 0;
+            final int maxAttempts = 3;
+
+            @Override
+            public void run() {
+                attempt++;
+                PrintWriter out = clientMap.get(clientKey);
+                if (out != null) {
+                    out.println(message);
+                    scheduler.shutdown();
+                } else if (attempt >= maxAttempts) {
+//                    log.info("未找到指定客户端: {} after {} attempts", clientKey, maxAttempts);
+                    ClientOffLineEventHandler clientOffLineEventHandler = new ClientOffLineEventHandler();
+                    clientOffLineEventHandler.handleDisconnect(ip, port);
+                    scheduler.shutdown();
+                }
+            }
+        }, 0, 5, TimeUnit.SECONDS);
+
     }
 }
+

@@ -8,12 +8,12 @@ import lombok.Data;
 import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.MC_CHANGE_TRAIN_PARA;
 
 @Data
-public class MCChangeTrainParaCommand extends BaseRequest {
+public class MCChangeTrainParamCommand extends BaseRequest {
     @JsonProperty("ProjectName")
     private String projectName;
 
     @JsonProperty("TrainPara")
-    private TrainParameters trainPara;
+    private TrainParameters trainParam;
 
     @Data
     public static class TrainParameters {
@@ -30,7 +30,7 @@ public class MCChangeTrainParaCommand extends BaseRequest {
         private int imgSize; // 640
     }
 
-    public MCChangeTrainParaCommand() {
+    public MCChangeTrainParamCommand() {
         this.setCommandStr(MC_CHANGE_TRAIN_PARA.getCommandStr());
     }
 }

@@ -15,7 +15,7 @@ public class MCStartTrainCommand extends BaseRequest {
     private String projectName;
 
     @JsonProperty("TrainPara")
-    private TrainParameters trainPara;
+    private TrainParameters trainParam;
 
     @Data
     public static class TrainParameters {

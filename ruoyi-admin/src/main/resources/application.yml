@@ -31,6 +31,13 @@ server:
       # Tomcat启动初始化的线程数，默认值10
       min-spare: 100
 
+socket:
+  port: 3000
+  scheduling:
+    rate: 30000
+
+
+
 # 日志配置
 logging:
   level:

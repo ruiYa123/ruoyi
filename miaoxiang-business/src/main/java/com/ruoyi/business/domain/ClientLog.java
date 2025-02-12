@@ -7,9 +7,9 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 客户端操作日志对象 client_log
- * 
+ *
  * @author ruoyi
- * @date 2025-02-08
+ * @date 2025-02-11
  */
 public class ClientLog extends BaseEntity
 {
@@ -26,43 +26,56 @@ public class ClientLog extends BaseEntity
     @Excel(name = "客户端执行的命令字符串")
     private String commandStr;
 
+    /** 日志状态 */
+    @Excel(name = "日志状态")
+    private Long state;
+
     /** 日志详细内容 */
     @Excel(name = "日志详细内容")
     private String content;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setClientId(Long clientId) 
+    public void setClientId(Long clientId)
     {
         this.clientId = clientId;
     }
 
-    public Long getClientId() 
+    public Long getClientId()
     {
         return clientId;
     }
-    public void setCommandStr(String commandStr) 
+    public void setCommandStr(String commandStr)
     {
         this.commandStr = commandStr;
     }
 
-    public String getCommandStr() 
+    public String getCommandStr()
     {
         return commandStr;
     }
-    public void setContent(String content) 
+    public void setState(Long state)
+    {
+        this.state = state;
+    }
+
+    public Long getState()
+    {
+        return state;
+    }
+    public void setContent(String content)
     {
         this.content = content;
     }
 
-    public String getContent() 
+    public String getContent()
     {
         return content;
     }
@@ -73,6 +86,7 @@ public class ClientLog extends BaseEntity
             .append("id", getId())
             .append("clientId", getClientId())
             .append("commandStr", getCommandStr())
+            .append("state", getState())
             .append("content", getContent())
             .append("createTime", getCreateTime())
             .append("createBy", getCreateBy())

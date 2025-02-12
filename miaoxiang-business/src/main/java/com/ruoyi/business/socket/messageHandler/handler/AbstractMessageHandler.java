@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
 public abstract class AbstractMessageHandler implements BaseMessageHandler {
@@ -18,9 +19,18 @@ public abstract class AbstractMessageHandler implements BaseMessageHandler {
     @Autowired
     protected IClientLogService clientLogService;
 
+    @Autowired
+    protected ClientUpdater clientUpdater;
+
+    @Override
     public abstract void handle(String json, String ip, int port);
 
+    @Override
     public abstract String getCommand();
+
+    protected List<Client> getClients() {
+        return clientUpdater.getClients();
+    }
 
     protected void setClientLog(String ip, int port, String content) {
         Client client = clientService.selectClient(toClient(null, null, ip, port));
@@ -31,6 +41,11 @@ public abstract class AbstractMessageHandler implements BaseMessageHandler {
         Client client = clientService.selectClient(toClient(null, name, null, null));
         buildClientLog(content, client);
     }
+    protected void setClientWarningLog(String name, String content) {
+        Client client = clientService.selectClient(toClient(null, name, null, null));
+        buildClientWarningLog(content, client);
+    }
+
 
     protected void setClientLog(Long clientId, String content) {
         Client client = clientService.selectClient(toClient(clientId, null, null, null));
@@ -43,6 +58,18 @@ public abstract class AbstractMessageHandler implements BaseMessageHandler {
             clientLog.setClientId(client.getId());
             clientLog.setCommandStr(getCommand());
             clientLog.setContent(content);
+            clientLog.setCreateTime(new Date());
+            clientLogService.insertClientLog(clientLog);
+        }
+    }
+
+    private void buildClientWarningLog(String content, Client client) {
+        if (client != null) {
+            ClientLog clientLog = new ClientLog();
+            clientLog.setClientId(client.getId());
+            clientLog.setCommandStr(getCommand());
+            clientLog.setContent(content);
+            clientLog.setState(1L);
             clientLog.setCreateTime(new Date());
             clientLogService.insertClientLog(clientLog);
         }

@@ -3,6 +3,8 @@ package com.ruoyi.business.controller;
 import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.business.service.IAssignmentTrainService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +36,9 @@ public class AssignmentController extends BaseController
 {
     @Autowired
     private IAssignmentService assignmentService;
+
+    @Autowired
+    private IAssignmentTrainService assignmentTrainService;
 
     /**
      * 查询任务列表
@@ -98,8 +103,17 @@ public class AssignmentController extends BaseController
         return toAjax(assignmentService.insertAssignment(assignment));
     }
 
+    @PreAuthorize("@ss.hasPermi('business:assignment:query')")
+    @GetMapping(value = "/start/{id}")
+    public AjaxResult startAssignment(@PathVariable("id") Long id)
+    {
+        Assignment assignment = assignmentService.selectAssignmentById(id);
+        assignmentTrainService.startTrain(id);
+        return success();
+    }
+
     /**
-     * 修改任务
+     *
      */
     @PreAuthorize("@ss.hasPermi('business:assignment:edit')")
     @Log(title = "任务", businessType = BusinessType.UPDATE)
