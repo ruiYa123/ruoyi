@@ -17,8 +17,8 @@ import java.util.concurrent.Executors;
 public class ClientFactory {
 
     private final List<BaseMessageHandler> messageHandlers;
-    private static final ConcurrentHashMap<String, ClientHandler> clientMap = new ConcurrentHashMap<>();
-    private final ExecutorService clientThreadPool = Executors.newCachedThreadPool(); // 在工厂中管理线程池
+    private final ConcurrentHashMap<String, ClientHandler> clientMap = new ConcurrentHashMap<>();
+    private final ExecutorService clientThreadPool = Executors.newFixedThreadPool(15);
 
     @Autowired
     public ClientFactory(List<BaseMessageHandler> messageHandlers) {
@@ -27,16 +27,16 @@ public class ClientFactory {
 
     public void createAndHandleClient(Socket clientSocket) throws IOException {
         String clientKey = clientSocket.getInetAddress().getHostAddress() + ":" + clientSocket.getPort();
-        ClientHandler clientHandler = new ClientHandler(clientSocket, messageHandlers);
+        ClientHandler clientHandler = new ClientHandler(clientSocket, messageHandlers, this);
         clientMap.put(clientKey, clientHandler);
-        clientThreadPool.submit(clientHandler); // 使用线程池处理客户端
+        clientThreadPool.submit(clientHandler);
     }
 
-    public static void removeClient(String clientKey) {
+    public void removeClient(String clientKey) {
         clientMap.remove(clientKey);
     }
 
-    public static ClientHandler getClientHandler(String clientKey) {
+    public ClientHandler getClientHandler(String clientKey) {
         return clientMap.get(clientKey);
     }
 
@@ -46,4 +46,6 @@ public class ClientFactory {
         }
     }
 }
+
+
 

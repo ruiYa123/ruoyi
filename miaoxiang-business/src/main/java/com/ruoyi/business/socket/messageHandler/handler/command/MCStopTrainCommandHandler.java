@@ -19,7 +19,7 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
     public void stopTrain(Client client) {
         MCStopTrainCommand request = new MCStopTrainCommand();
         request.setClientName(client.getName());
-        SocketService.sendMessageToClientByAddress(client.getIp(), client.getPort(), JsonUtil.toJson(request));
+        socketService.sendMessageToClientByAddress(client.getIp(), client.getPort(), JsonUtil.toJson(request));
     }
     @Override
     public void handle(String jsonMessage, ClientStatus clientStatus) {

@@ -5,6 +5,7 @@ import com.ruoyi.business.domain.ClientLog;
 import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.service.IClientLogService;
 import com.ruoyi.business.service.IClientService;
+import com.ruoyi.business.socket.SocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,9 @@ public abstract class AbstractMessageHandler implements BaseMessageHandler {
 
     @Autowired
     protected ClientUpdater clientUpdater;
+
+    @Autowired
+    protected SocketService socketService;
 
     @Override
     public abstract void handle(String json, ClientStatus clientStatus);

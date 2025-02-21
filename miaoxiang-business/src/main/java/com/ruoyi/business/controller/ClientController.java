@@ -40,6 +40,9 @@ public class ClientController extends BaseController
 
     @Autowired
     private TestCommandHandler testCommandHandler;
+
+    @Autowired
+    private SocketService socketService;
     /**
      * 查询客户端列表
      */
@@ -88,7 +91,7 @@ public class ClientController extends BaseController
     public AjaxResult getStatus(@PathVariable("id") Long id)
     {
         Client client = clientService.selectClientById(id);
-        return success(SocketService.getClientStatus(client.getIp(), client.getPort()));
+        return success(socketService.getClientStatus(client.getIp(), client.getPort()));
     }
 
     /**

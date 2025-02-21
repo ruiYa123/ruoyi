@@ -17,6 +17,8 @@ import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.GET_T
 @Component
 public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
 
+
+
     @Scheduled(initialDelay = 2000, fixedRateString = "${socket.scheduling.rate}")
     public void requestTrainState() {
 //        log.info("获取client训练状态");
@@ -26,7 +28,7 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
             }
             MCGetTrainStateCommand request = new MCGetTrainStateCommand();
             request.setClientName(client.getName());
-            SocketService.sendMessageToClientByAddress(
+            socketService.sendMessageToClientByAddress(
                     client.getIp(),
                     client.getPort(),
                     JsonUtil.toJson(request)

@@ -25,7 +25,7 @@ public class MCStartTrainCommandHandler extends AbstractMessageHandler {
         mcStartTrainCommand.getTrainParam().setBatchSize(assignment.getBatchSize());
         mcStartTrainCommand.getTrainParam().setImgSize(assignment.getImgSize());
         mcStartTrainCommand.setProjectName(projectName + "~" + assignment.getAssignmentName());
-        SocketService.sendMessageToClientByAddress(client.getIp(), client.getPort(), JsonUtil.toJson(mcStartTrainCommand));
+        socketService.sendMessageToClientByAddress(client.getIp(), client.getPort(), JsonUtil.toJson(mcStartTrainCommand));
     }
 
     @Override

@@ -26,7 +26,7 @@ public class SocketService {
     @Autowired
     private ClientFactory clientFactory;
 
-    @Value(value = "${socket.port}")
+    @Value("${socket.port}")
     private int port;
 
     @PostConstruct
@@ -47,7 +47,7 @@ public class SocketService {
             if (serverSocket != null && !serverSocket.isClosed()) {
                 serverSocket.close();
             }
-            clientFactory.shutdown(); // 关闭客户端工厂中的线程池
+            clientFactory.shutdown();
             log.info("SOCKET服务已关闭。");
         } catch (IOException e) {
             log.error("关闭SOCKET服务时出错: {}", e.getMessage(), e);
@@ -72,13 +72,18 @@ public class SocketService {
 
     public void handleNewClient(Socket clientSocket) {
         try {
-            clientFactory.createAndHandleClient(clientSocket); // 使用工厂方法处理新客户端
+            clientFactory.createAndHandleClient(clientSocket);
         } catch (IOException e) {
             log.error("处理客户端时出错: {}", e.getMessage(), e);
+            try {
+                clientSocket.close();
+            } catch (IOException ex) {
+                log.error("关闭客户端Socket时出错: {}", ex.getMessage(), ex);
+            }
         }
     }
 
-    public static boolean sendMessageToClientByAddress(String ip, int port, String message) {
+    public boolean sendMessageToClientByAddress(String ip, int port, String message) {
         String clientKey = ip + ":" + port;
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         CompletableFuture<Boolean> result = new CompletableFuture<>();
@@ -91,7 +96,7 @@ public class SocketService {
             public void run() {
                 attempt++;
                 PrintWriter out = null;
-                ClientHandler clientHandler = ClientFactory.getClientHandler(clientKey);
+                ClientHandler clientHandler = clientFactory.getClientHandler(clientKey);
                 if (clientHandler != null) {
                     out = clientHandler.getPrintWriter();
                 }
@@ -118,12 +123,11 @@ public class SocketService {
         }
     }
 
-    public static ClientStatus getClientStatus(String ip, int port) {
-        ClientHandler clientHandler = ClientFactory.getClientHandler(ip + ":" + port);
+    public ClientStatus getClientStatus(String ip, int port) {
+        ClientHandler clientHandler = clientFactory.getClientHandler(ip + ":" + port);
         if (clientHandler == null) {
             return new ClientStatus(ip, port);
         }
         return clientHandler.getClientStatus();
     }
 }
-

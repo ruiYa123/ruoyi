@@ -1,7 +1,6 @@
 package com.ruoyi.business.socket.Client;
 
 import com.ruoyi.business.domain.ClientStatus;
-import com.ruoyi.business.socket.SocketService;
 import com.ruoyi.business.socket.messageHandler.handler.BaseMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.response.ErrorResponse;
 import com.ruoyi.common.utils.JsonUtil;
@@ -25,11 +24,13 @@ public class ClientHandler extends Thread {
     private final Map<String, BaseMessageHandler> messageHandlerMap = new HashMap<>();
     @Getter
     private final ClientStatus clientStatus;
+    private final ClientFactory clientFactory;
 
-    public ClientHandler(Socket socket, List<BaseMessageHandler> messageHandlers) throws IOException {
+    public ClientHandler(Socket socket, List<BaseMessageHandler> messageHandlers, ClientFactory clientFactory) throws IOException {
         this.clientSocket = socket;
         this.printWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
         this.clientStatus = new ClientStatus(socket.getInetAddress().getHostAddress(), socket.getPort());
+        this.clientFactory = clientFactory; // 通过构造函数传入
         for (BaseMessageHandler handler : messageHandlers) {
             messageHandlerMap.put(handler.getCommand(), handler);
         }
@@ -74,7 +75,13 @@ public class ClientHandler extends Thread {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setMessage(message);
         errorResponse.setState(1);
-        SocketService.sendMessageToClientByAddress(clientStatus.getIp(), clientStatus.getPort(), JsonUtil.toJson(errorResponse));
+
+        if (printWriter != null) {
+            printWriter.println(JsonUtil.toJson(errorResponse));
+            log.info("发送错误响应给客户端 {}: {}", clientStatus.getIp() + ":" + clientStatus.getPort(), message);
+        } else {
+            log.error("无法发送错误响应，PrintWriter 为 null");
+        }
     }
 
     private void cleanup() {
@@ -86,7 +93,7 @@ public class ClientHandler extends Thread {
             if (clientSocket != null && !clientSocket.isClosed()) {
                 clientSocket.close();
             }
-            ClientFactory.removeClient(this.clientStatus.getIp() + ":" + clientStatus.getPort());
+            clientFactory.removeClient(this.clientStatus.getIp() + ":" + clientStatus.getPort());
             log.info("Socket客户端资源清理完毕: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort());
         } catch (IOException e) {
             log.error("Error closing client socket for client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), e.getMessage(), e);

@@ -27,7 +27,7 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
             }
             MCGetClientStateCommand request = new MCGetClientStateCommand();
             request.setClientNames(client.getName());
-            SocketService.sendMessageToClientByAddress(
+            socketService.sendMessageToClientByAddress(
                     client.getIp(),
                     client.getPort(),
                     JsonUtil.toJson(request)
