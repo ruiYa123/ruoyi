@@ -36,7 +36,7 @@ public class SocketService {
             Thread thread = new Thread(this::start, "SOCKET-SERVER");
             thread.start();
         } catch (IOException e) {
-            throw new UtilException("Socket服务启动失败： " + e.getMessage());
+            throw new UtilException("Socket服务启动失败： " + e.getMessage(), e);
         }
     }
 
@@ -44,10 +44,13 @@ public class SocketService {
     public void shutdown() {
         log.info("正在关闭SOCKET服务...");
         try {
-            serverSocket.close();
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+            }
+            clientFactory.shutdown(); // 关闭客户端工厂中的线程池
             log.info("SOCKET服务已关闭。");
         } catch (IOException e) {
-            log.error("关闭SOCKET服务时出错: {}", e.getMessage());
+            log.error("关闭SOCKET服务时出错: {}", e.getMessage(), e);
         }
     }
 
@@ -59,25 +62,19 @@ public class SocketService {
                 handleNewClient(clientSocket);
             } catch (SocketException e) {
                 if (!serverSocket.isClosed()) {
-                    log.error("Socket异常: {}", e.getMessage());
+                    log.error("Socket异常: {}", e.getMessage(), e);
                 }
             } catch (IOException e) {
-                log.error("客户端连接失败: {}", e.getMessage());
+                log.error("客户端连接失败: {}", e.getMessage(), e);
             }
         }
     }
 
     public void handleNewClient(Socket clientSocket) {
         try {
-            String clientKey = clientSocket.getInetAddress().getHostAddress() + ":" + clientSocket.getPort();
-            log.info("客户端已连接: {}", clientKey);
-
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-
-            ClientHandler clientHandler = clientFactory.createClientHandler(clientSocket);
-            new Thread(clientHandler).start();
+            clientFactory.createAndHandleClient(clientSocket); // 使用工厂方法处理新客户端
         } catch (IOException e) {
-            System.err.println("处理客户端时出错: " + e.getMessage());
+            log.error("处理客户端时出错: {}", e.getMessage(), e);
         }
     }
 
@@ -96,11 +93,7 @@ public class SocketService {
                 PrintWriter out = null;
                 ClientHandler clientHandler = ClientFactory.getClientHandler(clientKey);
                 if (clientHandler != null) {
-                    try {
-                        out = clientHandler.getPrintWriter();
-                    } catch (IOException e) {
-                        log.error("处理客户端时出错: {}", e.getMessage());
-                    }
+                    out = clientHandler.getPrintWriter();
                 }
                 if (out != null) {
                     out.println(message);
@@ -133,3 +126,4 @@ public class SocketService {
         return clientHandler.getClientStatus();
     }
 }
+

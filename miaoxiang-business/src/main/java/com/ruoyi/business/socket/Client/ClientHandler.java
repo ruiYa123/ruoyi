@@ -20,28 +20,19 @@ import java.util.Map;
 @Slf4j
 public class ClientHandler extends Thread {
     private final Socket clientSocket;
+    @Getter
     private final PrintWriter printWriter;
     private final Map<String, BaseMessageHandler> messageHandlerMap = new HashMap<>();
     @Getter
     private final ClientStatus clientStatus;
 
-    public ClientHandler(Socket socket, List<BaseMessageHandler> messageHandlers) {
-        PrintWriter printWriter = null;
+    public ClientHandler(Socket socket, List<BaseMessageHandler> messageHandlers) throws IOException {
         this.clientSocket = socket;
-        try {
-             printWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
-        } catch (IOException e) {
-            log.error("创建客户端时出错: {}", e.getMessage());
-        }
-        this.printWriter = printWriter;
+        this.printWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
         this.clientStatus = new ClientStatus(socket.getInetAddress().getHostAddress(), socket.getPort());
         for (BaseMessageHandler handler : messageHandlers) {
             messageHandlerMap.put(handler.getCommand(), handler);
         }
-    }
-
-    public PrintWriter getPrintWriter() throws IOException {
-        return this.printWriter;
     }
 
     @Override
@@ -89,14 +80,18 @@ public class ClientHandler extends Thread {
     private void cleanup() {
         try {
             log.info("清理Socket客户端资源中: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort());
-            printWriter.close();
-            clientSocket.close();
+            if (printWriter != null) {
+                printWriter.close();
+            }
+            if (clientSocket != null && !clientSocket.isClosed()) {
+                clientSocket.close();
+            }
             ClientFactory.removeClient(this.clientStatus.getIp() + ":" + clientStatus.getPort());
             log.info("Socket客户端资源清理完毕: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort());
         } catch (IOException e) {
-            log.error("Error closing client socket for client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), e.getMessage());
+            log.error("Error closing client socket for client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), e.getMessage(), e);
         }
     }
-
 }
+
 
