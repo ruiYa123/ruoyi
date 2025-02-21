@@ -4,8 +4,10 @@ CREATE TABLE client (
                         ip VARCHAR(45) NOT NULL,
                         port INT NOT NULL,
                         state TINYINT NOT NULL,
-                        create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                        create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                        UNIQUE INDEX idx_name (name)
 );
+
 
 
 -- 菜单 SQL
@@ -105,7 +107,7 @@ CREATE TABLE assignment (
                             assignment_name VARCHAR(255) NOT NULL COMMENT '任务名称',
                             project_id BIGINT UNSIGNED NOT NULL COMMENT '关联的项目ID',
                             model_id BIGINT UNSIGNED NOT NULL COMMENT '关联的模型ID',
-                            client_id BIGINT UNSIGNED DEFAULT NULL COMMENT '训练此任务的训练机ID',
+                            client_name VARCHAR(255) UNSIGNED DEFAULT NULL COMMENT '训练此任务的训练机',
                             preTrain_mode VARCHAR(255) NOT NULL COMMENT '训练网络的预训练模式',
                             epoch INT UNSIGNED NOT NULL COMMENT '训练次数',
                             batch_size INT UNSIGNED NOT NULL COMMENT '每次训练的批大小',
@@ -142,7 +144,7 @@ values('任务导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:as
 CREATE TABLE assignment_train (
                                   id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
                                   assignment_id BIGINT NOT NULL COMMENT '任务ID',
-                                  client_id BIGINT UNSIGNED DEFAULT NULL COMMENT '训练此任务的训练机ID',
+                                  client_name VARCHAR(255) UNSIGNED DEFAULT NULL COMMENT '训练此任务的训练机',
                                   state VARCHAR(50) NOT NULL COMMENT '状态',
                                   progress DECIMAL(5,2) NOT NULL COMMENT '进度',
                                   description TEXT COMMENT '备注',

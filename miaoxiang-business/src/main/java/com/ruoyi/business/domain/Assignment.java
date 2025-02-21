@@ -32,7 +32,7 @@ public class Assignment extends BaseEntity
     @Excel(name = "关联的模型ID")
     private Long modelId;
 
-    private Long clientId;
+    private String clientName;
 
     /** 训练网络的预训练模式 */
     @Excel(name = "训练网络的预训练模式")
@@ -99,14 +99,15 @@ public class Assignment extends BaseEntity
         return modelId;
     }
 
-    public Long getClientId()
+    public String getClientName()
     {
-        return clientId;
+        return clientName;
     }
-    public void setClientId(Long clientId)
+    public void setClientName(String clientName)
     {
-        this.clientId = clientId;
+        this.clientName = clientName;
     }
+
     public void setPretrainMode(String pretrainMode)
     {
         this.pretrainMode = pretrainMode;
@@ -189,7 +190,7 @@ public class Assignment extends BaseEntity
                 .append("assignmentName", getAssignmentName())
                 .append("projectId", getProjectId())
                 .append("modelId", getModelId())
-                .append("clientId", getClientId())
+                .append("clientName", getClientName())
                 .append("pretrainMode", getPretrainMode())
                 .append("epoch", getEpoch())
                 .append("batchSize", getBatchSize())

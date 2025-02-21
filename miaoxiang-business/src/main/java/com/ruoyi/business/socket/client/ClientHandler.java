@@ -1,6 +1,9 @@
-package com.ruoyi.business.socket.Client;
+package com.ruoyi.business.socket.client;
 
 import com.ruoyi.business.domain.ClientStatus;
+import com.ruoyi.business.socket.messageHandler.model.Events.ClientAddEvent;
+import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetClientStateFeedBack;
+import com.ruoyi.business.socket.service.ServiceRegistry;
 import com.ruoyi.business.socket.messageHandler.handler.BaseMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.response.ErrorResponse;
 import com.ruoyi.common.utils.JsonUtil;
@@ -15,6 +18,10 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIENT_ADD;
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.GET_CLIENT_STATE;
 
 @Slf4j
 public class ClientHandler extends Thread {
@@ -24,13 +31,13 @@ public class ClientHandler extends Thread {
     private final Map<String, BaseMessageHandler> messageHandlerMap = new HashMap<>();
     @Getter
     private final ClientStatus clientStatus;
-    private final ClientFactory clientFactory;
+    private final ServiceRegistry serviceRegistry;
 
-    public ClientHandler(Socket socket, List<BaseMessageHandler> messageHandlers, ClientFactory clientFactory) throws IOException {
+    public ClientHandler(Socket socket, List<BaseMessageHandler> messageHandlers, ServiceRegistry serviceRegistry) throws IOException {
         this.clientSocket = socket;
         this.printWriter = new PrintWriter(this.clientSocket.getOutputStream(), true);
         this.clientStatus = new ClientStatus(socket.getInetAddress().getHostAddress(), socket.getPort());
-        this.clientFactory = clientFactory; // 通过构造函数传入
+        this.serviceRegistry = serviceRegistry;
         for (BaseMessageHandler handler : messageHandlers) {
             messageHandlerMap.put(handler.getCommand(), handler);
         }
@@ -58,6 +65,14 @@ public class ClientHandler extends Thread {
     private void handleClientMessage(String jsonData) {
         try {
             String commandStr = JsonUtil.getField(jsonData, "CommandStr").toString();
+            if (Objects.equals(commandStr, CLIENT_ADD.getCommandStr())) {
+                ClientAddEvent clientAddEvent = JsonUtil.fromJson(jsonData, ClientAddEvent.class);
+                serviceRegistry.register(clientAddEvent.getName(), this.printWriter);
+            }
+            if (Objects.equals(commandStr, GET_CLIENT_STATE.getCommandStr())) {
+                MCGetClientStateFeedBack mcGetClientStateFeedBack = JsonUtil.fromJson(jsonData, MCGetClientStateFeedBack.class);
+                serviceRegistry.register(mcGetClientStateFeedBack.getClientState().getName(), this.printWriter);
+            }
             BaseMessageHandler handler = messageHandlerMap.get(commandStr);
             if (handler != null) {
                 handler.handle(jsonData, this.clientStatus);
@@ -93,12 +108,10 @@ public class ClientHandler extends Thread {
             if (clientSocket != null && !clientSocket.isClosed()) {
                 clientSocket.close();
             }
-            clientFactory.removeClient(this.clientStatus.getIp() + ":" + clientStatus.getPort());
+            serviceRegistry.unregister(this.clientStatus.getIp() + ":" + clientStatus.getPort());
             log.info("Socket客户端资源清理完毕: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort());
         } catch (IOException e) {
             log.error("Error closing client socket for client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), e.getMessage(), e);
         }
     }
 }
-
-

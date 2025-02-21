@@ -3,7 +3,6 @@ package com.ruoyi.business.socket.messageHandler.handler.command;
 import com.ruoyi.business.domain.Assignment;
 import com.ruoyi.business.domain.Client;
 import com.ruoyi.business.domain.ClientStatus;
-import com.ruoyi.business.socket.SocketService;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.Events.ClientProjectTrainStartEvent;
 import com.ruoyi.business.socket.messageHandler.model.command.MCStartTrainCommand;
@@ -11,21 +10,22 @@ import com.ruoyi.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIENT_PROJECT_TRAIN_END;
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIENT_PROJECT_TRAIN_START;
+
 
 @Slf4j
 @Component
 public class MCStartTrainCommandHandler extends AbstractMessageHandler {
 
-    public void startTrain(String projectName, Assignment assignment, Client client) {
+    public void startTrain(Assignment assignment, String clientName) {
         MCStartTrainCommand mcStartTrainCommand = new MCStartTrainCommand();
-        mcStartTrainCommand.setClientName(client.getName());
+        mcStartTrainCommand.setClientName(clientName);
         mcStartTrainCommand.getTrainParam().setPreTrainModel(assignment.getPretrainMode());
         mcStartTrainCommand.getTrainParam().setEpoch(assignment.getEpoch());
         mcStartTrainCommand.getTrainParam().setBatchSize(assignment.getBatchSize());
         mcStartTrainCommand.getTrainParam().setImgSize(assignment.getImgSize());
-        mcStartTrainCommand.setProjectName(projectName + "~" + assignment.getAssignmentName());
-        socketService.sendMessageToClientByAddress(client.getIp(), client.getPort(), JsonUtil.toJson(mcStartTrainCommand));
+        mcStartTrainCommand.setProjectName(assignment.getAssignmentName());
+        socketService.sendMessageToClientByAddress(clientName, JsonUtil.toJson(mcStartTrainCommand));
     }
 
     @Override
@@ -37,6 +37,6 @@ public class MCStartTrainCommandHandler extends AbstractMessageHandler {
 
     @Override
     public String getCommand() {
-        return CLIENT_PROJECT_TRAIN_END.getCommandStr();
+        return CLIENT_PROJECT_TRAIN_START.getCommandStr();
     }
 }

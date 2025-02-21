@@ -1,7 +1,6 @@
 package com.ruoyi.business.socket.messageHandler.handler.command;
 
 import com.ruoyi.business.domain.ClientStatus;
-import com.ruoyi.business.socket.SocketService;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.command.MCGetTrainStateCommand;
 import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetTrainStateFeedBack;
@@ -29,8 +28,7 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
             MCGetTrainStateCommand request = new MCGetTrainStateCommand();
             request.setClientName(client.getName());
             socketService.sendMessageToClientByAddress(
-                    client.getIp(),
-                    client.getPort(),
+                    client.getName(),
                     JsonUtil.toJson(request)
             );
         });

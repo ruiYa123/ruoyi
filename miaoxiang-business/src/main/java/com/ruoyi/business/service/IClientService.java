@@ -63,4 +63,28 @@ public interface IClientService
      * @return 结果
      */
     public int deleteClientById(Long id);
+
+    /**
+     * 根据name查询客户端
+     *
+     * @param name 客户端名称
+     * @return 客户端
+     */
+    public Client selectClientByName(String name);
+
+    /**
+     * 根据name更新客户端
+     *
+     * @param client 客户端
+     * @return 结果
+     */
+    public int updateClientByName(Client client);
+
+    /**
+     * 根据name删除客户端
+     *
+     * @param name 客户端名称
+     * @return 结果
+     */
+    public int deleteClientByName(String name);
 }

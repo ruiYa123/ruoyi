@@ -1,65 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.business.mapper.AssignmentMapper">
 
     <resultMap type="Assignment" id="AssignmentResult">
-        <result property="id"    column="id"    />
-        <result property="assignmentName"    column="assignment_name"    />
-        <result property="projectId"    column="project_id"    />
-        <result property="modelId"    column="model_id"    />
-        <result property="pretrainMode"    column="preTrain_mode"    />
-        <result property="epoch"    column="epoch"    />
-        <result property="batchSize"    column="batch_size"    />
-        <result property="imgSize"    column="img_size"    />
-        <result property="description"    column="description"    />
-        <result property="state"    column="state"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="dept"    column="dept"    />
+        <result property="id" column="id" />
+        <result property="assignmentName" column="assignment_name" />
+        <result property="projectId" column="project_id" />
+        <result property="modelId" column="model_id" />
+        <result property="clientName" column="client_name" />
+        <result property="pretrainMode" column="preTrain_mode" />
+        <result property="epoch" column="epoch" />
+        <result property="batchSize" column="batch_size" />
+        <result property="imgSize" column="img_size" />
+        <result property="state" column="state" />
+        <result property="description" column="description" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="dept" column="dept" />
+        <result property="jumpTime" column="jump_time" />
     </resultMap>
 
     <sql id="selectAssignmentVo">
-        select id, assignment_name, project_id, model_id, preTrain_mode, epoch, batch_size, img_size, description, state, create_time, create_by, update_time, update_by, dept from assignment
+        select id, assignment_name, project_id, model_id, client_name, preTrain_mode, epoch, batch_size, img_size, state, description, create_time, create_by, update_time, update_by, dept, jump_time
+        from assignment
     </sql>
 
     <select id="getStateCounts" parameterType="Assignment" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM assignment
         WHERE state = 0
-        <if test="dept != null and dept != ''">
+        <if test="dept != null">
             AND dept = #{dept}
         </if>
         UNION ALL
         SELECT COUNT(*) FROM assignment
         WHERE state = 1
-        <if test="dept != null and dept != ''">
+        <if test="dept != null">
             AND dept = #{dept}
         </if>
         UNION ALL
         SELECT COUNT(*) FROM assignment
         WHERE state = 2
-        <if test="dept != null and dept != ''">
+        <if test="dept != null">
             AND dept = #{dept}
         </if>
     </select>
 
-
     <select id="selectAssignmentList" parameterType="Assignment" resultMap="AssignmentResult">
         <include refid="selectAssignmentVo"/>
         <where>
-            <if test="assignmentName != null  and assignmentName != ''"> and assignment_name like concat('%', #{assignmentName}, '%')</if>
+            <if test="assignmentName != null and assignmentName != ''"> and assignment_name like concat('%', #{assignmentName}, '%')</if>
             <if test="projectId != null"> and project_id = #{projectId}</if>
             <if test="modelId != null"> and model_id = #{modelId}</if>
-            <if test="pretrainMode != null  and pretrainMode != ''"> and preTrain_mode = #{pretrainMode}</if>
-            <if test="epoch != null  and epoch != ''"> and epoch = #{epoch}</if>
-            <if test="batchSize != null  and batchSize != ''"> and batch_size = #{batchSize}</if>
-            <if test="imgSize != null  and imgSize != ''"> and img_size = #{imgSize}</if>
-            <if test="description != null  and description != ''"> and description = #{description}</if>
-            <if test="state != null "> and state = #{state}</if>
-            <if test="dept != null  and dept != ''"> and dept = #{dept}</if>
+            <if test="clientName != null and clientName != ''"> and client_name = #{clientName}</if>
+            <if test="pretrainMode != null and pretrainMode != ''"> and preTrain_mode = #{pretrainMode}</if>
+            <if test="epoch != null"> and epoch = #{epoch}</if>
+            <if test="batchSize != null"> and batch_size = #{batchSize}</if>
+            <if test="imgSize != null"> and img_size = #{imgSize}</if>
+            <if test="state != null"> and state = #{state}</if>
+            <if test="description != null and description != ''"> and description = #{description}</if>
+            <if test="dept != null"> and dept = #{dept}</if>
+            <if test="jumpTime != null"> and jump_time = #{jumpTime}</if>
         </where>
     </select>
 
@@ -74,34 +78,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assignmentName != null and assignmentName != ''">assignment_name,</if>
             <if test="projectId != null">project_id,</if>
             <if test="modelId != null">model_id,</if>
+            <if test="clientName != null and clientName != ''">client_name,</if>
             <if test="pretrainMode != null and pretrainMode != ''">preTrain_mode,</if>
-            <if test="epoch != null and epoch != ''">epoch,</if>
-            <if test="batchSize != null and batchSize != ''">batch_size,</if>
-            <if test="imgSize != null and imgSize != ''">img_size,</if>
-            <if test="description != null">description,</if>
+            <if test="epoch != null">epoch,</if>
+            <if test="batchSize != null">batch_size,</if>
+            <if test="imgSize != null">img_size,</if>
             <if test="state != null">state,</if>
+            <if test="description != null">description,</if>
             <if test="createTime != null">create_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="dept != null">dept,</if>
-         </trim>
+            <if test="jumpTime != null">jump_time,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="assignmentName != null and assignmentName != ''">#{assignmentName},</if>
             <if test="projectId != null">#{projectId},</if>
             <if test="modelId != null">#{modelId},</if>
+            <if test="clientName != null and clientName != ''">#{clientName},</if>
             <if test="pretrainMode != null and pretrainMode != ''">#{pretrainMode},</if>
-            <if test="epoch != null and epoch != ''">#{epoch},</if>
-            <if test="batchSize != null and batchSize != ''">#{batchSize},</if>
-            <if test="imgSize != null and imgSize != ''">#{imgSize},</if>
-            <if test="description != null">#{description},</if>
+            <if test="epoch != null">#{epoch},</if>
+            <if test="batchSize != null">#{batchSize},</if>
+            <if test="imgSize != null">#{imgSize},</if>
             <if test="state != null">#{state},</if>
+            <if test="description != null">#{description},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="dept != null">#{dept},</if>
-         </trim>
+            <if test="jumpTime != null">#{jumpTime},</if>
+        </trim>
     </insert>
 
     <update id="updateAssignment" parameterType="Assignment">
@@ -110,17 +118,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assignmentName != null and assignmentName != ''">assignment_name = #{assignmentName},</if>
             <if test="projectId != null">project_id = #{projectId},</if>
             <if test="modelId != null">model_id = #{modelId},</if>
+            <if test="clientName != null and clientName != ''">client_name = #{clientName},</if>
             <if test="pretrainMode != null and pretrainMode != ''">preTrain_mode = #{pretrainMode},</if>
-            <if test="epoch != null and epoch != ''">epoch = #{epoch},</if>
-            <if test="batchSize != null and batchSize != ''">batch_size = #{batchSize},</if>
-            <if test="imgSize != null and imgSize != ''">img_size = #{imgSize},</if>
-            <if test="description != null">description = #{description},</if>
+            <if test="epoch != null">epoch = #{epoch},</if>
+            <if test="batchSize != null">batch_size = #{batchSize},</if>
+            <if test="imgSize != null">img_size = #{imgSize},</if>
             <if test="state != null">state = #{state},</if>
+            <if test="description != null">description = #{description},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="dept != null">dept = #{dept},</if>
+            <if test="jumpTime != null">jump_time = #{jumpTime},</if>
         </trim>
         where id = #{id}
     </update>

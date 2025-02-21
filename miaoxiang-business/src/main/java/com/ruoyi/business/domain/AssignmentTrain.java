@@ -23,15 +23,15 @@ public class AssignmentTrain extends BaseEntity
     @Excel(name = "任务ID")
     private Long assignmentId;
 
-    private Long clientId;
+    private String clientName;
 
     /** 状态 */
     @Excel(name = "状态")
-    private Long state;
+    private Integer state;
 
     /** 进度 */
     @Excel(name = "进度")
-    private BigDecimal progress;
+    private BigDecimal progress = BigDecimal.ZERO;
 
     /** 备注 */
     @Excel(name = "备注")
@@ -56,21 +56,21 @@ public class AssignmentTrain extends BaseEntity
     {
         return assignmentId;
     }
-    public void setState(Long state)
+    public void setState(Integer state)
     {
         this.state = state;
     }
-    public Long getClientId()
+    public String getClientName()
     {
-        return clientId;
+        return clientName;
     }
-    public void setClientId(Long clientId)
+    public void setClientName(String clientName)
     {
-        this.clientId = clientId;
+        this.clientName = clientName;
     }
 
 
-    public Long getState()
+    public Integer getState()
     {
         return state;
     }
@@ -98,7 +98,7 @@ public class AssignmentTrain extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("assignmentId", getAssignmentId())
-            .append("clientId", getClientId())
+            .append("clientName", getClientName())
             .append("state", getState())
             .append("progress", getProgress())
             .append("description", getDescription())

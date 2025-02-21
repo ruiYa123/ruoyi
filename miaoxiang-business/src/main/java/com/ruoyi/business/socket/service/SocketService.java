@@ -1,8 +1,6 @@
-package com.ruoyi.business.socket;
+package com.ruoyi.business.socket.service;
 
-import com.ruoyi.business.domain.ClientStatus;
-import com.ruoyi.business.socket.Client.ClientFactory;
-import com.ruoyi.business.socket.Client.ClientHandler;
+import com.ruoyi.business.socket.client.ClientFactory;
 import com.ruoyi.business.socket.messageHandler.handler.event.ClientOffLineEventHandler;
 import com.ruoyi.common.exception.UtilException;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +23,8 @@ public class SocketService {
     private ServerSocket serverSocket;
     @Autowired
     private ClientFactory clientFactory;
+    @Autowired
+    private ServiceRegistry serviceRegistry;
 
     @Value("${socket.port}")
     private int port;
@@ -83,11 +83,9 @@ public class SocketService {
         }
     }
 
-    public boolean sendMessageToClientByAddress(String ip, int port, String message) {
-        String clientKey = ip + ":" + port;
+    public CompletableFuture<Boolean> sendMessageToClientByAddress(String clientName, String message) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         CompletableFuture<Boolean> result = new CompletableFuture<>();
-
         scheduler.scheduleWithFixedDelay(new Runnable() {
             int attempt = 0;
             final int MAX_ATTEMPTS = 2;
@@ -95,39 +93,22 @@ public class SocketService {
             @Override
             public void run() {
                 attempt++;
-                PrintWriter out = null;
-                ClientHandler clientHandler = clientFactory.getClientHandler(clientKey);
-                if (clientHandler != null) {
-                    out = clientHandler.getPrintWriter();
-                }
+                PrintWriter out = serviceRegistry.getPrintWriter(clientName);
                 if (out != null) {
                     out.println(message);
                     log.info("发送消息成功");
                     result.complete(true);
                     scheduler.shutdown();
                 } else if (attempt >= MAX_ATTEMPTS) {
-                    log.warn("未找到指定客户端: {} after {} attempts, message:{}", clientKey, MAX_ATTEMPTS, message);
+//                    log.warn("未找到指定客户端: {} after {} attempts, message:{}", clientKey, MAX_ATTEMPTS, message);
                     ClientOffLineEventHandler clientOffLineEventHandler = new ClientOffLineEventHandler();
-                    clientOffLineEventHandler.handleDisconnect(ip, port);
+                    clientOffLineEventHandler.handleDisconnect(clientName);
                     result.complete(false);
                     scheduler.shutdown();
                 }
             }
         }, 0, 5, TimeUnit.SECONDS);
 
-        try {
-            return result.get();
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("发送消息过程中出现异常: {}", e.getMessage());
-            return false;
-        }
-    }
-
-    public ClientStatus getClientStatus(String ip, int port) {
-        ClientHandler clientHandler = clientFactory.getClientHandler(ip + ":" + port);
-        if (clientHandler == null) {
-            return new ClientStatus(ip, port);
-        }
-        return clientHandler.getClientStatus();
+        return result;
     }
 }

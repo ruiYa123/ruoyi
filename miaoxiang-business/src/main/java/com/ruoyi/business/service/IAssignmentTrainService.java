@@ -35,7 +35,7 @@ public interface IAssignmentTrainService
      */
     public int insertAssignmentTrain(AssignmentTrain assignmentTrain);
 
-    public AssignmentTrain startTrain(Long assignmenId);
+    public AssignmentTrain startTrain(Long assignmenId, String clientName);
     /**
      * 修改任务训练
      *

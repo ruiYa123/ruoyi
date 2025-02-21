@@ -2,7 +2,6 @@ package com.ruoyi.business.socket.messageHandler.handler.command;
 
 import com.ruoyi.business.domain.Client;
 import com.ruoyi.business.domain.ClientStatus;
-import com.ruoyi.business.socket.SocketService;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.command.MCGetClientStateCommand;
 import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetClientStateFeedBack;
@@ -22,14 +21,13 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
     public void requestClientState() {
 //        log.info("获取client状态");
         getClients().forEach(client -> {
-            if (client.getState() == -1) {
+            if (client.getState() == 0) {
                 return;
             }
             MCGetClientStateCommand request = new MCGetClientStateCommand();
             request.setClientNames(client.getName());
             socketService.sendMessageToClientByAddress(
-                    client.getIp(),
-                    client.getPort(),
+                    client.getName(),
                     JsonUtil.toJson(request)
             );
         });
@@ -39,18 +37,23 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
     public void handle(String jsonMessage, ClientStatus clientStatus) {
         log.info("返回客户端状态信息: {}", jsonMessage);
         MCGetClientStateFeedBack response = JsonUtil.fromJson(jsonMessage, MCGetClientStateFeedBack.class);
+        if (response.getClientState().getState() == 2) {
+            clientInfoManager.registerClient(response.getClientState().getName());
+        }
+
         Client client = new Client();
         client.setState(response.getClientState().getState());
         client.setName(response.getClientState().getName());
         client.setIp(clientStatus.getIp());
         client.setPort(clientStatus.getPort());
         clientService.addClient(client);
+        clientStatus.setName(response.getClientState().getName());
         clientStatus.setGpu(response.getClientState().getGpu());
         clientStatus.setCpu(response.getClientState().getCpu());
         clientStatus.setGpuMem(response.getClientState().getGpuMem());
         clientStatus.setCpuMem(response.getClientState().getCpuMem());
         clientStatus.setDisk(response.getClientState().getDisk());
-
+        clientInfoManager.updateClientInfo(clientStatus);
         setClientLog(clientStatus.getIp(), clientStatus.getPort(), jsonMessage);
     }
 

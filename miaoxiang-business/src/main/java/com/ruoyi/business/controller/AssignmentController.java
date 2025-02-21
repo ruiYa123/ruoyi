@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.business.queueTasks.TaskConsumer;
+import com.ruoyi.business.queueTasks.TaskProducer;
 import com.ruoyi.business.service.IAssignmentTrainService;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.system.service.ISysDeptService;
@@ -51,6 +53,8 @@ public class AssignmentController extends BaseController
 
     @Autowired
     private ISysUserService userService;
+    @Autowired
+    private TaskProducer taskProducer;
 
     /**
      * 查询任务列表
@@ -153,7 +157,7 @@ public class AssignmentController extends BaseController
     public AjaxResult startAssignment(@PathVariable("id") Long id)
     {
         Assignment assignment = assignmentService.selectAssignmentById(id);
-        assignmentTrainService.startTrain(id);
+        taskProducer.addTask(assignment.getAssignmentName(), false);
         return success();
     }
 

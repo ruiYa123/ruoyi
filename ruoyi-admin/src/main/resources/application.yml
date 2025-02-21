@@ -36,7 +36,9 @@ socket:
   scheduling:
     rate: 30000
 
-
+assignment:
+  scheduling:
+    rate: 3000
 
 # 日志配置
 logging:

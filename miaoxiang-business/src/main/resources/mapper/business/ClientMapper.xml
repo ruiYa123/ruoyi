@@ -86,4 +86,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <!-- 根据name查询客户端 -->
+    <select id="selectClientByName" parameterType="String" resultMap="ClientResult">
+        <include refid="selectClientVo"/>
+        where name = #{name}
+    </select>
+
+    <!-- 根据name更新客户端 -->
+    <update id="updateClientByName" parameterType="Client">
+        update client
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ip != null and ip != ''">ip = #{ip},</if>
+            <if test="port != null">port = #{port},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where name = #{name}
+    </update>
+
+    <!-- 根据name删除客户端 -->
+    <delete id="deleteClientByName" parameterType="String">
+        delete from client where name = #{name}
+    </delete>
+
 </mapper>

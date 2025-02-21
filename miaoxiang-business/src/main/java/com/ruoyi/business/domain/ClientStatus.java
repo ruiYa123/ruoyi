@@ -5,8 +5,9 @@ import lombok.Data;
 @Data
 public class ClientStatus {
 
-    private final String ip;
-    private final int port;
+    private String name;
+    private String ip;
+    private int port;
     private Double cpu = 0.0;
     private Double gpu = 0.0;
     private Double cpuMem = 0.0;
@@ -22,6 +23,10 @@ public class ClientStatus {
     public ClientStatus(String ip, int port) {
         this.ip = ip;
         this.port = port;
+    }
+
+    public ClientStatus() {
+
     }
 
 }

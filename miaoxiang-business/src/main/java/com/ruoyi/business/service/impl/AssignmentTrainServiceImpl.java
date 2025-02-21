@@ -60,17 +60,20 @@ public class AssignmentTrainServiceImpl implements IAssignmentTrainService
     }
 
     @Override
-    public AssignmentTrain startTrain(Long assignmentId) {
+    public AssignmentTrain startTrain(Long assignmentId, String clientName) {
         AssignmentTrain assignmentTrain = new AssignmentTrain();
-        assignmentTrain.setState(3L);
+        assignmentTrain.setState(3);
         List<AssignmentTrain> assignmentTrains = selectAssignmentTrainList(assignmentTrain);
         if (assignmentTrains != null && !assignmentTrains.isEmpty()) {
             assignmentTrain = assignmentTrains.get(assignmentTrains.size() - 1);
+            assignmentTrain.setState(1);
+            updateAssignmentTrain(assignmentTrain);
         } else {
             assignmentTrain.setAssignmentId(assignmentId);
             assignmentTrain.setCreateTime(new Date());
             assignmentTrain.setProgress(BigDecimal.ZERO);
-            assignmentTrain.setState(1L);
+            assignmentTrain.setState(1);
+            assignmentTrain.setClientName(clientName);
             insertAssignmentTrain(assignmentTrain);
         }
         return assignmentTrain;

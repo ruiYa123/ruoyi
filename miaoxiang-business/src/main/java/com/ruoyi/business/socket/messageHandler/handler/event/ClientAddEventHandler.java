@@ -18,6 +18,9 @@ public class ClientAddEventHandler extends AbstractMessageHandler {
     @Override
     public void handle(String jsonMessage, ClientStatus clientStatus) {
         ClientAddEvent message = JsonUtil.fromJson(jsonMessage, ClientAddEvent.class);
+        if (message.getState() == 2) {
+            clientInfoManager.registerClient(message.getName());
+        }
         message.setIp(clientStatus.getIp());
         message.setPort(clientStatus.getPort());
         log.info("{} 客户端上线，状态：{}", message.getName(), message.getState());

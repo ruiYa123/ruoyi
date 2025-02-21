@@ -103,9 +103,9 @@ public class ClientServiceImpl implements IClientService
             clientSearchVO.setPort(client.getPort());
         }
         Client clientResult = clientMapper.selectClient(clientSearchVO);
-        if (clientResult != null && clientResult.getState() != -1) {
+        if (clientResult != null && clientResult.getState() != 0) {
             log.info("与{}断开连接", clientResult.getName());
-            clientResult.setState(-1);
+            clientResult.setState(0);
             clientMapper.updateClient(clientResult);
         }
     }
@@ -144,5 +144,20 @@ public class ClientServiceImpl implements IClientService
     public int deleteClientById(Long id)
     {
         return clientMapper.deleteClientById(id);
+    }
+
+    @Override
+    public Client selectClientByName(String name) {
+        return clientMapper.selectClientByName(name);
+    }
+
+    @Override
+    public int updateClientByName(Client client) {
+        return clientMapper.updateClientByName(client);
+    }
+
+    @Override
+    public int deleteClientByName(String name) {
+        return clientMapper.deleteClientByName(name);
     }
 }

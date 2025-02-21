@@ -25,10 +25,9 @@ public class ClientOffLineEventHandler extends AbstractMessageHandler {
         setClientLog(message.getName(), jsonMessage);
     }
 
-    public void handleDisconnect(String ip, int port) {
+    public void handleDisconnect(String name) {
         Client client = new Client();
-        client.setIp(ip);
-        client.setPort(port);
+        client.setName(name);
         clientService.offLineClient(client);
     }
 

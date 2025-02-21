@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import com.ruoyi.common.utils.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
@@ -264,5 +266,121 @@ public class RedisCache
     public Collection<String> keys(final String pattern)
     {
         return redisTemplate.keys(pattern);
+    }
+
+    /**
+     * 添加元素到队列
+     *
+     * @param key 队列键
+     * @param value 元素值
+     * @param prioritize 是否优先（插队）
+     */
+    public <T> void addToQueue(final String key, final T value, boolean prioritize) {
+        if (prioritize) {
+            redisTemplate.opsForList().leftPush(key, value);  // 插队
+        } else {
+            redisTemplate.opsForList().rightPush(key, value); // 正常添加
+        }
+    }
+
+    /**
+     * 获取并移除队列中的第一个元素
+     *
+     * @param key 队列键
+     * @return 队列中的第一个元素
+     */
+    public <T> T popFromQueue(final String key) {
+        return (T) redisTemplate.opsForList().leftPop(key);
+    }
+
+    // 通用集合操作方法
+
+    /**
+     * 添加元素到集合
+     *
+     * @param key 集合键
+     * @param value 元素值
+     */
+    public <T> void addToSet(final String key, final T value) {
+        redisTemplate.opsForSet().add(key, value);
+    }
+
+    /**
+     * 从集合中移除元素
+     *
+     * @param key 集合键
+     * @param value 元素值
+     */
+    public <T> void removeFromSet(final String key, final T value) {
+        redisTemplate.opsForSet().remove(key, value);
+    }
+
+    /**
+     * 获取集合中的所有元素
+     *
+     * @param key 集合键
+     * @return 集合中的所有元素
+     */
+    public <T> Set<T> getMembersFromSet(final String key) {
+        return redisTemplate.opsForSet().members(key);
+    }
+
+    /**
+     * 获取集合中的一个随机元素
+     *
+     * @param key 集合键
+     * @return 集合中的一个随机元素
+     */
+    public <T> T getRandomMemberFromSet(final String key) {
+        return (T) redisTemplate.opsForSet().randomMember(key);
+    }
+
+    /**
+     * 将对象以 JSON 字符串形式存储到 Redis
+     *
+     * @param key 键
+     * @param object 要存储的对象
+     */
+    public void setObjectAsJson(final String key, final Object object) {
+        redisTemplate.opsForValue().set(key, JsonUtil.toJson(object));
+    }
+
+    /**
+     * 从 Redis 中获取 JSON 字符串并反序列化为对象
+     *
+     * @param key 键
+     * @param clazz 对象类型
+     * @return 反序列化后的对象
+     */
+    public <T> T getObjectFromJson(final String key, Class<T> clazz) {
+        return JsonUtil.fromJson((String) redisTemplate.opsForValue().get(key), clazz);
+    }
+
+    /**
+     * 将对象以 JSON 字符串形式存储到 Redis 哈希表中
+     *
+     * @param hashKey 哈希表键
+     * @param fieldKey 哈希字段键
+     * @param object 要存储的对象
+     */
+    public void putObjectInHash(final String hashKey, final String fieldKey, final Object object) {
+        String jsonString = JsonUtil.toJson(object);
+        redisTemplate.opsForHash().put(hashKey, fieldKey, jsonString);
+    }
+
+    /**
+     * 从 Redis 哈希表中获取对象
+     *
+     * @param hashKey 哈希表键
+     * @param fieldKey 哈希字段键
+     * @param clazz 对象类型
+     * @return 反序列化后的对象
+     */
+    public <T> T getObjectFromHash(final String hashKey, final String fieldKey, Class<T> clazz) {
+        Object jsonString = redisTemplate.opsForHash().get(hashKey, fieldKey);
+        if (jsonString != null) {
+            return JsonUtil.fromJson(jsonString.toString(), clazz);
+        }
+        return null;
     }
 }

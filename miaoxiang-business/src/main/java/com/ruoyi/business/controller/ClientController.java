@@ -4,7 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.business.domain.request.MessageRequest;
-import com.ruoyi.business.socket.SocketService;
+import com.ruoyi.business.queueTasks.ClientInfoManager;
 import com.ruoyi.business.socket.messageHandler.handler.command.TestCommandHandler;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class ClientController extends BaseController
     private TestCommandHandler testCommandHandler;
 
     @Autowired
-    private SocketService socketService;
+    private ClientInfoManager clientInfoManager;
     /**
      * 查询客户端列表
      */
@@ -87,11 +87,11 @@ public class ClientController extends BaseController
     }
 
     @PreAuthorize("@ss.hasPermi('business:client:query')")
-    @GetMapping(value = "/status/{id}")
-    public AjaxResult getStatus(@PathVariable("id") Long id)
+        @GetMapping(value = "/status/{name}")
+    public AjaxResult getStatus(@PathVariable("name") String name)
     {
-        Client client = clientService.selectClientById(id);
-        return success(socketService.getClientStatus(client.getIp(), client.getPort()));
+//        Client client = clientService.selectClientById(id);
+        return success(clientInfoManager.getClientInfo(name));
     }
 
     /**

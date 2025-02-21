@@ -3,9 +3,10 @@ package com.ruoyi.business.socket.messageHandler.handler;
 import com.ruoyi.business.domain.Client;
 import com.ruoyi.business.domain.ClientLog;
 import com.ruoyi.business.domain.ClientStatus;
+import com.ruoyi.business.queueTasks.ClientInfoManager;
 import com.ruoyi.business.service.IClientLogService;
 import com.ruoyi.business.service.IClientService;
-import com.ruoyi.business.socket.SocketService;
+import com.ruoyi.business.socket.service.SocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +27,9 @@ public abstract class AbstractMessageHandler implements BaseMessageHandler {
 
     @Autowired
     protected SocketService socketService;
+
+    @Autowired
+    protected ClientInfoManager clientInfoManager;
 
     @Override
     public abstract void handle(String json, ClientStatus clientStatus);
