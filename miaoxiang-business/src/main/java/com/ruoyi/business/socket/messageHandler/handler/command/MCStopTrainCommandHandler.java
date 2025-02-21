@@ -1,6 +1,7 @@
 package com.ruoyi.business.socket.messageHandler.handler.command;
 
 import com.ruoyi.business.domain.Client;
+import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.socket.SocketService;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.Events.ClientProjectTrainEndEvent;
@@ -21,7 +22,7 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
         SocketService.sendMessageToClientByAddress(client.getIp(), client.getPort(), JsonUtil.toJson(request));
     }
     @Override
-    public void handle(String jsonMessage, String ip, int port) {
+    public void handle(String jsonMessage, ClientStatus clientStatus) {
         ClientProjectTrainEndEvent message = JsonUtil.fromJson(jsonMessage, ClientProjectTrainEndEvent.class);
         log.info("处理客户端训练完成: {}", message.getName());
         setClientLog(message.getName(), jsonMessage);

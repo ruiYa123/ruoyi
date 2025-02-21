@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ruoyi.business.socket.messageHandler.model.BaseRequest;
 import lombok.Data;
 
-import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.MC_GET_TRAIN_STATE;
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.GET_TRAIN_STATE;
 
 @Data
 public class MCGetTrainStateCommand extends BaseRequest {
@@ -12,6 +12,6 @@ public class MCGetTrainStateCommand extends BaseRequest {
     private String clientName;
 
     public MCGetTrainStateCommand() {
-        this.setCommandStr(MC_GET_TRAIN_STATE.getCommandStr());
+        this.setCommandStr(GET_TRAIN_STATE.getCommandStr());
     }
 }

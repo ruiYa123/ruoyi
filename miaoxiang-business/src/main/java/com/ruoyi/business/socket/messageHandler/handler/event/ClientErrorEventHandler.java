@@ -1,5 +1,6 @@
 package com.ruoyi.business.socket.messageHandler.handler.event;
 
+import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.Events.ClientErrorEvent;
 import com.ruoyi.common.utils.JsonUtil;
@@ -13,7 +14,7 @@ import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIEN
 public class ClientErrorEventHandler extends AbstractMessageHandler {
 
     @Override
-    public void handle(String jsonMessage, String ip, int port) {
+    public void handle(String jsonMessage, ClientStatus clientStatus) {
         ClientErrorEvent message = JsonUtil.fromJson(jsonMessage, ClientErrorEvent.class);
         log.warn("处理异常报警信息: {}, 错误信息: {}", message.getErrorMsg().getClientNames(), message.getErrorMsg().getErrorText());
         setClientWarningLog(message.getErrorMsg().getClientNames(), jsonMessage);

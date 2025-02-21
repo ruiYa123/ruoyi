@@ -17,6 +17,21 @@ public class MCGetClientStateFeedBack extends BaseMessage {
         @JsonProperty("State")
         private int state; // 0: 空闲, 1: 训练中
 
+        @JsonProperty("GPU")
+        private Double gpu;
+
+        @JsonProperty("CPU")
+        private Double cpu;
+
+        @JsonProperty("GPU_Mem")
+        private Double gpuMem;
+
+        @JsonProperty("CPU_Mem")
+        private Double cpuMem;
+
+        @JsonProperty("Disk")
+        private Double disk;
+
         @JsonProperty("TrainState")
         private TrainState trainState;
 

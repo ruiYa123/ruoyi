@@ -1,10 +1,16 @@
 package com.ruoyi.business.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.business.service.IAssignmentTrainService;
+import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +46,12 @@ public class AssignmentController extends BaseController
     @Autowired
     private IAssignmentTrainService assignmentTrainService;
 
+    @Autowired
+    private ISysDeptService deptService;
+
+    @Autowired
+    private ISysUserService userService;
+
     /**
      * 查询任务列表
      */
@@ -47,6 +59,17 @@ public class AssignmentController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(Assignment assignment)
     {
+        if(!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
+            List<Long> deptList = Arrays.stream(ancestors.split(","))
+                    .map(Long::parseLong) // 将字符串转换为整数
+                    .collect(Collectors.toList());
+            if (deptList.size() > 1) {
+                assignment.setDept(deptList.get(1));
+            } else {
+                assignment.setDept(getDeptId());
+            }
+        }
         startPage();
         List<Assignment> list = assignmentService.selectAssignmentList(assignment);
         return getDataTable(list);
@@ -65,7 +88,19 @@ public class AssignmentController extends BaseController
     @GetMapping("/counts")
     public AjaxResult getCounts()
     {
-        return success(assignmentService.getStateCounts());
+        Assignment assignment = new Assignment();
+        if(!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
+            List<Long> deptList = Arrays.stream(ancestors.split(","))
+                    .map(Long::parseLong) // 将字符串转换为整数
+                    .collect(Collectors.toList());
+            if (deptList.size() > 1) {
+                assignment.setDept(deptList.get(1));
+            } else {
+                assignment.setDept(getDeptId());
+            }
+        }
+        return success(assignmentService.getStateCounts(assignment));
     }
 
     /**
@@ -100,6 +135,16 @@ public class AssignmentController extends BaseController
     public AjaxResult add(@RequestBody Assignment assignment)
     {
         assignment.setCreateBy(getUsername());
+        String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
+        List<Long> deptList = Arrays.stream(ancestors.split(","))
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+        if (deptList.size() > 1) {
+            assignment.setDept(deptList.get(1));
+        } else {
+            assignment.setDept(getDeptId());
+        }
+
         return toAjax(assignmentService.insertAssignment(assignment));
     }
 

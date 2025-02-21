@@ -2,6 +2,7 @@ package com.ruoyi.business.socket.messageHandler.handler;
 
 import com.ruoyi.business.domain.Client;
 import com.ruoyi.business.domain.ClientLog;
+import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.service.IClientLogService;
 import com.ruoyi.business.service.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public abstract class AbstractMessageHandler implements BaseMessageHandler {
     protected ClientUpdater clientUpdater;
 
     @Override
-    public abstract void handle(String json, String ip, int port);
+    public abstract void handle(String json, ClientStatus clientStatus);
 
     @Override
     public abstract String getCommand();

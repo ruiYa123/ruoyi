@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ruoyi.business.socket.messageHandler.model.BaseRequest;
 import lombok.Data;
 
-import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.MC_PAUSE_TRAIN;
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.PAUSE_TRAIN;
 
 @Data
 public class MCPauseTrainCommand extends BaseRequest {
@@ -12,7 +12,7 @@ public class MCPauseTrainCommand extends BaseRequest {
     private String clientName;
 
     public MCPauseTrainCommand() {
-        this.setCommandStr(MC_PAUSE_TRAIN.getCommandStr());
+        this.setCommandStr(PAUSE_TRAIN.getCommandStr());
     }
 }
 

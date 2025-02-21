@@ -1,6 +1,7 @@
 package com.ruoyi.business.socket.messageHandler.handler.event;
 
 import com.ruoyi.business.domain.Client;
+import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.Events.ClientAddEvent;
 import com.ruoyi.common.utils.JsonUtil;
@@ -15,10 +16,10 @@ import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIEN
 public class ClientAddEventHandler extends AbstractMessageHandler {
 
     @Override
-    public void handle(String jsonMessage, String ip, int port) {
+    public void handle(String jsonMessage, ClientStatus clientStatus) {
         ClientAddEvent message = JsonUtil.fromJson(jsonMessage, ClientAddEvent.class);
-        message.setIp(ip);
-        message.setPort(port);
+        message.setIp(clientStatus.getIp());
+        message.setPort(clientStatus.getPort());
         log.info("{} 客户端上线，状态：{}", message.getName(), message.getState());
         Client client = new Client();
         BeanUtils.copyProperties(message, client);

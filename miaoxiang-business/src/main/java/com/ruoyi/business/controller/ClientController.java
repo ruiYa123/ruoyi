@@ -2,6 +2,10 @@ package com.ruoyi.business.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.business.domain.request.MessageRequest;
+import com.ruoyi.business.socket.SocketService;
+import com.ruoyi.business.socket.messageHandler.handler.command.TestCommandHandler;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +38,8 @@ public class ClientController extends BaseController
     @Autowired
     private IClientService clientService;
 
+    @Autowired
+    private TestCommandHandler testCommandHandler;
     /**
      * 查询客户端列表
      */
@@ -77,6 +83,14 @@ public class ClientController extends BaseController
         return success(clientService.selectClientById(id));
     }
 
+    @PreAuthorize("@ss.hasPermi('business:client:query')")
+    @GetMapping(value = "/status/{id}")
+    public AjaxResult getStatus(@PathVariable("id") Long id)
+    {
+        Client client = clientService.selectClientById(id);
+        return success(SocketService.getClientStatus(client.getIp(), client.getPort()));
+    }
+
     /**
      * 新增客户端
      */
@@ -86,6 +100,15 @@ public class ClientController extends BaseController
     public AjaxResult add(@RequestBody Client client)
     {
         return toAjax(clientService.insertClient(client));
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:client:add')")
+    @Log(title = "客户端", businessType = BusinessType.INSERT)
+    @PostMapping("/sendMessage")
+    public AjaxResult sendMessage(@RequestBody MessageRequest messageRequest)
+    {
+        ;
+        return toAjax(testCommandHandler.testCommand(messageRequest));
     }
 
     /**

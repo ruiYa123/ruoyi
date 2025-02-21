@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.Date;
+
 /**
  * 任务对象 assignment
  *
@@ -30,6 +32,8 @@ public class Assignment extends BaseEntity
     @Excel(name = "关联的模型ID")
     private Long modelId;
 
+    private Long clientId;
+
     /** 训练网络的预训练模式 */
     @Excel(name = "训练网络的预训练模式")
     private String pretrainMode;
@@ -53,6 +57,10 @@ public class Assignment extends BaseEntity
     /** 任务状态 */
     @Excel(name = "任务状态")
     private Integer state;
+
+    private Long dept;
+
+    private Date  jumpTime;
 
     public void setId(Long id)
     {
@@ -90,6 +98,15 @@ public class Assignment extends BaseEntity
     {
         return modelId;
     }
+
+    public Long getClientId()
+    {
+        return clientId;
+    }
+    public void setClientId(Long clientId)
+    {
+        this.clientId = clientId;
+    }
     public void setPretrainMode(String pretrainMode)
     {
         this.pretrainMode = pretrainMode;
@@ -122,6 +139,16 @@ public class Assignment extends BaseEntity
         this.imgSize = imgSize;
     }
 
+    public Long getDept()
+    {
+        return dept;
+    }
+
+    public void setDept(Long dept)
+    {
+        this.dept = dept;
+    }
+
     public Integer getImgSize()
     {
         return imgSize;
@@ -145,19 +172,32 @@ public class Assignment extends BaseEntity
         return state;
     }
 
+    public Date getJumpTime()
+    {
+        return jumpTime;
+    }
+
+    public void setJumpTime(Date jumpTime)
+    {
+        this.jumpTime = jumpTime;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("id", getId())
                 .append("assignmentName", getAssignmentName())
                 .append("projectId", getProjectId())
                 .append("modelId", getModelId())
+                .append("clientId", getClientId())
                 .append("pretrainMode", getPretrainMode())
                 .append("epoch", getEpoch())
                 .append("batchSize", getBatchSize())
                 .append("imgSize", getImgSize())
                 .append("description", getDescription())
                 .append("state", getState())
+                .append("dept", getDept())
+                .append("jumpTime", getJumpTime())
                 .append("createTime", getCreateTime())
                 .append("createBy", getCreateBy())
                 .append("updateTime", getUpdateTime())

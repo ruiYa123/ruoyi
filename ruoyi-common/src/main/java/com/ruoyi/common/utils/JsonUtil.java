@@ -50,7 +50,7 @@ public class JsonUtil {
         try {
             return objectMapper.readValue(json, clazz);
         } catch (Exception e) {
-            throw new UtilException("JSON字符串转换错误: " + e.getMessage());
+                throw new UtilException("JSON字符串转换错误: " + e.getMessage());
         }
 
     }

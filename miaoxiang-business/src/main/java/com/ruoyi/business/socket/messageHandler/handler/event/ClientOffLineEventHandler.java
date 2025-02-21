@@ -1,6 +1,7 @@
 package com.ruoyi.business.socket.messageHandler.handler.event;
 
 import com.ruoyi.business.domain.Client;
+import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.Events.ClientOfflineEvent;
 import com.ruoyi.common.utils.JsonUtil;
@@ -15,7 +16,7 @@ import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIEN
 public class ClientOffLineEventHandler extends AbstractMessageHandler {
 
     @Override
-    public void handle(String jsonMessage, String ip, int port) {
+    public void handle(String jsonMessage, ClientStatus clientStatus) {
         ClientOfflineEvent message = JsonUtil.fromJson(jsonMessage, ClientOfflineEvent.class);
         log.info("{} 处理客户端下线， 原因：{}", message.getName(), message.getReason());
         Client client = new Client();

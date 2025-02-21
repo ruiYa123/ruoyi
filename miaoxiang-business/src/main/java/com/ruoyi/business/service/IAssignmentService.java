@@ -59,5 +59,5 @@ public interface IAssignmentService
      */
     public int deleteAssignmentById(Long id);
 
-    public List<Integer> getStateCounts();
+    public List<Integer> getStateCounts(Assignment assignment);
 }

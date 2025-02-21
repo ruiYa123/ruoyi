@@ -1,5 +1,6 @@
 package com.ruoyi.business.socket.messageHandler.handler.command;
 
+import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.socket.SocketService;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.command.MCGetTrainStateCommand;
@@ -10,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.MC_GET_TRAIN_STATE;
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.GET_TRAIN_STATE;
 
 @Slf4j
 @Component
@@ -18,7 +19,7 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
 
     @Scheduled(initialDelay = 2000, fixedRateString = "${socket.scheduling.rate}")
     public void requestTrainState() {
-        log.info("获取client训练状态");
+//        log.info("获取client训练状态");
         getClients().forEach(client -> {
             if (client.getState() == -1) {
                 return;
@@ -34,15 +35,16 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
     }
 
     @Override
-    public void handle(String jsonMessage, String ip, int port) {
+    public void handle(String jsonMessage, ClientStatus clientStatus) {
 
         MCGetTrainStateFeedBack response = JsonUtil.fromJson(jsonMessage, MCGetTrainStateFeedBack.class);
+        clientStatus.setTrainProcess(response.getTrainState().getTrainPercentage());
         log.info("返回客户端训练进度信息: {}", jsonMessage);
-        setClientLog(ip, port, jsonMessage);
+        setClientLog(clientStatus.getIp(), clientStatus.getPort(), jsonMessage);
     }
 
     @Override
     public String getCommand() {
-        return MC_GET_TRAIN_STATE.getCommandStr();
+        return GET_TRAIN_STATE.getCommandStr();
     }
 }

@@ -59,5 +59,5 @@ public interface AssignmentMapper
      */
     public int deleteAssignmentByIds(Long[] ids);
 
-    public List<Integer> getStateCounts();
+    public List<Integer> getStateCounts(Assignment assignment);
 }

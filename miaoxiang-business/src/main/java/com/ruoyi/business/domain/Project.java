@@ -7,7 +7,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 项目对象 project
- * 
+ *
  * @author ruoyi
  * @date 2025-01-16
  */
@@ -26,32 +26,44 @@ public class Project extends BaseEntity
     @Excel(name = "描述")
     private String description;
 
-    public void setId(Long id) 
+    private Long dept;
+
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setProjectName(String projectName) 
+    public void setProjectName(String projectName)
     {
         this.projectName = projectName;
     }
 
-    public String getProjectName() 
+    public String getProjectName()
     {
         return projectName;
     }
-    public void setDescription(String description) 
+    public void setDescription(String description)
     {
         this.description = description;
     }
 
-    public String getDescription() 
+    public String getDescription()
     {
         return description;
+    }
+
+    public Long getDept()
+    {
+        return dept;
+    }
+
+    public void setDept(Long dept)
+    {
+        this.dept = dept;
     }
 
     @Override

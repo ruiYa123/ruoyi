@@ -21,7 +21,7 @@ public class ClientUpdater {
 
     @Scheduled(initialDelay = 0, fixedRateString = "${socket.scheduling.rate}")
     public void updateClients() {
-        log.info("更新client信息");
+//        log.info("更新client信息");
         clients = clientService.selectClientList(new Client());
     }
 

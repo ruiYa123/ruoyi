@@ -8,7 +8,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 任务训练对象 assignment_train
- * 
+ *
  * @author ruoyi
  * @date 2025-02-08
  */
@@ -23,6 +23,8 @@ public class AssignmentTrain extends BaseEntity
     @Excel(name = "任务ID")
     private Long assignmentId;
 
+    private Long clientId;
+
     /** 状态 */
     @Excel(name = "状态")
     private Long state;
@@ -35,48 +37,58 @@ public class AssignmentTrain extends BaseEntity
     @Excel(name = "备注")
     private String description;
 
-    public void setId(Long id) 
+
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setAssignmentId(Long assignmentId) 
+    public void setAssignmentId(Long assignmentId)
     {
         this.assignmentId = assignmentId;
     }
 
-    public Long getAssignmentId() 
+    public Long getAssignmentId()
     {
         return assignmentId;
     }
-    public void setState(Long state) 
+    public void setState(Long state)
     {
         this.state = state;
     }
+    public Long getClientId()
+    {
+        return clientId;
+    }
+    public void setClientId(Long clientId)
+    {
+        this.clientId = clientId;
+    }
 
-    public Long getState() 
+
+    public Long getState()
     {
         return state;
     }
-    public void setProgress(BigDecimal progress) 
+    public void setProgress(BigDecimal progress)
     {
         this.progress = progress;
     }
 
-    public BigDecimal getProgress() 
+    public BigDecimal getProgress()
     {
         return progress;
     }
-    public void setDescription(String description) 
+    public void setDescription(String description)
     {
         this.description = description;
     }
 
-    public String getDescription() 
+    public String getDescription()
     {
         return description;
     }
@@ -86,6 +98,7 @@ public class AssignmentTrain extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("assignmentId", getAssignmentId())
+            .append("clientId", getClientId())
             .append("state", getState())
             .append("progress", getProgress())
             .append("description", getDescription())

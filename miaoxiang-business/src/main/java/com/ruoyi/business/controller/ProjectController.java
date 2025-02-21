@@ -1,7 +1,12 @@
 package com.ruoyi.business.controller;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +39,12 @@ public class ProjectController extends BaseController
     @Autowired
     private IProjectService projectService;
 
+    @Autowired
+    private ISysDeptService deptService;
+
+    @Autowired
+    private ISysUserService sysUserService;
+
     /**
      * 查询项目列表
      */
@@ -41,6 +52,17 @@ public class ProjectController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(Project project)
     {
+        if(!sysUserService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
+            List<Long> deptList = Arrays.stream(ancestors.split(","))
+                    .map(Long::parseLong) // 将字符串转换为整数
+                    .collect(Collectors.toList());
+            if (deptList.size() > 1) {
+                project.setDept(deptList.get(1));
+            } else {
+                project.setDept(getDeptId());
+            }
+        }
         startPage();
         List<Project> list = projectService.selectProjectList(project);
         return getDataTable(list);
@@ -78,6 +100,15 @@ public class ProjectController extends BaseController
     public AjaxResult add(@RequestBody Project project)
     {
         project.setCreateBy(getUsername());
+        String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
+        List<Long> deptList = Arrays.stream(ancestors.split(","))
+                .map(Long::parseLong) // 将字符串转换为整数
+                .collect(Collectors.toList());
+        if (deptList.size() > 1) {
+            project.setDept(deptList.get(1));
+        } else {
+            project.setDept(getDeptId());
+        }
         return toAjax(projectService.insertProject(project));
     }
 

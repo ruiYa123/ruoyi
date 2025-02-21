@@ -19,18 +19,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
+        <result property="dept"    column="dept"    />
     </resultMap>
 
     <sql id="selectAssignmentVo">
-        select id, assignment_name, project_id, model_id, preTrain_mode, epoch, batch_size, img_size, description, state, create_time, create_by, update_time, update_by from assignment
+        select id, assignment_name, project_id, model_id, preTrain_mode, epoch, batch_size, img_size, description, state, create_time, create_by, update_time, update_by, dept from assignment
     </sql>
 
-    <select id="getStateCounts" resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM assignment WHERE state = 0
+    <select id="getStateCounts" parameterType="Assignment" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM assignment
+        WHERE state = 0
+        <if test="dept != null and dept != ''">
+            AND dept = #{dept}
+        </if>
         UNION ALL
-        SELECT COUNT(*) FROM assignment WHERE state = 1
+        SELECT COUNT(*) FROM assignment
+        WHERE state = 1
+        <if test="dept != null and dept != ''">
+            AND dept = #{dept}
+        </if>
         UNION ALL
-        SELECT COUNT(*) FROM assignment WHERE state = 2
+        SELECT COUNT(*) FROM assignment
+        WHERE state = 2
+        <if test="dept != null and dept != ''">
+            AND dept = #{dept}
+        </if>
     </select>
 
 
@@ -46,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="imgSize != null  and imgSize != ''"> and img_size = #{imgSize}</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
             <if test="state != null "> and state = #{state}</if>
+            <if test="dept != null  and dept != ''"> and dept = #{dept}</if>
         </where>
     </select>
 
@@ -70,6 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createBy != null">create_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="updateBy != null">update_by,</if>
+            <if test="dept != null">dept,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="assignmentName != null and assignmentName != ''">#{assignmentName},</if>
@@ -85,6 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createBy != null">#{createBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
+            <if test="dept != null">#{dept},</if>
          </trim>
     </insert>
 
@@ -104,6 +120,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="dept != null">dept = #{dept},</if>
         </trim>
         where id = #{id}
     </update>

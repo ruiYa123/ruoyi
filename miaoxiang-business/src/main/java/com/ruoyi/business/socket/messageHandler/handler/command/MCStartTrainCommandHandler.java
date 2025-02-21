@@ -2,6 +2,7 @@ package com.ruoyi.business.socket.messageHandler.handler.command;
 
 import com.ruoyi.business.domain.Assignment;
 import com.ruoyi.business.domain.Client;
+import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.socket.SocketService;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.Events.ClientProjectTrainStartEvent;
@@ -28,7 +29,7 @@ public class MCStartTrainCommandHandler extends AbstractMessageHandler {
     }
 
     @Override
-    public void handle(String json, String ip, int port) {
+    public void handle(String json, ClientStatus clientStatus) {
         ClientProjectTrainStartEvent message = JsonUtil.fromJson(json, ClientProjectTrainStartEvent.class);
         log.info("处理客户端开始训练: {}", message.getClientNames());
         setClientLog(message.getClientNames(), json);

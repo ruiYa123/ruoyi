@@ -1,5 +1,5 @@
 CREATE TABLE client (
-                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         ip VARCHAR(45) NOT NULL,
                         port INT NOT NULL,
@@ -36,13 +36,14 @@ values('【请填写功能名称】导出', @parentId, '5',  '#', '', 1, 0, 'F',
 INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `route_name`, `is_frame`, `is_cache`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (2000, '项目管理', 0, 0, 'project', 'projectManager/index.vue', NULL, '', 1, 0, 'C', '0', '0', '', 'clipboard', 'admin', '2025-01-08 16:45:53', 'admin', '2025-01-11 14:22:09', '');
 
 CREATE TABLE project (
-                         id INT AUTO_INCREMENT PRIMARY KEY COMMENT '项目ID，自动递增',
+                         id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '项目ID，自动递增',
                          project_name VARCHAR(255) NOT NULL COMMENT '项目名称',
                          description TEXT COMMENT '描述',
                          create_time DATETIME COMMENT '创建时间，默认为当前时间',
                          create_by VARCHAR(100) COMMENT '创建人',
                          update_time DATETIME COMMENT '更新时间，默认为当前时间，并在更新时自动更新',
                          update_by VARCHAR(100) COMMENT '更新人'
+                         dept INT COMMENT '部门ID';
 );
 
 
@@ -67,7 +68,7 @@ insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame
 values('模型导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'miaoxiang-business:model:export',       '#', 'admin', sysdate(), '', null, '');
 
 CREATE TABLE model (
-                       id INT AUTO_INCREMENT PRIMARY KEY COMMENT '模型ID，自动递增',
+                       id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '模型ID，自动递增',
                        model_name VARCHAR(255) NOT NULL COMMENT '模型名称',
                        description TEXT COMMENT '描述',
                        create_time DATETIME COMMENT '创建时间',
@@ -100,10 +101,11 @@ values('模型导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:mo
 
 
 CREATE TABLE assignment (
-                            id INT AUTO_INCREMENT PRIMARY KEY COMMENT '任务ID',
+                            id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '任务ID',
                             assignment_name VARCHAR(255) NOT NULL COMMENT '任务名称',
                             project_id BIGINT UNSIGNED NOT NULL COMMENT '关联的项目ID',
                             model_id BIGINT UNSIGNED NOT NULL COMMENT '关联的模型ID',
+                            client_id BIGINT UNSIGNED DEFAULT NULL COMMENT '训练此任务的训练机ID',
                             preTrain_mode VARCHAR(255) NOT NULL COMMENT '训练网络的预训练模式',
                             epoch INT UNSIGNED NOT NULL COMMENT '训练次数',
                             batch_size INT UNSIGNED NOT NULL COMMENT '每次训练的批大小',
@@ -114,6 +116,8 @@ CREATE TABLE assignment (
                             create_by VARCHAR(100) COMMENT '创建人',
                             update_time DATETIME COMMENT '更新时间',
                             update_by VARCHAR(100) COMMENT '更新人'
+                            dept INT COMMENT '部门ID';
+                            jump_time DATETIME COMMENT '插队时间',
 ) COMMENT='任务表';
 
 -- 按钮父菜单ID
@@ -136,8 +140,9 @@ insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame
 values('任务导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'system:assignment:export',       '#', 'admin', sysdate(), '', null, '');
 
 CREATE TABLE assignment_train (
-                                  id INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
-                                  assignment_id INT NOT NULL COMMENT '任务ID',
+                                  id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+                                  assignment_id BIGINT NOT NULL COMMENT '任务ID',
+                                  client_id BIGINT UNSIGNED DEFAULT NULL COMMENT '训练此任务的训练机ID',
                                   state VARCHAR(50) NOT NULL COMMENT '状态',
                                   progress DECIMAL(5,2) NOT NULL COMMENT '进度',
                                   description TEXT COMMENT '备注',

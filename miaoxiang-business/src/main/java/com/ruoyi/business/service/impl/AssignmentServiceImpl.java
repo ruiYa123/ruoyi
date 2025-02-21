@@ -95,7 +95,7 @@ public class AssignmentServiceImpl implements IAssignmentService
     }
 
     @Override
-    public List<Integer> getStateCounts() {
-        return assignmentMapper.getStateCounts();
+    public List<Integer> getStateCounts(Assignment assignment) {
+        return assignmentMapper.getStateCounts(assignment);
     }
 }

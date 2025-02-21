@@ -9,12 +9,12 @@ public enum CommandEnum {
     CLIENT_PROJECT_TRAIN_END("Client_ProjectTrainEnd", "客户端训练完成"),
     CLIENT_PROJECT_TRAIN_START("Client_ProjectTrainStart", "客户端开始训练"),
     CLIENT_ERROR("Client_Error", "异常报警信息"),
-    MC_GET_CLIENT_STATE("MC_GetClientState", "获取客户端状态信息"),
-    MC_GET_TRAIN_STATE("MC_GetTrainState", "获取训练进度详细信息"),
-    MC_START_TRAIN("MC_StartTrain", "开始客户端训练"),
-    MC_STOP_TRAIN("MC_StopTrain", "停止客户端训练"),
-    MC_PAUSE_TRAIN("MC_PauseTrain", "暂停客户端训练"),
-    MC_CHANGE_TRAIN_PARA("MC_ChangeTrainPara", "调整训练参数");
+    GET_CLIENT_STATE("GetClientState", "获取客户端状态信息"),
+    GET_TRAIN_STATE("GetTrainState", "获取训练进度详细信息"),
+    START_TRAIN("StartTrain", "开始客户端训练"),
+    STOP_TRAIN("StopTrain", "停止客户端训练"),
+    PAUSE_TRAIN("PauseTrain", "暂停客户端训练"),
+    CHANGE_TRAIN_PARA("ChangeTrainPara", "调整训练参数");
 
     private final String commandStr;
     private final String commandType;
