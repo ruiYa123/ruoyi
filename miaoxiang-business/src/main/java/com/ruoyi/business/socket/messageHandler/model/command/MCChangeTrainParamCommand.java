@@ -13,7 +13,7 @@ public class MCChangeTrainParamCommand extends BaseRequest {
     private String projectName;
 
     @JsonProperty("TrainPara")
-    private TrainParameters trainParam;
+    private TrainParameters trainParam = new TrainParameters();
 
     @Data
     public static class TrainParameters {

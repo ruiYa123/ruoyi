@@ -36,6 +36,8 @@ public interface IAssignmentTrainService
     public int insertAssignmentTrain(AssignmentTrain assignmentTrain);
 
     public AssignmentTrain startTrain(Long assignmenId, String clientName);
+
+    public boolean finishTrain(Long assignmenId, String clientName, Integer state);
     /**
      * 修改任务训练
      *
@@ -52,6 +54,8 @@ public interface IAssignmentTrainService
      */
     public int deleteAssignmentTrainByIds(Long[] ids);
 
+
+    public int deleteAssignmentTrainByAssignmentIds(Long[] ids);
     /**
      * 删除任务训练信息
      *

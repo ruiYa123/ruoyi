@@ -27,6 +27,7 @@ public interface IAssignmentService
      */
     public List<Assignment> selectAssignmentList(Assignment assignment);
 
+    public List<Assignment> selectAssignmentListByIds(Assignment assignment, Long[] ids);
     /**
      * 新增任务
      *

@@ -7,10 +7,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.business.domain.Project;
 import com.ruoyi.business.queueTasks.TaskConsumer;
 import com.ruoyi.business.queueTasks.TaskProducer;
 import com.ruoyi.business.service.IAssignmentTrainService;
+import com.ruoyi.business.service.IProjectService;
+import com.ruoyi.business.socket.messageHandler.handler.command.MCChangeTrainParamCommandHandler;
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,8 +58,28 @@ public class AssignmentController extends BaseController
     @Autowired
     private ISysUserService userService;
     @Autowired
+    private IProjectService projectService;
+    @Autowired
     private TaskProducer taskProducer;
 
+    @Autowired
+    private MCChangeTrainParamCommandHandler mcChangeTrainParamCommandHandler;
+
+
+    private Long getDept() {
+        if(!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
+            List<Long> deptList = Arrays.stream(ancestors.split(","))
+                    .map(Long::parseLong) // 将字符串转换为整数
+                    .collect(Collectors.toList());
+            if (deptList.size() > 1) {
+                return deptList.get(1);
+            } else {
+                return getDeptId();
+            }
+        }
+        return null;
+    }
     /**
      * 查询任务列表
      */
@@ -63,19 +87,15 @@ public class AssignmentController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(Assignment assignment)
     {
-        if(!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
-            String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
-            List<Long> deptList = Arrays.stream(ancestors.split(","))
-                    .map(Long::parseLong) // 将字符串转换为整数
-                    .collect(Collectors.toList());
-            if (deptList.size() > 1) {
-                assignment.setDept(deptList.get(1));
-            } else {
-                assignment.setDept(getDeptId());
-            }
-        }
+        assignment.setDept(getDept());
         startPage();
-        List<Assignment> list = assignmentService.selectAssignmentList(assignment);
+        List<Assignment> list = new ArrayList<>();
+        if (assignment.getState() == 2) {
+            Long[] tasks = taskProducer.getTask();
+            list = assignmentService.selectAssignmentListByIds(assignment, tasks);
+        } else {
+            list = assignmentService.selectAssignmentList(assignment);
+        }
         return getDataTable(list);
     }
 
@@ -83,6 +103,7 @@ public class AssignmentController extends BaseController
     @GetMapping("/listAll")
     public AjaxResult listAll(Assignment assignment)
     {
+        assignment.setDept(getDept());
         List<Assignment> list = assignmentService.selectAssignmentList(assignment);
         Collections.reverse(list);
         return success(list);
@@ -157,8 +178,34 @@ public class AssignmentController extends BaseController
     public AjaxResult startAssignment(@PathVariable("id") Long id)
     {
         Assignment assignment = assignmentService.selectAssignmentById(id);
-        taskProducer.addTask(assignment.getAssignmentName(), false);
-        return success();
+        assignment.setState(2);
+        assignment.setUpdateBy(getUsername());
+        taskProducer.addTask(assignment.getId(), false);
+        return success(assignmentService.updateAssignment(assignment));
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:assignment:query')")
+    @GetMapping(value = "/startPrioritize/{id}")
+    public AjaxResult startPrioritizeAssignment(@PathVariable("id") Long id)
+    {
+        Assignment assignment = assignmentService.selectAssignmentById(id);
+        assignment.setState(2);
+        assignment.setUpdateBy(getUsername());
+        assignment.setUpdateTime(DateUtils.getNowDate());
+        taskProducer.addTask(assignment.getId(), true);
+        return success(assignmentService.updateAssignment(assignment));
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:assignment:query')")
+    @GetMapping(value = "/stop/{id}")
+    public AjaxResult stopAssignment(@PathVariable("id") Long id)
+    {
+        Assignment assignment = assignmentService.selectAssignmentById(id);
+        assignment.setState(3);
+        assignment.setUpdateBy(getUsername());
+        assignment.setUpdateTime(DateUtils.getNowDate());
+        taskProducer.removeTask(assignment.getId());
+        return success(assignmentService.updateAssignment(assignment));
     }
 
     /**
@@ -169,7 +216,16 @@ public class AssignmentController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody Assignment assignment)
     {
+        Assignment assignment1 = assignmentService.selectAssignmentById(assignment.getId());
+        if (assignment1 != null && assignment1.getState() == 1) {
+            Project project = projectService.selectProjectById(assignment1.getProjectId());
+            mcChangeTrainParamCommandHandler.changeTrainParam(
+                    project.getProjectName(),
+                    assignment,
+                    assignment1.getClientName());
+        }
         assignment.setUpdateBy(getUsername());
+        assignment.setUpdateTime(DateUtils.getNowDate());
         return toAjax(assignmentService.updateAssignment(assignment));
     }
 
@@ -181,6 +237,10 @@ public class AssignmentController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(assignmentService.deleteAssignmentByIds(ids));
+        Arrays.stream(ids).forEach( id -> taskProducer.removeTask(id));
+
+        int deleteCount = assignmentService.deleteAssignmentByIds(ids);
+        assignmentTrainService.deleteAssignmentTrainByAssignmentIds(ids);
+        return toAjax(deleteCount);
     }
 }

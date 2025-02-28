@@ -3,6 +3,7 @@ package com.ruoyi.business.queueTasks;
 import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.common.core.redis.RedisCache;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,7 @@ import static com.ruoyi.business.queueTasks.ClientInfoManager.ClientRedisKeys.CL
 import static com.ruoyi.business.queueTasks.ClientInfoManager.ClientRedisKeys.IDLE_CLIENTS;
 
 
+@Slf4j
 @Component
 public class ClientInfoManager {
 
@@ -40,11 +42,12 @@ public class ClientInfoManager {
     }
 
     public ClientStatus getClientInfo(String clientName) {
-        ClientStatus objectFromHash = redisCache.getObjectFromHash(CLIENTS_STATUS.getKey(), clientName, ClientStatus.class);
-        if (objectFromHash != null) {
-            return objectFromHash;
-        } else {
-            return new ClientStatus();
+        ClientStatus objectFromHash = new ClientStatus();
+        try {
+            objectFromHash = redisCache.getObjectFromHash(CLIENTS_STATUS.getKey(), clientName, ClientStatus.class);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
+        return objectFromHash;
     }
 }

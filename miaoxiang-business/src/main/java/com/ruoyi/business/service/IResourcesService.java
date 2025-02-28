@@ -1,8 +1,10 @@
 package com.ruoyi.business.service;
 
+import java.nio.file.Path;
 import java.util.List;
 import com.ruoyi.business.domain.Resources;
 import com.ruoyi.business.domain.request.ResourcesRequest;
+import com.ruoyi.business.domain.response.ResourcesResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -29,6 +31,8 @@ public interface IResourcesService
      */
     public List<Resources> selectResourcesList(Resources resources);
 
+
+    public List<ResourcesResponse> selectImagesList(ResourcesRequest resourcesRequest);
     /**
      * 新增资源
      *
@@ -48,10 +52,10 @@ public interface IResourcesService
     /**
      * 批量删除资源
      *
-     * @param ids 需要删除的资源主键集合
+     * @param paths 需要删除的资源路径集合
      * @return 结果
      */
-    public int deleteResourcesByIds(Long[] ids);
+    public int deleteResourcesByIds(String[] paths);
 
     /**
      * 删除资源信息

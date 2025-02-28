@@ -68,10 +68,12 @@ public class ClientHandler extends Thread {
             if (Objects.equals(commandStr, CLIENT_ADD.getCommandStr())) {
                 ClientAddEvent clientAddEvent = JsonUtil.fromJson(jsonData, ClientAddEvent.class);
                 serviceRegistry.register(clientAddEvent.getName(), this.printWriter);
+                this.clientStatus.setName(clientAddEvent.getName());
             }
             if (Objects.equals(commandStr, GET_CLIENT_STATE.getCommandStr())) {
                 MCGetClientStateFeedBack mcGetClientStateFeedBack = JsonUtil.fromJson(jsonData, MCGetClientStateFeedBack.class);
                 serviceRegistry.register(mcGetClientStateFeedBack.getClientState().getName(), this.printWriter);
+                this.clientStatus.setName(mcGetClientStateFeedBack.getClientState().getName());
             }
             BaseMessageHandler handler = messageHandlerMap.get(commandStr);
             if (handler != null) {

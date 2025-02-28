@@ -37,7 +37,7 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
     public void handle(String jsonMessage, ClientStatus clientStatus) {
         log.info("返回客户端状态信息: {}", jsonMessage);
         MCGetClientStateFeedBack response = JsonUtil.fromJson(jsonMessage, MCGetClientStateFeedBack.class);
-        if (response.getClientState().getState() == 2) {
+        if (response.getClientState().getState() == 0) {
             clientInfoManager.registerClient(response.getClientState().getName());
         }
 
@@ -47,12 +47,7 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
         client.setIp(clientStatus.getIp());
         client.setPort(clientStatus.getPort());
         clientService.addClient(client);
-        clientStatus.setName(response.getClientState().getName());
-        clientStatus.setGpu(response.getClientState().getGpu());
-        clientStatus.setCpu(response.getClientState().getCpu());
-        clientStatus.setGpuMem(response.getClientState().getGpuMem());
-        clientStatus.setCpuMem(response.getClientState().getCpuMem());
-        clientStatus.setDisk(response.getClientState().getDisk());
+        clientStatus.setMcGetClientStateFeedBack(response);
         clientInfoManager.updateClientInfo(clientStatus);
         setClientLog(clientStatus.getIp(), clientStatus.getPort(), jsonMessage);
     }

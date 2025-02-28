@@ -89,4 +89,13 @@
             #{id}
         </foreach>
     </delete>
+
+    <delete id="deleteAssignmentTrainByAssignmentIds" parameterType="Long[]">
+        delete from assignment_train where assignment_id in
+        <foreach item="assignmentId" collection="array" open="(" separator="," close=")">
+            #{assignmentId}
+        </foreach>
+    </delete>
+
+
 </mapper>

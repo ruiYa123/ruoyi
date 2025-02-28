@@ -1,9 +1,17 @@
 package com.ruoyi.business.controller;
 
+import java.nio.file.Path;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.pagehelper.PageInfo;
+import com.ruoyi.business.domain.request.DeleteResourcesRequest;
+import com.ruoyi.business.domain.request.FileListRequest;
 import com.ruoyi.business.domain.request.ResourcesRequest;
+import com.ruoyi.business.domain.response.ResourcesResponse;
+import com.ruoyi.common.constant.HttpStatus;
+import com.ruoyi.common.core.text.Convert;
+import com.ruoyi.common.utils.ServletUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +24,9 @@ import com.ruoyi.business.service.IResourcesService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.ruoyi.common.core.page.TableSupport.PAGE_NUM;
+import static com.ruoyi.common.core.page.TableSupport.PAGE_SIZE;
 
 /**
  * 资源Controller
@@ -40,6 +51,32 @@ public class ResourcesController extends BaseController
         startPage();
         List<Resources> list = resourcesService.selectResourcesList(resources);
         return getDataTable(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:resources:list')")
+    @GetMapping("/listAll")
+    public AjaxResult listAll(ResourcesRequest resourcesRequest)
+    {
+        List<ResourcesResponse> list = resourcesService.selectImagesList(resourcesRequest);
+        return success(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:resources:list')")
+    @GetMapping("/imagelist")
+    public TableDataInfo imagelist(ResourcesRequest resourcesRequest)
+    {
+
+        List<ResourcesResponse> list = resourcesService.selectImagesList(resourcesRequest);
+        Integer pageNum = Convert.toInt(ServletUtils.getParameter(PAGE_NUM), 1);
+        Integer pageSize = Convert.toInt(ServletUtils.getParameter(PAGE_SIZE), 10);
+        int fromIndex = (pageNum - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, list.size());
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setMsg("查询成功");
+        rspData.setRows(list.subList(fromIndex, toIndex));
+        rspData.setTotal(list.size());
+        return rspData;
     }
 
     /**
@@ -95,9 +132,9 @@ public class ResourcesController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('business:resources:remove')")
     @Log(title = "资源", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@PostMapping("/delete")
+    public AjaxResult remove(@RequestBody DeleteResourcesRequest deleteResourcesRequest)
     {
-        return toAjax(resourcesService.deleteResourcesByIds(ids));
+        return success(resourcesService.deleteResourcesByIds(deleteResourcesRequest.getPath().toArray(new String[0])));
     }
 }

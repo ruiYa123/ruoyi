@@ -276,12 +276,28 @@ public class RedisCache
      * @param prioritize 是否优先（插队）
      */
     public <T> void addToQueue(final String key, final T value, boolean prioritize) {
+        List<String> list = redisTemplate.opsForList().range(key, 0, -1);
+        if (list != null && list.contains(value)) {
+            redisTemplate.opsForList().remove(key, 0, value);
+        }
         if (prioritize) {
-            redisTemplate.opsForList().leftPush(key, value);  // 插队
+            redisTemplate.opsForList().leftPush(key, value);
         } else {
-            redisTemplate.opsForList().rightPush(key, value); // 正常添加
+            redisTemplate.opsForList().rightPush(key, value);
         }
     }
+
+    public <T> List<T> addToQueue(final String key) {
+        return redisTemplate.opsForList().range(key, 0, -1);
+    }
+
+    public <T> void removeFromQueue(final String key, final T value) {
+        List<String> list = redisTemplate.opsForList().range(key, 0, -1);
+        if (list != null && list.contains(value)) {
+            redisTemplate.opsForList().remove(key, 0, value);
+        }
+    }
+
 
     /**
      * 获取并移除队列中的第一个元素

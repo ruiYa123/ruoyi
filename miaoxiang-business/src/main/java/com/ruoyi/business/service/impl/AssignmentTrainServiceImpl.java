@@ -63,6 +63,7 @@ public class AssignmentTrainServiceImpl implements IAssignmentTrainService
     public AssignmentTrain startTrain(Long assignmentId, String clientName) {
         AssignmentTrain assignmentTrain = new AssignmentTrain();
         assignmentTrain.setState(3);
+        assignmentTrain.setAssignmentId(assignmentId);
         List<AssignmentTrain> assignmentTrains = selectAssignmentTrainList(assignmentTrain);
         if (assignmentTrains != null && !assignmentTrains.isEmpty()) {
             assignmentTrain = assignmentTrains.get(assignmentTrains.size() - 1);
@@ -77,6 +78,21 @@ public class AssignmentTrainServiceImpl implements IAssignmentTrainService
             insertAssignmentTrain(assignmentTrain);
         }
         return assignmentTrain;
+    }
+
+    @Override
+    public boolean finishTrain(Long assignmentId, String clientNamem, Integer state) {
+        AssignmentTrain assignmentTrain = new AssignmentTrain();
+        assignmentTrain.setState(1);
+        assignmentTrain.setAssignmentId(assignmentId);
+        List<AssignmentTrain> assignmentTrains = selectAssignmentTrainList(assignmentTrain);
+        if (assignmentTrains != null && !assignmentTrains.isEmpty()) {
+            assignmentTrain = assignmentTrains.get(assignmentTrains.size() - 1);
+            assignmentTrain.setState(state);
+            updateAssignmentTrain(assignmentTrain);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -102,6 +118,12 @@ public class AssignmentTrainServiceImpl implements IAssignmentTrainService
     public int deleteAssignmentTrainByIds(Long[] ids)
     {
         return assignmentTrainMapper.deleteAssignmentTrainByIds(ids);
+    }
+
+    @Override
+    public int deleteAssignmentTrainByAssignmentIds(Long[] ids)
+    {
+        return assignmentTrainMapper.deleteAssignmentTrainByAssignmentIds(ids);
     }
 
     /**

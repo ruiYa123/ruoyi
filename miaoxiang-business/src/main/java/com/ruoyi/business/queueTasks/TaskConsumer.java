@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import static com.ruoyi.business.queueTasks.ClientInfoManager.ClientRedisKeys.IDLE_CLIENTS;
+import static com.ruoyi.business.queueTasks.TaskConsumer.TaskQueueRedisKey.TASK_QUEUE;
 
 @Service
 public class TaskConsumer {
@@ -46,10 +47,15 @@ public class TaskConsumer {
     public void consumeTask() {
         String clientName = redisCache.getRandomMemberFromSet(IDLE_CLIENTS.getKey());
         if (clientName != null) {
-            Long assignmentId = redisCache.popFromQueue(TaskQueueRedisKey.TASK_QUEUE.key);
+            Long assignmentId = redisCache.popFromQueue(TASK_QUEUE.key);
             if (assignmentId != null) {
-                redisCache.removeFromSet(IDLE_CLIENTS.getKey(), clientName);
-                processTask(clientName, assignmentId);
+                try {
+                    redisCache.removeFromSet(IDLE_CLIENTS.getKey(), clientName);
+                    processTask(clientName, assignmentId);
+                } catch (Exception e) {
+                    redisCache.addToQueue(TASK_QUEUE.getKey(), assignmentId, true);
+                    redisCache.addToSet(IDLE_CLIENTS.getKey(), clientName);
+                }
             }
         }
     }
@@ -62,6 +68,9 @@ public class TaskConsumer {
      */
     private void processTask(String clientName, Long assignmentId) {
         Assignment assignment = assignmentService.selectAssignmentById(assignmentId);
+        assignment.setState(1);
+        assignment.setClientName(clientName);
+        assignmentService.updateAssignment(assignment);
         assignmentTrainService.startTrain(assignmentId, clientName);
         mcStartTrainCommandHandler.startTrain(assignment, clientName);
     }

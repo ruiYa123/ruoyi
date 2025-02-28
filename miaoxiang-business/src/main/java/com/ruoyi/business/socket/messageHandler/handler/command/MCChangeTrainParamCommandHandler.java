@@ -14,14 +14,14 @@ public class MCChangeTrainParamCommandHandler {
     @Autowired
     private SocketService socketService;
 
-    public void changeTrainParam(String projectName, Assignment assignment, Client client) {
+    public void changeTrainParam(String projectName, Assignment assignment, String clientName) {
         MCChangeTrainParamCommand mcChangeTrainParamCommand = new MCChangeTrainParamCommand();
         mcChangeTrainParamCommand.setProjectName(projectName + "~" + assignment.getAssignmentName());
         mcChangeTrainParamCommand.getTrainParam().setPreTrainModel(assignment.getPretrainMode());
         mcChangeTrainParamCommand.getTrainParam().setEpoch(assignment.getEpoch());
         mcChangeTrainParamCommand.getTrainParam().setBatchSize(assignment.getBatchSize());
         mcChangeTrainParamCommand.getTrainParam().setImgSize(assignment.getImgSize());
-        socketService.sendMessageToClientByAddress(client.getName(), JsonUtil.toJson(mcChangeTrainParamCommand));
+        socketService.sendMessageToClientByAddress(clientName, JsonUtil.toJson(mcChangeTrainParamCommand));
     }
 
 }

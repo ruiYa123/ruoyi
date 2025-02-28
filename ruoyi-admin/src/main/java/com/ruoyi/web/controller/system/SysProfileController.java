@@ -1,6 +1,10 @@
 package com.ruoyi.web.controller.system;
 
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.system.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +30,7 @@ import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 个人信息 业务处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -39,6 +43,9 @@ public class SysProfileController extends BaseController
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private ISysDeptService deptService;
+
     /**
      * 个人信息
      */
@@ -47,6 +54,23 @@ public class SysProfileController extends BaseController
     {
         LoginUser loginUser = getLoginUser();
         SysUser user = loginUser.getUser();
+        List<SysDept> sysDepts = deptService.selectDeptList(new SysDept());
+        String ancestors = user.getDept().getAncestors();
+        List<Long> ancestorList = Arrays.stream(ancestors.split(",")).map(Long::parseLong).collect(Collectors.toList());
+        ancestorList.add(user.getDept().getDeptId());
+        Collections.reverse(ancestorList);
+        StringBuilder deptNames = new StringBuilder();
+        for(Long ancestor: ancestorList) {
+            SysDept sysDept = deptService.selectDeptById(ancestor);
+            if (sysDept != null) {
+                deptNames.append('/').append(sysDept.getDeptName());
+            }
+        }
+        if (deptNames.length() > 0) {
+            deptNames.deleteCharAt(0); // 删除第一个字符
+        }
+        user.getDept().setDeptNames(deptNames.toString());
+        System.out.println(deptNames);
         AjaxResult ajax = AjaxResult.success(user);
         ajax.put("roleGroup", userService.selectUserRoleGroup(loginUser.getUsername()));
         ajax.put("postGroup", userService.selectUserPostGroup(loginUser.getUsername()));

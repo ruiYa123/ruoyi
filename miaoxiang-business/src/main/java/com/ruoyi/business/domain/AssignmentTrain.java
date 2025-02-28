@@ -31,7 +31,7 @@ public class AssignmentTrain extends BaseEntity
 
     /** 进度 */
     @Excel(name = "进度")
-    private BigDecimal progress = BigDecimal.ZERO;
+    private BigDecimal progress;
 
     /** 备注 */
     @Excel(name = "备注")

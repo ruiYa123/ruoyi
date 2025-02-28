@@ -44,6 +44,9 @@
         UNION ALL
         SELECT COUNT(*) FROM assignment
         WHERE state = 2
+        UNION ALL
+        SELECT COUNT(*) FROM assignment
+        WHERE state = 3
         <if test="dept != null">
             AND dept = #{dept}
         </if>
@@ -66,6 +69,62 @@
             <if test="jumpTime != null"> and jump_time = #{jumpTime}</if>
         </where>
     </select>
+
+    <select id="selectAssignmentListByIds" resultMap="AssignmentResult">
+        <include refid="selectAssignmentVo"/>
+        <where>
+            <if test="assignment.assignmentName != null and assignment.assignmentName != ''">
+                and assignment_name like concat('%', #{assignment.assignmentName}, '%')
+            </if>
+            <if test="assignment.projectId != null">
+                and project_id = #{assignment.projectId}
+            </if>
+            <if test="assignment.modelId != null">
+                and model_id = #{assignment.modelId}
+            </if>
+            <if test="assignment.clientName != null and assignment.clientName != ''">
+                and client_name = #{assignment.clientName}
+            </if>
+            <if test="assignment.pretrainMode != null and assignment.pretrainMode != ''">
+                and preTrain_mode = #{assignment.pretrainMode}
+            </if>
+            <if test="assignment.epoch != null">
+                and epoch = #{assignment.epoch}
+            </if>
+            <if test="assignment.batchSize != null">
+                and batch_size = #{assignment.batchSize}
+            </if>
+            <if test="assignment.imgSize != null">
+                and img_size = #{assignment.imgSize}
+            </if>
+            <if test="assignment.state != null">
+                and state = #{assignment.state}
+            </if>
+            <if test="assignment.description != null and assignment.description != ''">
+                and description = #{assignment.description}
+            </if>
+            <if test="assignment.dept != null">
+                and dept = #{assignment.dept}
+            </if>
+            <if test="assignment.jumpTime != null">
+                and jump_time = #{assignment.jumpTime}
+            </if>
+            <if test="ids != null and ids.length > 0">
+                and id in
+                <foreach item="id" collection="ids" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        <if test="ids != null and ids.length > 0">
+            ORDER BY FIELD(id,
+            <foreach item="id" collection="ids" separator=",">
+                #{id}
+            </foreach>)
+        </if>
+    </select>
+
+
 
     <select id="selectAssignmentById" parameterType="Long" resultMap="AssignmentResult">
         <include refid="selectAssignmentVo"/>

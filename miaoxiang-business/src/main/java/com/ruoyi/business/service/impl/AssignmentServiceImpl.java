@@ -44,6 +44,12 @@ public class AssignmentServiceImpl implements IAssignmentService
         return assignmentMapper.selectAssignmentList(assignment);
     }
 
+    @Override
+    public List<Assignment> selectAssignmentListByIds(Assignment assignment, Long[] ids)
+    {
+        return assignmentMapper.selectAssignmentListByIds(assignment, ids);
+    }
+
     /**
      * 新增任务
      *
@@ -66,7 +72,6 @@ public class AssignmentServiceImpl implements IAssignmentService
     @Override
     public int updateAssignment(Assignment assignment)
     {
-        assignment.setUpdateTime(DateUtils.getNowDate());
         return assignmentMapper.updateAssignment(assignment);
     }
 

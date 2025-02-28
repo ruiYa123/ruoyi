@@ -68,6 +68,25 @@ public class ProjectController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('business:project:list')")
+    @GetMapping("/listAll")
+    public AjaxResult listAll(Project project)
+    {
+        if(!sysUserService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
+            List<Long> deptList = Arrays.stream(ancestors.split(","))
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+            if (deptList.size() > 1) {
+                project.setDept(deptList.get(1));
+            } else {
+                project.setDept(getDeptId());
+            }
+        }
+        List<Project> list = projectService.selectProjectList(project);
+        return success(list);
+    }
+
     /**
      * 导出项目列表
      */

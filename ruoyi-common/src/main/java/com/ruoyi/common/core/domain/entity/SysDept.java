@@ -28,6 +28,8 @@ public class SysDept extends BaseEntity
     /** 祖级列表 */
     private String ancestors;
 
+    private String deptNames;
+
     /** 部门名称 */
     private String deptName;
 
@@ -96,6 +98,17 @@ public class SysDept extends BaseEntity
     {
         this.deptName = deptName;
     }
+
+    public String getDeptNames()
+    {
+        return deptNames;
+    }
+
+    public void setDeptNames(String deptNames)
+    {
+        this.deptNames = deptNames;
+    }
+
 
     @NotNull(message = "显示顺序不能为空")
     public Integer getOrderNum()

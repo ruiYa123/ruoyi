@@ -5,15 +5,15 @@ import com.ruoyi.business.domain.AssignmentTrain;
 
 /**
  * 任务训练Mapper接口
- * 
+ *
  * @author ruoyi
  * @date 2025-02-08
  */
-public interface AssignmentTrainMapper 
+public interface AssignmentTrainMapper
 {
     /**
      * 查询任务训练
-     * 
+     *
      * @param id 任务训练主键
      * @return 任务训练
      */
@@ -21,7 +21,7 @@ public interface AssignmentTrainMapper
 
     /**
      * 查询任务训练列表
-     * 
+     *
      * @param assignmentTrain 任务训练
      * @return 任务训练集合
      */
@@ -29,7 +29,7 @@ public interface AssignmentTrainMapper
 
     /**
      * 新增任务训练
-     * 
+     *
      * @param assignmentTrain 任务训练
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface AssignmentTrainMapper
 
     /**
      * 修改任务训练
-     * 
+     *
      * @param assignmentTrain 任务训练
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface AssignmentTrainMapper
 
     /**
      * 删除任务训练
-     * 
+     *
      * @param id 任务训练主键
      * @return 结果
      */
@@ -53,9 +53,11 @@ public interface AssignmentTrainMapper
 
     /**
      * 批量删除任务训练
-     * 
+     *
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
     public int deleteAssignmentTrainByIds(Long[] ids);
+
+    public int deleteAssignmentTrainByAssignmentIds(Long[] ids);
 }

@@ -18,6 +18,6 @@ public class ClientProjectTrainEndEvent extends BaseMessage {
     @Data
     public static class TrainParameter {
         @JsonProperty("Train_Complete")
-        private int trainComplete; // 1: 完成
+        private Integer trainComplete; // 1: 完成
     }
 }

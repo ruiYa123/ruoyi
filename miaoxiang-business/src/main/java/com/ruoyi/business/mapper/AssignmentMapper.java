@@ -2,6 +2,7 @@ package com.ruoyi.business.mapper;
 
 import java.util.List;
 import com.ruoyi.business.domain.Assignment;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 任务Mapper接口
@@ -26,6 +27,8 @@ public interface AssignmentMapper
      * @return 任务集合
      */
     public List<Assignment> selectAssignmentList(Assignment assignment);
+
+    public List<Assignment> selectAssignmentListByIds(@Param("assignment") Assignment assignment, @Param("ids") Long[] ids);
 
     /**
      * 新增任务
