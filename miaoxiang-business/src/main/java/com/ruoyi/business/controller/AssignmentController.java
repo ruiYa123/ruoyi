@@ -117,7 +117,7 @@ public class AssignmentController extends BaseController
         if(!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
             String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
             List<Long> deptList = Arrays.stream(ancestors.split(","))
-                    .map(Long::parseLong) // 将字符串转换为整数
+                    .map(Long::parseLong)
                     .collect(Collectors.toList());
             if (deptList.size() > 1) {
                 assignment.setDept(deptList.get(1));

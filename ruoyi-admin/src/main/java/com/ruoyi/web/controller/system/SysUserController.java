@@ -34,7 +34,7 @@ import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 用户信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -74,6 +74,17 @@ public class SysUserController extends BaseController
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         util.exportExcel(response, list, "用户数据");
     }
+
+//    @GetMapping("/onlineUsers")
+//    public AjaxResult getOnlineUsers() {
+//        return success(userService.getOnlineUsers());
+//    }
+//
+//    @GetMapping("/expireUser/{userName}")
+//    public AjaxResult expireUser(@PathVariable(value = "userName", required = false) String userName) {
+//        userService.expireUserSessions(userName);
+//        return success();
+//    }
 
     @Log(title = "用户管理", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('system:user:import')")

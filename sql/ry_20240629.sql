@@ -43,6 +43,8 @@ create table sys_user (
   user_id           bigint(20)      not null auto_increment    comment '用户ID',
   dept_id           bigint(20)      default null               comment '部门ID',
   user_name         varchar(30)     not null                   comment '用户账号',
+  full_name         VARCHAR(50)     DEFAULT ''                 COMMENT '用户姓名'
+  address           VARCHAR(255)    DEFAULT ''                 COMMENT '用户地址';
   nick_name         varchar(30)     not null                   comment '用户昵称',
   user_type         varchar(2)      default '00'               comment '用户类型（00系统用户）',
   email             varchar(50)     default ''                 comment '用户邮箱',

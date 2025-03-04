@@ -44,6 +44,9 @@
         UNION ALL
         SELECT COUNT(*) FROM assignment
         WHERE state = 2
+        <if test="dept != null">
+            AND dept = #{dept}
+        </if>
         UNION ALL
         SELECT COUNT(*) FROM assignment
         WHERE state = 3

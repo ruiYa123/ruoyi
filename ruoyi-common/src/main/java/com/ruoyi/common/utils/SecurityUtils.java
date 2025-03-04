@@ -3,19 +3,28 @@ package com.ruoyi.common.utils;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.util.PatternMatchUtils;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.exception.ServiceException;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 /**
  * 安全服务工具类
- * 
+ *
  * @author ruoyi
  */
 public class SecurityUtils
@@ -116,7 +125,7 @@ public class SecurityUtils
 
     /**
      * 是否为管理员
-     * 
+     *
      * @param userId 用户ID
      * @return 结果
      */
@@ -127,7 +136,7 @@ public class SecurityUtils
 
     /**
      * 验证用户是否具备某权限
-     * 
+     *
      * @param permission 权限字符串
      * @return 用户是否具备某权限
      */
@@ -138,7 +147,7 @@ public class SecurityUtils
 
     /**
      * 判断是否包含权限
-     * 
+     *
      * @param authorities 权限列表
      * @param permission 权限字符串
      * @return 用户是否具备某权限
@@ -151,7 +160,7 @@ public class SecurityUtils
 
     /**
      * 验证用户是否拥有某个角色
-     * 
+     *
      * @param role 角色标识
      * @return 用户是否具备某角色
      */
@@ -164,7 +173,7 @@ public class SecurityUtils
 
     /**
      * 判断是否包含角色
-     * 
+     *
      * @param roles 角色列表
      * @param role 角色
      * @return 用户是否具备某角色权限

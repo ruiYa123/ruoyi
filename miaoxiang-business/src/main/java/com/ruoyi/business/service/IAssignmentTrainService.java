@@ -1,5 +1,6 @@
 package com.ruoyi.business.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.ruoyi.business.domain.AssignmentTrain;
 
@@ -35,9 +36,11 @@ public interface IAssignmentTrainService
      */
     public int insertAssignmentTrain(AssignmentTrain assignmentTrain);
 
-    public AssignmentTrain startTrain(Long assignmenId, String clientName);
+    public AssignmentTrain startTrain(Long assignmentId, String clientName);
 
-    public boolean finishTrain(Long assignmenId, String clientName, Integer state);
+    public Long finishTrain(Long assignmentId, String clientName, Integer state);
+
+    public Long updateTrain(Long assignmentId, String clientName, BigDecimal progress, Integer state);
     /**
      * 修改任务训练
      *

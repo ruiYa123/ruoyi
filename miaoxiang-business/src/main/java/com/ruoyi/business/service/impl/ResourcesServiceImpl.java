@@ -115,7 +115,8 @@ public class ResourcesServiceImpl implements IResourcesService
                 }
             }
         }
-        result.get(0).setUnMarkedCount(count);
+        int finalCount = count;
+        result.forEach(e-> e.setUnMarkedCount(finalCount));
         return result;
     }
 

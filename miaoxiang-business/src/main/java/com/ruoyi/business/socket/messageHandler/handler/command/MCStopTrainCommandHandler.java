@@ -3,11 +3,14 @@ package com.ruoyi.business.socket.messageHandler.handler.command;
 import com.ruoyi.business.domain.Assignment;
 import com.ruoyi.business.domain.Client;
 import com.ruoyi.business.domain.ClientStatus;
+import com.ruoyi.business.domain.TrainLog;
 import com.ruoyi.business.service.IAssignmentService;
 import com.ruoyi.business.service.IAssignmentTrainService;
+import com.ruoyi.business.service.ITrainLogService;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.Events.ClientProjectTrainEndEvent;
 import com.ruoyi.business.socket.messageHandler.model.command.MCStopTrainCommand;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
 
     @Autowired
     IAssignmentTrainService assignmentTrainService;
+
+    @Autowired
+    ITrainLogService trainLogService;
 
     public void stopTrain(Client client) {
         MCStopTrainCommand request = new MCStopTrainCommand();
@@ -50,7 +56,14 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
         } else {
             state = 2;
         }
-        assignmentTrainService.finishTrain(assignment.getId(), message.getName(), state);
+        Long trainId = assignmentTrainService.finishTrain(assignment.getId(), message.getName(), state);
+        TrainLog trainLog = new TrainLog();
+        trainLog.setAssignmentTrainId(trainId);
+        trainLog.setAssignmentId(assignment.getId());
+        trainLog.setContent(jsonMessage);
+        trainLog.setCreateTime(DateUtils.getNowDate());
+        trainLogService.insertTrainLog(trainLog);
+
         log.info("处理客户端训练完成: {}", message.getName());
         setClientLog(message.getName(), jsonMessage);
     }
