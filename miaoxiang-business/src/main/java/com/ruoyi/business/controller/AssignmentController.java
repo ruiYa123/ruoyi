@@ -7,16 +7,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import com.github.pagehelper.PageHelper;
+import com.ruoyi.business.domain.AssignmentTrain;
 import com.ruoyi.business.domain.Project;
+import com.ruoyi.business.domain.response.TrainingAssignment;
 import com.ruoyi.business.queueTasks.TaskConsumer;
 import com.ruoyi.business.queueTasks.TaskProducer;
 import com.ruoyi.business.service.IAssignmentTrainService;
 import com.ruoyi.business.service.IProjectService;
 import com.ruoyi.business.socket.messageHandler.handler.command.MCChangeTrainParamCommandHandler;
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.common.core.page.PageDomain;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysUserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -107,6 +112,30 @@ public class AssignmentController extends BaseController
         List<Assignment> list = assignmentService.selectAssignmentList(assignment);
         Collections.reverse(list);
         return success(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:assignment:list')")
+    @GetMapping("/listTraining")
+    public AjaxResult listTraining()
+    {
+        Assignment assignment = new Assignment();
+        assignment.setState(1);
+        assignment.setDept(getDept());
+        List<Assignment> list = assignmentService.selectAssignmentList(assignment);
+        List<TrainingAssignment> response = new ArrayList<>();
+        list.forEach(e -> {
+            TrainingAssignment t = new TrainingAssignment();
+            AssignmentTrain assignmentTrain = new AssignmentTrain();
+            assignmentTrain.setAssignmentId(e.getId());
+            PageHelper.startPage(1, 1, "create_time desc");
+            List<AssignmentTrain> assignmentTrains = assignmentTrainService.selectAssignmentTrainList(assignmentTrain);
+            BeanUtils.copyProperties(e, t);
+            if (assignmentTrains.size() > 0) {
+                t.setProgress(assignmentTrains.get(0).getProgress());
+            }
+            response.add(t);
+        });
+        return success(response);
     }
 
     @PreAuthorize("@ss.hasPermi('business:assignment:list')")
