@@ -12,6 +12,9 @@ public class ClientProjectTrainEndEvent extends BaseMessage {
     @JsonProperty("ProjectName")
     private String projectName;
 
+    @JsonProperty("AssignmentName")
+    private String assignmentName;
+
     @JsonProperty("TrainPara")
     private TrainParameter trainPara;
 

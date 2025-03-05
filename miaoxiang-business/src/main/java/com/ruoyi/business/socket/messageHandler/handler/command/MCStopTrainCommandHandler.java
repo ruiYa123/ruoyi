@@ -1,11 +1,9 @@
 package com.ruoyi.business.socket.messageHandler.handler.command;
 
-import com.ruoyi.business.domain.Assignment;
-import com.ruoyi.business.domain.Client;
-import com.ruoyi.business.domain.ClientStatus;
-import com.ruoyi.business.domain.TrainLog;
+import com.ruoyi.business.domain.*;
 import com.ruoyi.business.service.IAssignmentService;
 import com.ruoyi.business.service.IAssignmentTrainService;
+import com.ruoyi.business.service.IProjectService;
 import com.ruoyi.business.service.ITrainLogService;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
 import com.ruoyi.business.socket.messageHandler.model.Events.ClientProjectTrainEndEvent;
@@ -25,13 +23,16 @@ import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIEN
 public class MCStopTrainCommandHandler extends AbstractMessageHandler {
 
     @Autowired
-    IAssignmentService assignmentService;
+    private IAssignmentService assignmentService;
 
     @Autowired
-    IAssignmentTrainService assignmentTrainService;
+    private IAssignmentTrainService assignmentTrainService;
 
     @Autowired
-    ITrainLogService trainLogService;
+    private ITrainLogService trainLogService;
+
+    @Autowired
+    private IProjectService projectService;
 
     public void stopTrain(Client client) {
         MCStopTrainCommand request = new MCStopTrainCommand();
@@ -43,18 +44,20 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
         ClientProjectTrainEndEvent message = JsonUtil.fromJson(jsonMessage, ClientProjectTrainEndEvent.class);
 //        clientInfoManager.registerClient(message.getName());
         Assignment assignment = new Assignment();
-        assignment.setAssignmentName(message.getProjectName());
+        Project project = new Project();
+        project.setProjectName(message.getProjectName());
+        Long projectId = projectService.selectProjectList(project).get(0).getId();
+        assignment.setProjectId(projectId);
+        assignment.setAssignmentName(message.getAssignmentName());
         assignment.setClientName(message.getName());
         List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);
         assignment = assignments.get(0);
         assignment.setClientName(null);
         assignment.setState(0);
         assignmentService.updateAssignment(assignment);
-        Integer state;
+        int state = 2;
         if (message.getTrainPara().getTrainComplete() == 0) {
             state = 0;
-        } else {
-            state = 2;
         }
         Long trainId = assignmentTrainService.finishTrain(assignment.getId(), message.getName(), state);
         TrainLog trainLog = new TrainLog();

@@ -123,7 +123,7 @@ pagehelper:
 
 frontend:
   public:
-    directory: D:/projects/ruoyi-ui/public/img
+    directory: D:\projects\file-server
 
 # Swagger配置
 swagger:

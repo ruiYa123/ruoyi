@@ -131,7 +131,11 @@ public class ResourcesServiceImpl implements IResourcesService
         } catch (IOException e) {
             log.error(e.getMessage());
         }
-        ResourcesResponse response = new ResourcesResponse(bmpFile.toFile().getPath(), bmpFile.getFileName().toString(), createDate, hasJson);
+        String fullPath = bmpFile.toFile().getPath();
+        String normalizedFrontendDir = frontendPublicDir.replace("\\", "/");
+        String normalizedFullPath = fullPath.replace("\\", "/");
+        String relativePath = normalizedFullPath.substring(normalizedFrontendDir.length() + 1);
+        ResourcesResponse response = new ResourcesResponse(relativePath, bmpFile.getFileName().toString(), createDate, hasJson);
 
         if (!hasJson) {
             result.add(0, response);
@@ -202,7 +206,7 @@ public class ResourcesServiceImpl implements IResourcesService
         for (String name : names) {
             try {
 
-                Path path = Paths.get(name);
+                Path path = Paths.get(frontendPublicDir + '/' + name);
                 if (Files.isDirectory(path)) {
                     deletedCount += deleteDirectory(path);
                 } else {

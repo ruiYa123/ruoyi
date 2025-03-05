@@ -1,12 +1,10 @@
 package com.ruoyi.business.socket.messageHandler.handler;
 
-import com.ruoyi.business.domain.Client;
-import com.ruoyi.business.domain.ClientLog;
-import com.ruoyi.business.domain.ClientStatus;
+import com.ruoyi.business.domain.*;
 import com.ruoyi.business.queueTasks.ClientInfoManager;
-import com.ruoyi.business.service.IClientLogService;
-import com.ruoyi.business.service.IClientService;
+import com.ruoyi.business.service.*;
 import com.ruoyi.business.socket.service.SocketService;
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +28,15 @@ public abstract class AbstractMessageHandler implements BaseMessageHandler {
 
     @Autowired
     protected ClientInfoManager clientInfoManager;
+
+    @Autowired
+    protected IAssignmentTrainService assignmentTrainService;
+    @Autowired
+    protected ITrainLogService trainLogService;
+    @Autowired
+    protected IAssignmentService assignmentService;
+    @Autowired
+    protected IProjectService projectService;
 
     @Override
     public abstract void handle(String json, ClientStatus clientStatus);
@@ -99,5 +106,28 @@ public abstract class AbstractMessageHandler implements BaseMessageHandler {
             client.setPort(port);
         }
         return client;
+    }
+
+    protected void setTrainLog(String jsonMessage, ClientStatus clientStatus, String projectName, String assignmentName, IAssignmentService assignmentService, IAssignmentTrainService assignmentTrainService, ITrainLogService trainLogService) {
+        Project project = new Project();
+        project.setProjectName(projectName);
+        Long projectId = projectService.selectProjectList(project).get(0).getId();
+        Assignment assignment = new Assignment();
+        assignment.setClientName(clientStatus.getName());
+        assignment.setProjectId(projectId);
+        assignment.setAssignmentName(assignmentName);
+        List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);
+        if (!assignments.isEmpty()) {
+            assignment = assignments.get(0);
+            clientStatus.setAssignmentId(assignment.getId());
+            clientStatus.setAssignmentName(assignment.getAssignmentName());
+        }
+        Long trainId = assignmentTrainService.selectAssignmentTrainById(assignment.getId()).getId();
+        TrainLog trainLog = new TrainLog();
+        trainLog.setAssignmentTrainId(trainId);
+        trainLog.setAssignmentId(assignment.getId());
+        trainLog.setContent(jsonMessage);
+        trainLog.setCreateTime(DateUtils.getNowDate());
+        trainLogService.insertTrainLog(trainLog);
     }
 }

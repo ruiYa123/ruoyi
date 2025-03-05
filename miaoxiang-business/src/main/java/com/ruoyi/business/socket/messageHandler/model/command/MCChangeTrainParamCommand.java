@@ -12,6 +12,9 @@ public class MCChangeTrainParamCommand extends BaseRequest {
     @JsonProperty("ProjectName")
     private String projectName;
 
+    @JsonProperty("AssignmentName")
+    private String assignmentName;
+
     @JsonProperty("TrainPara")
     private TrainParameters trainParam = new TrainParameters();
 

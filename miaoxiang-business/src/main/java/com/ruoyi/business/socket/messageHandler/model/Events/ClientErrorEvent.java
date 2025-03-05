@@ -17,6 +17,9 @@ public class ClientErrorEvent extends BaseMessage {
         @JsonProperty("ProjectName")
         private String projectName;
 
+        @JsonProperty("AssignmentName")
+        private String assignmentName;
+
         @JsonProperty("ErrorText")
         private String errorText;
     }

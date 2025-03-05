@@ -3,6 +3,7 @@ package com.ruoyi.business.queueTasks;
 import com.ruoyi.business.domain.Assignment;
 import com.ruoyi.business.service.IAssignmentService;
 import com.ruoyi.business.service.IAssignmentTrainService;
+import com.ruoyi.business.service.IProjectService;
 import com.ruoyi.business.socket.messageHandler.handler.command.MCStartTrainCommandHandler;
 import com.ruoyi.common.core.redis.RedisCache;
 import lombok.Getter;
@@ -27,6 +28,9 @@ public class TaskConsumer {
 
     @Autowired
     private MCStartTrainCommandHandler mcStartTrainCommandHandler;
+
+    @Autowired
+    private IProjectService projectService;
 
 
     @Getter
@@ -72,6 +76,7 @@ public class TaskConsumer {
         assignment.setClientName(clientName);
         assignmentService.updateAssignment(assignment);
         assignmentTrainService.startTrain(assignmentId, clientName);
-        mcStartTrainCommandHandler.startTrain(assignment, clientName);
+        String projectName = projectService.selectProjectById(assignment.getProjectId()).getProjectName();
+        mcStartTrainCommandHandler.startTrain(assignment, projectName, clientName);
     }
 }

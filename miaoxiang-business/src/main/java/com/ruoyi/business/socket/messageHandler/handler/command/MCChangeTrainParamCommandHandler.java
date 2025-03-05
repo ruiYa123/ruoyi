@@ -16,7 +16,8 @@ public class MCChangeTrainParamCommandHandler {
 
     public void changeTrainParam(String projectName, Assignment assignment, String clientName) {
         MCChangeTrainParamCommand mcChangeTrainParamCommand = new MCChangeTrainParamCommand();
-        mcChangeTrainParamCommand.setProjectName(projectName + "~" + assignment.getAssignmentName());
+        mcChangeTrainParamCommand.setProjectName(projectName);
+        mcChangeTrainParamCommand.setAssignmentName(assignment.getAssignmentName());
         mcChangeTrainParamCommand.getTrainParam().setPreTrainModel(assignment.getPretrainMode());
         mcChangeTrainParamCommand.getTrainParam().setEpoch(assignment.getEpoch());
         mcChangeTrainParamCommand.getTrainParam().setBatchSize(assignment.getBatchSize());

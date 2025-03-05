@@ -17,6 +17,9 @@ public class ClientProjectTrainStartEvent extends BaseMessage {
         @JsonProperty("ProjectName")
         private String projectName;
 
+        @JsonProperty("AssignmentName")
+        private String assignmentName;
+
         @JsonProperty("Train_Start")
         private int trainStart; // 1: 开始
     }
