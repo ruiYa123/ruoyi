@@ -119,20 +119,23 @@ public class AssignmentController extends BaseController
     public AjaxResult listTraining()
     {
         Assignment assignment = new Assignment();
-        assignment.setState(1);
+//        assignment.setState(1);
         assignment.setDept(getDept());
         List<Assignment> list = assignmentService.selectAssignmentList(assignment);
         List<TrainingAssignment> response = new ArrayList<>();
         list.forEach(e -> {
             TrainingAssignment t = new TrainingAssignment();
-            AssignmentTrain assignmentTrain = new AssignmentTrain();
-            assignmentTrain.setAssignmentId(e.getId());
-            PageHelper.startPage(1, 1, "create_time desc");
-            List<AssignmentTrain> assignmentTrains = assignmentTrainService.selectAssignmentTrainList(assignmentTrain);
-            BeanUtils.copyProperties(e, t);
-            if (assignmentTrains.size() > 0) {
-                t.setProgress(assignmentTrains.get(0).getProgress());
+            if (e.getState() == 1) {
+                AssignmentTrain assignmentTrain = new AssignmentTrain();
+                assignmentTrain.setAssignmentId(e.getId());
+                PageHelper.startPage(1, 1, "create_time desc");
+                List<AssignmentTrain> assignmentTrains = assignmentTrainService.selectAssignmentTrainList(assignmentTrain);
+                if (assignmentTrains.size() > 0) {
+                    t.setProgress(assignmentTrains.get(0).getProgress());
+                }
             }
+            BeanUtils.copyProperties(e, t);
+
             response.add(t);
         });
         return success(response);

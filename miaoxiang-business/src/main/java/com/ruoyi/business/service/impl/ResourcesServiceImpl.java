@@ -170,7 +170,9 @@ public class ResourcesServiceImpl implements IResourcesService
                             Path targetLocation = targetDir.resolve(originalFileName);
                             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
                         } catch (IOException e) {
-                            throw new UtilException("文件保存失败");
+                            log.error(e.getMessage());
+                            throw new UtilException("文件保存失败", e);
+
                         }
                     });
 
