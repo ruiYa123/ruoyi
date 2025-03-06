@@ -62,4 +62,16 @@ public class JsonUtil {
             throw new UtilException("JSON字符串转换错误");
         }
     }
+
+    public static boolean isValidJson(String json) {
+        try {
+            if (json == null || json.isEmpty()) {
+                return false;
+            }
+            objectMapper.readTree(json);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

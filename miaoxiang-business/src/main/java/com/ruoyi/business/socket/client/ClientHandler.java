@@ -54,7 +54,7 @@ public class ClientHandler extends Thread {
 
                 while (true) {
                     String jsonData = completeMessage.toString();
-                    if (isValidJson(jsonData)) {
+                    if (JsonUtil.isValidJson(jsonData)) {
                         log.info("Received JSON data from client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), jsonData);
                         handleClientMessage(jsonData);
                         completeMessage.setLength(0);
@@ -71,18 +71,6 @@ public class ClientHandler extends Thread {
             }
         } finally {
             cleanup();
-        }
-    }
-
-    private boolean isValidJson(String json) {
-        try {
-            if (json == null || json.isEmpty()) {
-                return false;
-            }
-            new ObjectMapper().readTree(json);
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 
