@@ -94,6 +94,7 @@ public class SocketService {
             public void run() {
                 attempt++;
                 PrintWriter out = serviceRegistry.getPrintWriter(clientName);
+                log.info(out.toString());
                 if (out != null) {
                     out.println(message);
                     log.info("发送消息：{}", message);

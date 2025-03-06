@@ -134,8 +134,8 @@ public class ClientHandler extends Thread {
             if (clientSocket != null && !clientSocket.isClosed()) {
                 clientSocket.close();
             }
-            serviceRegistry.unregister(this.clientStatus.getIp() + ":" + clientStatus.getPort());
-            log.info("Socket客户端资源清理完毕: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort());
+            serviceRegistry.unregister(this.clientStatus.getName());
+            log.info("Socket客户端资源清理完毕: {}", this.clientStatus.getName());
         } catch (IOException e) {
             log.error("Error closing client socket for client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), e.getMessage(), e);
         }
