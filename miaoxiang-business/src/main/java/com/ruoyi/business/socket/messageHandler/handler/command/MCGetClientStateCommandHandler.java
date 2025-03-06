@@ -21,7 +21,7 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
     public void requestClientState() {
 //        log.info("获取client状态");
         getClients().forEach(client -> {
-            if (client.getState() == 0) {
+            if (client.getState() == 2) {
                 return;
             }
             MCGetClientStateCommand request = new MCGetClientStateCommand();

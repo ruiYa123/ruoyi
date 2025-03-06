@@ -39,7 +39,7 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
     public void requestTrainState() {
 //        log.info("获取client训练状态");
         getClients().forEach(client -> {
-            if (client.getState() == -1) {
+            if (client.getState() == 2) {
                 return;
             }
             MCGetTrainStateCommand request = new MCGetTrainStateCommand();
