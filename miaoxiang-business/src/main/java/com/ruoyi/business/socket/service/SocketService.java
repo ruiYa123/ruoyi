@@ -96,7 +96,7 @@ public class SocketService {
                 PrintWriter out = serviceRegistry.getPrintWriter(clientName);
                 if (out != null) {
                     out.println(message);
-                    log.info("发送消息成功");
+                    log.info("发送消息：{}", message);
                     result.complete(true);
                     scheduler.shutdown();
                 } else if (attempt >= MAX_ATTEMPTS) {

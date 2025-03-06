@@ -45,25 +45,21 @@ public class ClientHandler extends Thread {
     @Override
     public void run() {
         StringBuilder completeMessage = new StringBuilder();
-        ObjectMapper objectMapper = new ObjectMapper(); // 用于解析 JSON
         try (InputStream inputStream = clientSocket.getInputStream()) {
             byte[] buffer = new byte[1024];
             int bytesRead;
 
-            // 循环读取数据
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 completeMessage.append(new String(buffer, 0, bytesRead, StandardCharsets.UTF_8));
 
-                // 检查是否为完整的 JSON
                 while (true) {
                     String jsonData = completeMessage.toString();
                     if (isValidJson(jsonData)) {
                         log.info("Received JSON data from client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), jsonData);
-                        handleClientMessage(jsonData); // 处理完整的 JSON
-                        completeMessage.setLength(0); // 清空已处理的数据
+                        handleClientMessage(jsonData);
+                        completeMessage.setLength(0);
                     } else {
-                        // 如果不是完整的 JSON，检查是否可以继续读取更多数据
-                        break; // 跳出内层循环，继续读取新的数据
+                        break;
                     }
                 }
             }
@@ -78,17 +74,15 @@ public class ClientHandler extends Thread {
         }
     }
 
-    // 检查字符串是否为有效的 JSON
     private boolean isValidJson(String json) {
         try {
             if (json == null || json.isEmpty()) {
                 return false;
             }
-            new ObjectMapper().readTree(json); // 尝试解析 JSON
-            log.info("是完整json");
-            return true; // 如果解析成功，返回 true
+            new ObjectMapper().readTree(json);
+            return true;
         } catch (Exception e) {
-            return false; // 如果解析失败，返回 false
+            return false;
         }
     }
 
