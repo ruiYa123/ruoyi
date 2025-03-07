@@ -16,8 +16,10 @@ import com.ruoyi.business.queueTasks.TaskProducer;
 import com.ruoyi.business.service.IAssignmentTrainService;
 import com.ruoyi.business.service.IProjectService;
 import com.ruoyi.business.socket.messageHandler.handler.command.MCChangeTrainParamCommandHandler;
+import com.ruoyi.business.socket.messageHandler.handler.command.MCStopTrainCommandHandler;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.page.PageDomain;
+import com.ruoyi.common.exception.UtilException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysUserService;
@@ -69,6 +71,9 @@ public class AssignmentController extends BaseController
 
     @Autowired
     private MCChangeTrainParamCommandHandler mcChangeTrainParamCommandHandler;
+
+    @Autowired
+    private MCStopTrainCommandHandler mcStopTrainCommandHandler;
 
 
     private Long getDept() {
@@ -233,10 +238,18 @@ public class AssignmentController extends BaseController
     public AjaxResult stopAssignment(@PathVariable("id") Long id)
     {
         Assignment assignment = assignmentService.selectAssignmentById(id);
+        Integer currentState = assignment.getState();
         assignment.setState(3);
         assignment.setUpdateBy(getUsername());
         assignment.setUpdateTime(DateUtils.getNowDate());
-        taskProducer.removeTask(assignment.getId());
+        if (currentState == 2) {
+            taskProducer.removeTask(assignment.getId());
+        } else if (currentState == 1){
+            mcStopTrainCommandHandler.stopTrain(assignment.getClientName());
+
+        } else if (currentState == 0){
+            throw new UtilException(assignment.getAssignmentName() + "任务已训练完成");
+        }
         return success(assignmentService.updateAssignment(assignment));
     }
 

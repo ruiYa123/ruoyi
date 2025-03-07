@@ -30,8 +30,8 @@ public class ClientAddEventHandler extends AbstractMessageHandler {
         if (clientInfo != null) {
             BeanUtils.copyProperties(clientStatus, clientInfo);
         }
-        clientStatus.setIp(message.getIp());
-        clientStatus.setPort(message.getPort());
+        clientStatus.getClient().setIp(message.getIp());
+        clientStatus.getClient().setPort(message.getPort());
         clientInfoManager.updateClientInfo(clientStatus);
         clientUpdater.updateClients();
     }

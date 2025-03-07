@@ -1,6 +1,8 @@
 package com.ruoyi.business.queueTasks;
 
+import com.ruoyi.business.domain.Client;
 import com.ruoyi.business.domain.ClientStatus;
+import com.ruoyi.business.service.IClientService;
 import com.ruoyi.common.core.redis.RedisCache;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,9 @@ public class ClientInfoManager {
     @Autowired
     private RedisCache redisCache;
 
+    @Autowired
+    private IClientService clientService;
+
     @Getter
     public enum ClientRedisKeys {
         CLIENTS_STATUS("CLIENTS_STATUS"),
@@ -33,12 +38,16 @@ public class ClientInfoManager {
 
     public void registerClient(String... names) {
         for (String name : names) {
-            redisCache.addToSet(IDLE_CLIENTS.getKey(), name);
+            Client client = new Client();
+            client.setName(name);
+            if (clientService.selectClient(client).getActive() == 0) {
+                redisCache.addToSet(IDLE_CLIENTS.getKey(), name);
+            }
         }
     }
 
     public void updateClientInfo(ClientStatus clientStatus) {
-        redisCache.putObjectInHash(CLIENTS_STATUS.getKey(), clientStatus.getName(), clientStatus);
+        redisCache.putObjectInHash(CLIENTS_STATUS.getKey(), clientStatus.getClient().getName(), clientStatus);
     }
 
     public ClientStatus getClientInfo(String clientName) {

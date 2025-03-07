@@ -44,12 +44,12 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
         Client client = new Client();
         client.setState(response.getClientState().getState());
         client.setName(response.getClientState().getName());
-        client.setIp(clientStatus.getIp());
-        client.setPort(clientStatus.getPort());
+        client.setIp(clientStatus.getClient().getIp());
+        client.setPort(clientStatus.getClient().getPort());
         clientService.addClient(client);
         clientStatus.setMcGetClientStateFeedBack(response);
         clientInfoManager.updateClientInfo(clientStatus);
-        setClientLog(clientStatus.getIp(), clientStatus.getPort(), jsonMessage);
+        setClientLog(clientStatus.getClient().getIp(), clientStatus.getClient().getPort(), jsonMessage);
     }
 
     public String getCommand() {

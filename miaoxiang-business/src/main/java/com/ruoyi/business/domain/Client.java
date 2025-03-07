@@ -34,6 +34,9 @@ public class Client extends BaseEntity
     @Excel(name = "状态")
     private Integer state;
 
+    @Excel(name = "激活状态")
+    private Integer active;
+
     public void setId(Long id)
     {
         this.id = id;
@@ -78,6 +81,16 @@ public class Client extends BaseEntity
     public Integer getState()
     {
         return state;
+    }
+
+    public void setActive(Integer active)
+    {
+        this.active = active;
+    }
+
+    public Integer getActive()
+    {
+        return active;
     }
 
     @Override

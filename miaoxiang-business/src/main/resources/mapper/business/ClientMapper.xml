@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.business.mapper.ClientMapper">
 
     <resultMap type="Client" id="ClientResult">
@@ -11,10 +11,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="port"    column="port"    />
         <result property="state"    column="state"    />
         <result property="createTime"    column="create_time"    />
+        <result property="active"    column="active"    /> <!-- 新增 active 字段 -->
     </resultMap>
 
     <sql id="selectClientVo">
-        select id, name, ip, port, state, create_time from client
+        select id, name, ip, port, state, create_time, active from client <!-- 更新查询语句 -->
     </sql>
 
     <select id="selectClientList" parameterType="Client" resultMap="ClientResult">
@@ -24,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="ip != null  and ip != ''"> and ip = #{ip}</if>
             <if test="port != null "> and port = #{port}</if>
             <if test="state != null "> and state = #{state}</if>
+            <if test="active != null"> and active = #{active}</if>
         </where>
     </select>
 
@@ -31,15 +33,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectClientVo"/>
         <where>
             <if test="id != null"> and id = #{id}</if>
-            <if test="name != null and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="name != null and name != ''">and name = #{name}</if>
             <if test="ip != null and ip != ''"> and ip = #{ip}</if>
             <if test="port != null"> and port = #{port}</if>
             <if test="state != null"> and state = #{state}</if>
             <if test="createTime != null"> and create_time = #{createTime}</if>
+            <if test="active != null"> and active = #{active}</if> <!-- 新增 active 查询条件 -->
         </where>
         limit 1
     </select>
-
 
     <select id="selectClientById" parameterType="Long" resultMap="ClientResult">
         <include refid="selectClientVo"/>
@@ -54,14 +56,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="port != null">port,</if>
             <if test="state != null">state,</if>
             <if test="createTime != null">create_time,</if>
-         </trim>
+            <if test="active != null">active,</if> <!-- 新增 active 字段 -->
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">#{name},</if>
             <if test="ip != null and ip != ''">#{ip},</if>
             <if test="port != null">#{port},</if>
             <if test="state != null">#{state},</if>
             <if test="createTime != null">#{createTime},</if>
-         </trim>
+            <if test="active != null">#{active},</if> <!-- 新增 active 字段 -->
+        </trim>
     </insert>
 
     <update id="updateClient" parameterType="Client">
@@ -72,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="port != null">port = #{port},</if>
             <if test="state != null">state = #{state},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="active != null">active = #{active},</if> <!-- 新增 active 字段 -->
         </trim>
         where id = #{id}
     </update>
@@ -101,6 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="port != null">port = #{port},</if>
             <if test="state != null">state = #{state},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="active != null">active = #{active},</if> <!-- 新增 active 字段 -->
         </trim>
         where name = #{name}
     </update>

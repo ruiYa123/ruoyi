@@ -55,7 +55,7 @@ public class ClientHandler extends Thread {
                 while (true) {
                     String jsonData = completeMessage.toString();
                     if (JsonUtil.isValidJson(jsonData)) {
-                        log.info("Received JSON data from client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), jsonData);
+                        log.info("Received JSON data from client {}: {}", this.clientStatus.getClient().getName(), jsonData);
                         handleClientMessage(jsonData);
                         completeMessage.setLength(0);
                     } else {
@@ -65,9 +65,9 @@ public class ClientHandler extends Thread {
             }
         } catch (IOException e) {
             if ("Socket closed".equals(e.getMessage())) {
-                log.info("Socket客户端已关闭: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort());
+                log.info("Socket客户端已关闭: {}", this.clientStatus.getClient().getName());
             } else {
-                log.warn("IOException occurred while reading input for client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), e.getMessage());
+                log.warn("IOException occurred while reading input for client {}: {}", this.clientStatus.getClient().getName(), e.getMessage());
             }
         } finally {
             cleanup();
@@ -80,22 +80,22 @@ public class ClientHandler extends Thread {
             if (Objects.equals(commandStr, CLIENT_ADD.getCommandStr())) {
                 ClientAddEvent clientAddEvent = JsonUtil.fromJson(jsonData, ClientAddEvent.class);
                 serviceRegistry.register(clientAddEvent.getName(), this.printWriter);
-                this.clientStatus.setName(clientAddEvent.getName());
+                this.clientStatus.getClient().setName(clientAddEvent.getName());
             }
             if (Objects.equals(commandStr, GET_CLIENT_STATE.getCommandStr())) {
                 MCGetClientStateFeedBack mcGetClientStateFeedBack = JsonUtil.fromJson(jsonData, MCGetClientStateFeedBack.class);
                 serviceRegistry.register(mcGetClientStateFeedBack.getClientState().getName(), this.printWriter);
-                this.clientStatus.setName(mcGetClientStateFeedBack.getClientState().getName());
+                this.clientStatus.getClient().setName(mcGetClientStateFeedBack.getClientState().getName());
             }
             BaseMessageHandler handler = messageHandlerMap.get(commandStr);
             if (handler != null) {
                 handler.handle(jsonData, this.clientStatus);
             } else {
-                log.warn("Unrecognized commandStr from client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), commandStr);
+                log.warn("Unrecognized commandStr from client {}: {}", this.clientStatus.getClient().getName(), commandStr);
                 sendErrorResponse("Unrecognized commandStr");
             }
         } catch (Exception e) {
-            log.error("Error processing message from client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), e.getMessage(), e);
+            log.error("Error processing message from client {}: {}", this.clientStatus.getClient().getName(), e.getMessage(), e);
             sendErrorResponse(e.getMessage());
         }
     }
@@ -107,7 +107,7 @@ public class ClientHandler extends Thread {
 
         if (printWriter != null) {
             printWriter.println(JsonUtil.toJson(errorResponse));
-            log.info("发送错误响应给客户端 {}: {}", clientStatus.getIp() + ":" + clientStatus.getPort(), message);
+            log.info("发送错误响应给客户端 {}: {}", clientStatus.getClient().getName(), message);
         } else {
             log.error("无法发送错误响应，PrintWriter 为 null");
         }
@@ -115,17 +115,17 @@ public class ClientHandler extends Thread {
 
     private void cleanup() {
         try {
-            log.info("清理Socket客户端资源中: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort());
+            log.info("清理Socket客户端资源中: {}", this.clientStatus.getClient().getName());
             if (printWriter != null) {
                 printWriter.close();
             }
             if (clientSocket != null && !clientSocket.isClosed()) {
                 clientSocket.close();
             }
-            serviceRegistry.unregister(this.clientStatus.getName());
-            log.info("Socket客户端资源清理完毕: {}", this.clientStatus.getName());
+            serviceRegistry.unregister(this.clientStatus.getClient().getName());
+            log.info("Socket客户端资源清理完毕: {}", this.clientStatus.getClient().getName());
         } catch (IOException e) {
-            log.error("Error closing client socket for client {}: {}", this.clientStatus.getIp() + ":" + clientStatus.getPort(), e.getMessage(), e);
+            log.error("Error closing client socket for client {}: {}", this.clientStatus.getClient().getName(), e.getMessage(), e);
         }
     }
 }

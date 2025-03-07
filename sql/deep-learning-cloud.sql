@@ -78,6 +78,7 @@ CREATE TABLE `client`  (
                            `ip` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
                            `port` int NOT NULL,
                            `state` tinyint NOT NULL,
+                           `active` TINYINT NOT NULL,
                            `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                            PRIMARY KEY (`id`) USING BTREE,
                            UNIQUE INDEX `idx_name`(`name`) USING BTREE

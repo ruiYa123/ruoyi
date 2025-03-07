@@ -56,7 +56,7 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
 
         MCGetTrainStateFeedBack response = JsonUtil.fromJson(jsonMessage, MCGetTrainStateFeedBack.class);
         Assignment assignment = new Assignment();
-        assignment.setClientName(clientStatus.getName());
+        assignment.setClientName(clientStatus.getClient().getName());
         List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);
         if (!assignments.isEmpty()) {
             assignment = assignments.get(0);
@@ -65,7 +65,7 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
         }
         clientStatus.setMcGetTrainStateFeedBack(response);
         clientStatus.setAssignment(assignment);
-        Long trainId = assignmentTrainService.updateTrain(assignment.getId(), clientStatus.getName(), BigDecimal.valueOf(response.getTrainState().getTrainPercentage()), 1);
+        Long trainId = assignmentTrainService.updateTrain(assignment.getId(), clientStatus.getClient().getName(), BigDecimal.valueOf(response.getTrainState().getTrainPercentage()), 1);
         TrainLog trainLog = new TrainLog();
         trainLog.setAssignmentTrainId(trainId);
         trainLog.setAssignmentId(assignment.getId());
@@ -74,7 +74,7 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
         trainLogService.insertTrainLog(trainLog);
         clientInfoManager.updateClientInfo(clientStatus);
         log.info("返回客户端训练进度信息: {}", jsonMessage);
-        setClientLog(clientStatus.getIp(), clientStatus.getPort(), jsonMessage);
+        setClientLog(clientStatus.getClient().getIp(), clientStatus.getClient().getPort(), jsonMessage);
     }
 
     @Override

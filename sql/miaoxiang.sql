@@ -4,6 +4,7 @@ CREATE TABLE client (
                         ip VARCHAR(45) NOT NULL,
                         port INT NOT NULL,
                         state TINYINT NOT NULL,
+                        active TINYINT NOT NULL,
                         create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                         UNIQUE INDEX idx_name (name)
 );

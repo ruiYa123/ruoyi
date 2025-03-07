@@ -113,7 +113,7 @@ public abstract class AbstractMessageHandler implements BaseMessageHandler {
         project.setProjectName(projectName);
         Long projectId = projectService.selectProjectList(project).get(0).getId();
         Assignment assignment = new Assignment();
-        assignment.setClientName(clientStatus.getName());
+        assignment.setClientName(clientStatus.getClient().getName());
         assignment.setProjectId(projectId);
         assignment.setAssignmentName(assignmentName);
         List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);

@@ -7,9 +7,7 @@ import lombok.Data;
 @Data
 public class ClientStatus {
 
-    private String name;
-    private String ip;
-    private int port;
+    private Client client = new Client();
     private Long assignmentId;
     private String assignmentName;
     private Long projectId;
@@ -22,8 +20,8 @@ public class ClientStatus {
     private MCGetTrainStateFeedBack mcGetTrainStateFeedBack = new MCGetTrainStateFeedBack();
 
     public ClientStatus(String ip, int port) {
-        this.ip = ip;
-        this.port = port;
+        this.client.setIp(ip);
+        this.client.setPort(port);
     }
 
     public ClientStatus() {

@@ -34,10 +34,10 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
     @Autowired
     private IProjectService projectService;
 
-    public void stopTrain(Client client) {
+    public void stopTrain(String clientName) {
         MCStopTrainCommand request = new MCStopTrainCommand();
-        request.setClientName(client.getName());
-        socketService.sendMessageToClientByAddress(client.getName(), JsonUtil.toJson(request));
+        request.setClientName(clientName);
+        socketService.sendMessageToClientByAddress(clientName, JsonUtil.toJson(request));
     }
     @Override
     public void handle(String jsonMessage, ClientStatus clientStatus) {

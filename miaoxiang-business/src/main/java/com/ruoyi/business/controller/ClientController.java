@@ -90,8 +90,18 @@ public class ClientController extends BaseController
         @GetMapping(value = "/status/{name}")
     public AjaxResult getStatus(@PathVariable("name") String name)
     {
-//        Client client = clientService.selectClientById(id);
         return success(clientInfoManager.getClientInfo(name));
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:client:query')")
+    @GetMapping(value = "/active/{clientId}")
+    public AjaxResult getStatus(@PathVariable("clientId") Long clientId)
+    {
+        Client client = clientService.selectClientById(clientId);
+        Integer active = client.getActive() == 1 ? 0 : 1;
+        client.setActive(active);
+        clientService.updateClient(client);
+        return success(client.getActive());
     }
 
     /**
