@@ -53,7 +53,7 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
         assignment = assignments.get(0);
         assignment.setClientName(null);
         int state = 2;
-        if (message.getTrainPara().getTrainComplete() == 0) {
+        if (message.getTrainPara().getTrainComplete() == 1) {
             state = 0;
         }
         assignment.setState(state);
