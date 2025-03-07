@@ -105,7 +105,7 @@ public class ClientServiceImpl implements IClientService
         Client clientResult = clientMapper.selectClient(clientSearchVO);
         if (clientResult != null && clientResult.getState() != 0) {
             log.info("与{}断开连接", clientResult.getName());
-            clientResult.setState(0);
+            clientResult.setState(2);
             clientMapper.updateClient(clientResult);
         }
     }
