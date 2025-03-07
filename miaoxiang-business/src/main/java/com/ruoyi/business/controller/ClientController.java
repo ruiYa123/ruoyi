@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.business.domain.request.MessageRequest;
 import com.ruoyi.business.queueTasks.ClientInfoManager;
+import com.ruoyi.business.socket.messageHandler.handler.command.MCStopTrainCommandHandler;
 import com.ruoyi.business.socket.messageHandler.handler.command.TestCommandHandler;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class ClientController extends BaseController
 
     @Autowired
     private ClientInfoManager clientInfoManager;
+
+    @Autowired
+    private MCStopTrainCommandHandler mcStopTrainCommandHandler;
     /**
      * 查询客户端列表
      */
@@ -87,10 +91,18 @@ public class ClientController extends BaseController
     }
 
     @PreAuthorize("@ss.hasPermi('business:client:query')")
-        @GetMapping(value = "/status/{name}")
+    @GetMapping(value = "/status/{name}")
     public AjaxResult getStatus(@PathVariable("name") String name)
     {
         return success(clientInfoManager.getClientInfo(name));
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:client:query')")
+    @GetMapping(value = "/stopTrain/{name}")
+    public AjaxResult stopTrain(@PathVariable("name") String name)
+    {
+        mcStopTrainCommandHandler.stopTrain(name);
+        return success();
     }
 
     @PreAuthorize("@ss.hasPermi('business:client:query')")

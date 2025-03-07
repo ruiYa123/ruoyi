@@ -38,7 +38,7 @@ public class ClientAddEventHandler extends AbstractMessageHandler {
         setClientLog(client.getName(), jsonMessage);
         ClientStatus clientInfo = clientInfoManager.getClientInfo(client.getName());
         if (clientInfo != null) {
-            BeanUtils.copyProperties(clientStatus, clientInfo);
+            BeanUtils.copyProperties(clientInfo, clientStatus);
         }
         clientStatus.getClient().setIp(message.getIp());
         clientStatus.getClient().setPort(message.getPort());

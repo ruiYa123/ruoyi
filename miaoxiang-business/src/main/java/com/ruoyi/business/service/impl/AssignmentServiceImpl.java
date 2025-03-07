@@ -96,7 +96,7 @@ public class AssignmentServiceImpl implements IAssignmentService
     @Override
     public int deleteAssignmentById(Long id)
     {
-        return assignmentMapper.deleteAssignmentById(id);
+            return assignmentMapper.deleteAssignmentById(id);
     }
 
     @Override

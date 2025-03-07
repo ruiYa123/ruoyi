@@ -108,7 +108,7 @@ public abstract class AbstractMessageHandler implements BaseMessageHandler {
         return client;
     }
 
-    protected void setTrainLog(String jsonMessage, ClientStatus clientStatus, String projectName, String assignmentName, IAssignmentService assignmentService, IAssignmentTrainService assignmentTrainService, ITrainLogService trainLogService) {
+    protected void setTrainLog(String jsonMessage, ClientStatus clientStatus, String projectName, String assignmentName) {
         Project project = new Project();
         project.setProjectName(projectName);
         Long projectId = projectService.selectProjectList(project).get(0).getId();

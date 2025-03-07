@@ -42,7 +42,6 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
     @Override
     public void handle(String jsonMessage, ClientStatus clientStatus) {
         ClientProjectTrainEndEvent message = JsonUtil.fromJson(jsonMessage, ClientProjectTrainEndEvent.class);
-//        clientInfoManager.registerClient(message.getName());
         Assignment assignment = new Assignment();
         Project project = new Project();
         project.setProjectName(message.getProjectName());
@@ -53,19 +52,14 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
         List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);
         assignment = assignments.get(0);
         assignment.setClientName(null);
-        assignment.setState(0);
-        assignmentService.updateAssignment(assignment);
         int state = 2;
         if (message.getTrainPara().getTrainComplete() == 0) {
             state = 0;
         }
-        Long trainId = assignmentTrainService.finishTrain(assignment.getId(), message.getName(), state);
-        TrainLog trainLog = new TrainLog();
-        trainLog.setAssignmentTrainId(trainId);
-        trainLog.setAssignmentId(assignment.getId());
-        trainLog.setContent(jsonMessage);
-        trainLog.setCreateTime(DateUtils.getNowDate());
-        trainLogService.insertTrainLog(trainLog);
+        assignment.setState(state);
+        assignmentService.updateAssignment(assignment);
+        assignmentTrainService.finishTrain(assignment.getId(), message.getName(), state);
+        setTrainLog(jsonMessage, clientStatus, message.getProjectName(), message.getAssignmentName());
 
         log.info("处理客户端训练完成: {}", message.getName());
         setClientLog(message.getName(), jsonMessage);

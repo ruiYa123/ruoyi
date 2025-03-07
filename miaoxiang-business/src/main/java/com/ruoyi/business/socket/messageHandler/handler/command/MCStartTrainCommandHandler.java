@@ -42,7 +42,7 @@ public class MCStartTrainCommandHandler extends AbstractMessageHandler {
     public void handle(String json, ClientStatus clientStatus) {
         ClientProjectTrainStartEvent message = JsonUtil.fromJson(json, ClientProjectTrainStartEvent.class);
         log.info("处理客户端开始训练: {}", message.getClientNames());
-        setTrainLog(json, clientStatus, message.getTrainPara().getProjectName(), message.getTrainPara().getAssignmentName(), assignmentService, assignmentTrainService, trainLogService);
+        setTrainLog(json, clientStatus, message.getTrainPara().getProjectName(), message.getTrainPara().getAssignmentName());
         setClientLog(message.getClientNames(), json);
     }
 

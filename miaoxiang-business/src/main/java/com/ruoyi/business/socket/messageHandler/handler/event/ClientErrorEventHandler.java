@@ -37,7 +37,7 @@ public class ClientErrorEventHandler extends AbstractMessageHandler {
     public void handle(String jsonMessage, ClientStatus clientStatus) {
         ClientErrorEvent message = JsonUtil.fromJson(jsonMessage, ClientErrorEvent.class);
         log.warn("处理异常报警信息: {}, 错误信息: {}", message.getErrorMsg().getClientNames(), message.getErrorMsg().getErrorText());
-        setTrainLog(jsonMessage, clientStatus, message.getErrorMsg().getProjectName(), message.getErrorMsg().getAssignmentName(), assignmentService, assignmentTrainService, trainLogService);
+        setTrainLog(jsonMessage, clientStatus, message.getErrorMsg().getProjectName(), message.getErrorMsg().getAssignmentName());
         setClientWarningLog(message.getErrorMsg().getClientNames(), jsonMessage);
     }
 
