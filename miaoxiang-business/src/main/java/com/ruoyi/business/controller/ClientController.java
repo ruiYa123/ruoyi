@@ -101,13 +101,17 @@ public class ClientController extends BaseController
     @GetMapping(value = "/stopTrain/{name}")
     public AjaxResult stopTrain(@PathVariable("name") String name)
     {
+        Client client = clientService.selectClientByName(name);
+        Integer active = 0;
+        client.setActive(active);
+        clientService.updateClient(client);
         mcStopTrainCommandHandler.stopTrain(name);
         return success();
     }
 
     @PreAuthorize("@ss.hasPermi('business:client:query')")
     @GetMapping(value = "/active/{clientId}")
-    public AjaxResult getStatus(@PathVariable("clientId") Long clientId)
+    public AjaxResult active(@PathVariable("clientId") Long clientId)
     {
         Client client = clientService.selectClientById(clientId);
         Integer active = client.getActive() == 1 ? 0 : 1;
