@@ -19,17 +19,11 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
 
     @Scheduled(initialDelay = 2000, fixedRateString = "${socket.scheduling.rate}")
     public void requestClientState() {
-//        log.info("获取client状态");
         getClients().forEach(client -> {
             if (client.getState() == 2) {
                 return;
             }
-            MCGetClientStateCommand request = new MCGetClientStateCommand();
-            request.setClientNames(client.getName());
-            socketService.sendMessageToClientByAddress(
-                    client.getName(),
-                    JsonUtil.toJson(request)
-            );
+            request(client.getName());
         });
     }
 
@@ -50,6 +44,15 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
         clientStatus.setMcGetClientStateFeedBack(response);
         clientInfoManager.updateClientInfo(clientStatus);
         setClientLog(clientStatus.getClient().getIp(), clientStatus.getClient().getPort(), jsonMessage);
+    }
+
+    public void request(String clientName) {
+        MCGetClientStateCommand request = new MCGetClientStateCommand();
+        request.setClientNames(clientName);
+        socketService.sendMessageToClientByAddress(
+                clientName,
+                JsonUtil.toJson(request)
+        );
     }
 
     public String getCommand() {

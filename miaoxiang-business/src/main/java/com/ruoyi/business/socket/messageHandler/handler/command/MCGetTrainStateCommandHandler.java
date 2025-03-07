@@ -37,17 +37,11 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
 
     @Scheduled(initialDelay = 2000, fixedRateString = "${socket.scheduling.rate}")
     public void requestTrainState() {
-//        log.info("获取client训练状态");
         getClients().forEach(client -> {
             if (client.getState() == 2) {
                 return;
             }
-            MCGetTrainStateCommand request = new MCGetTrainStateCommand();
-            request.setClientName(client.getName());
-            socketService.sendMessageToClientByAddress(
-                    client.getName(),
-                    JsonUtil.toJson(request)
-            );
+            request(client.getName());
         });
     }
 
@@ -77,6 +71,14 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
         setClientLog(clientStatus.getClient().getIp(), clientStatus.getClient().getPort(), jsonMessage);
     }
 
+    public void request(String clientName) {
+        MCGetTrainStateCommand request = new MCGetTrainStateCommand();
+        request.setClientName(clientName);
+        socketService.sendMessageToClientByAddress(
+                clientName,
+                JsonUtil.toJson(request)
+        );
+    }
     @Override
     public String getCommand() {
         return GET_TRAIN_STATE.getCommandStr();

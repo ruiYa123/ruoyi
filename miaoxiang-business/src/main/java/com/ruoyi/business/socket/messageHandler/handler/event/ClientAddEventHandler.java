@@ -3,10 +3,14 @@ package com.ruoyi.business.socket.messageHandler.handler.event;
 import com.ruoyi.business.domain.Client;
 import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
+import com.ruoyi.business.socket.messageHandler.handler.command.MCGetClientStateCommandHandler;
+import com.ruoyi.business.socket.messageHandler.handler.command.MCGetTrainStateCommandHandler;
 import com.ruoyi.business.socket.messageHandler.model.Events.ClientAddEvent;
+import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetClientStateFeedBack;
 import com.ruoyi.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIENT_ADD;
@@ -14,6 +18,12 @@ import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIEN
 @Slf4j
 @Component
 public class ClientAddEventHandler extends AbstractMessageHandler {
+
+    @Autowired
+    MCGetClientStateCommandHandler mcGetClientStateCommandHandler;
+
+    @Autowired
+    MCGetTrainStateCommandHandler mcGetTrainStateCommandHandler;
 
     @Override
     public void handle(String jsonMessage, ClientStatus clientStatus) {
@@ -34,6 +44,8 @@ public class ClientAddEventHandler extends AbstractMessageHandler {
         clientStatus.getClient().setPort(message.getPort());
         clientInfoManager.updateClientInfo(clientStatus);
         clientUpdater.updateClients();
+        mcGetClientStateCommandHandler.request(client.getName());
+        mcGetTrainStateCommandHandler.request(client.getName());
     }
 
     @Override
