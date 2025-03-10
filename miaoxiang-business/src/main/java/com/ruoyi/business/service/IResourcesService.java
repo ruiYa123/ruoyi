@@ -5,6 +5,7 @@ import java.util.List;
 import com.ruoyi.business.domain.Resources;
 import com.ruoyi.business.domain.request.ResourcesRequest;
 import com.ruoyi.business.domain.response.ResourcesResponse;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -31,6 +32,7 @@ public interface IResourcesService
      */
     public List<Resources> selectResourcesList(Resources resources);
 
+    public FileSystemResource getImage(String path);
 
     public List<ResourcesResponse> selectImagesList(ResourcesRequest resourcesRequest);
     /**

@@ -1,5 +1,6 @@
 package com.ruoyi.business.service.impl;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,16 +18,21 @@ import java.util.stream.Stream;
 
 import com.ruoyi.business.domain.request.ResourcesRequest;
 import com.ruoyi.business.domain.response.ResourcesResponse;
+import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.exception.UtilException;
 import com.ruoyi.common.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.ruoyi.business.mapper.ResourcesMapper;
 import com.ruoyi.business.domain.Resources;
 import com.ruoyi.business.service.IResourcesService;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
 
 import static com.ruoyi.common.utils.DateUtils.YYYY_MM_DD_HH_MM_SS;
 import static com.ruoyi.common.utils.DateUtils.dateTimeNow;
@@ -70,6 +76,31 @@ public class ResourcesServiceImpl implements IResourcesService
     public List<Resources> selectResourcesList(Resources resources)
     {
         return resourcesMapper.selectResourcesList(resources);
+    }
+
+    private void convertImage(String inputPath, String outputPath, String formatName) {
+        try {
+            // 读取 BMP 文件
+            BufferedImage bufferedImage = ImageIO.read(new File(inputPath));
+            // 写入新的格式文件
+            ImageIO.write(bufferedImage, formatName, new File(outputPath));
+            System.out.println("Image converted successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public FileSystemResource getImage(String path) {
+        String filePath = frontendPublicDir + "/" + path;
+        File imageFile = new File(filePath);
+
+        // 检查文件是否存在
+        if (!imageFile.exists()) {
+            throw new UtilException("没有找到图像");
+        }
+
+        return new FileSystemResource(imageFile);
     }
 
     @Override

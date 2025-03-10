@@ -9,9 +9,13 @@ import com.ruoyi.business.domain.request.DeleteResourcesRequest;
 import com.ruoyi.business.domain.request.FileListRequest;
 import com.ruoyi.business.domain.request.ResourcesRequest;
 import com.ruoyi.business.domain.response.ResourcesResponse;
+import com.ruoyi.business.service.impl.ResourcesServiceImpl;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.ServletUtils;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +63,19 @@ public class ResourcesController extends BaseController
     {
         List<ResourcesResponse> list = resourcesService.selectImagesList(resourcesRequest);
         return success(list);
+    }
+
+    @GetMapping(value = "/getImage/{projectName}/{assignmentName}/{resourcesName}") // 允许路径中包含多个斜杠
+    public ResponseEntity<FileSystemResource> getImage(@PathVariable String projectName, @PathVariable String assignmentName, @PathVariable String resourcesName) {
+        try {
+            FileSystemResource image = resourcesService.getImage(projectName + "/" + assignmentName + "/" + resourcesName);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "image/bmp");
+            headers.add("Access-Control-Allow-Origin", "*");
+            return new ResponseEntity<>(image, headers, HttpStatus.SUCCESS);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
     }
 
     @PreAuthorize("@ss.hasPermi('business:resources:list')")
