@@ -103,7 +103,7 @@ public class ClientServiceImpl implements IClientService
             clientSearchVO.setPort(client.getPort());
         }
         Client clientResult = clientMapper.selectClient(clientSearchVO);
-        if (clientResult != null && clientResult.getState() != 0) {
+        if (clientResult != null) {
             log.info("与{}断开连接", clientResult.getName());
             clientResult.setState(2);
             clientMapper.updateClient(clientResult);
