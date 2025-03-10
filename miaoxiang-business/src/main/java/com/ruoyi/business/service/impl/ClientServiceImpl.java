@@ -95,7 +95,6 @@ public class ClientServiceImpl implements IClientService
 
     @Override
     public void offLineClient(Client client) {
-        log.info("现在下线{}", client.getName());
         Client clientSearchVO = new Client();
         if (client.getName() != null) {
             clientSearchVO.setName(client.getName());
