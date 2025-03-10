@@ -97,7 +97,9 @@ public class AssignmentController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(Assignment assignment)
     {
-        assignment.setDept(getDept());
+        if (!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            assignment.setDept(getDept());
+        }
         startPage();
         List<Assignment> list = new ArrayList<>();
         if (assignment.getState() == 2) {
@@ -113,7 +115,9 @@ public class AssignmentController extends BaseController
     @GetMapping("/listAll")
     public AjaxResult listAll(Assignment assignment)
     {
-        assignment.setDept(getDept());
+        if (!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            assignment.setDept(getDept());
+        }
         List<Assignment> list = assignmentService.selectAssignmentList(assignment);
         Collections.reverse(list);
         return success(list);
@@ -125,7 +129,9 @@ public class AssignmentController extends BaseController
     {
         Assignment assignment = new Assignment();
 //        assignment.setState(1);
-        assignment.setDept(getDept());
+        if (!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            assignment.setDept(getDept());
+        }
         List<Assignment> list = assignmentService.selectAssignmentList(assignment);
         List<TrainingAssignment> response = new ArrayList<>();
         list.forEach(e -> {
@@ -197,16 +203,18 @@ public class AssignmentController extends BaseController
     public AjaxResult add(@RequestBody Assignment assignment)
     {
         assignment.setCreateBy(getUsername());
-        String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
-        List<Long> deptList = Arrays.stream(ancestors.split(","))
-                .map(Long::parseLong)
-                .collect(Collectors.toList());
-        if (deptList.size() > 1) {
-            assignment.setDept(deptList.get(1));
-        } else {
-            assignment.setDept(getDeptId());
+        assignment.setState(3);
+        if (!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
+            List<Long> deptList = Arrays.stream(ancestors.split(","))
+                    .map(Long::parseLong)
+                    .collect(Collectors.toList());
+            if (deptList.size() > 1) {
+                assignment.setDept(deptList.get(1));
+            } else {
+                assignment.setDept(getDeptId());
+            }
         }
-
         return toAjax(assignmentService.insertAssignment(assignment));
     }
 
