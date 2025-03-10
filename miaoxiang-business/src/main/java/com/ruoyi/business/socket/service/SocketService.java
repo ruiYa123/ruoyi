@@ -101,10 +101,9 @@ public class SocketService {
                     result.complete(true);
                     scheduler.shutdown();
                 } else if (attempt >= MAX_ATTEMPTS) {
-                    log.warn("未找到指定客户端: {} after {} attempts, message:{}", clientName, MAX_ATTEMPTS, message);
+//                    log.warn("未找到指定客户端: {} after {} attempts, message:{}", clientName, MAX_ATTEMPTS, message);
                     try {
                         serviceRegistry.unregister(clientName);
-                        log.warn("下线操作完毕");
                         result.complete(false);
                         scheduler.shutdown();
                     } catch (Exception e) {
