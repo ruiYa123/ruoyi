@@ -26,6 +26,9 @@ import com.ruoyi.business.service.IClientService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
+import static com.ruoyi.business.domain.Client.StateEnum.ACTIVATE;
+import static com.ruoyi.business.domain.Client.StateEnum.DEACTIVATE;
+
 /**
  * 客户端Controller
  *
@@ -114,9 +117,12 @@ public class ClientController extends BaseController
     public AjaxResult active(@PathVariable("clientId") Long clientId)
     {
         Client client = clientService.selectClientById(clientId);
-        Integer active = client.getActive() == 1 ? 0 : 1;
+        Integer active = client.getActive() == ACTIVATE.getValue() ? DEACTIVATE.getValue() : ACTIVATE.getValue();
         client.setActive(active);
         clientService.updateClient(client);
+        if (active == DEACTIVATE.getValue()) {
+            clientInfoManager.removeClient(client.getName());
+        }
         return success(client.getActive());
     }
 

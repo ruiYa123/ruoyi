@@ -1,7 +1,9 @@
 package com.ruoyi.business.queueTasks;
 
+import com.ruoyi.business.domain.Assignment;
 import com.ruoyi.business.domain.Client;
 import com.ruoyi.business.domain.ClientStatus;
+import com.ruoyi.business.service.IAssignmentService;
 import com.ruoyi.business.service.IClientService;
 import com.ruoyi.common.core.redis.RedisCache;
 import lombok.Getter;
@@ -9,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
+import static com.ruoyi.business.domain.Client.StateEnum.ACTIVATE;
 import static com.ruoyi.business.queueTasks.ClientInfoManager.ClientRedisKeys.CLIENTS_STATUS;
 import static com.ruoyi.business.queueTasks.ClientInfoManager.ClientRedisKeys.IDLE_CLIENTS;
 
@@ -22,6 +27,9 @@ public class ClientInfoManager {
 
     @Autowired
     private IClientService clientService;
+
+    @Autowired
+    private IAssignmentService assignmentService;
 
     @Getter
     public enum ClientRedisKeys {
@@ -40,9 +48,26 @@ public class ClientInfoManager {
         for (String name : names) {
             Client client = new Client();
             client.setName(name);
-            if (clientService.selectClient(client).getActive() == 0) {
+            if (clientService.selectClient(client).getActive() == ACTIVATE.getValue()) {
+                Assignment assignment = new Assignment();
+                assignment.setClientName(client.getName());
+                assignment.setState(1);
+                List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);
+                if (!assignments.isEmpty()) {
+                    assignments.forEach(e -> {
+                        e.setState(0);
+                        e.setClientName(null);
+                        assignmentService.updateAssignment(assignment);
+                    });
+                }
                 redisCache.addToSet(IDLE_CLIENTS.getKey(), name);
             }
+        }
+    }
+
+    public void removeClient(String... names) {
+        for (String name : names) {
+            redisCache.removeFromSet(IDLE_CLIENTS.getKey(), name);
         }
     }
 

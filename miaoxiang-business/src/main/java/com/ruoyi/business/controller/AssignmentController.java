@@ -123,6 +123,17 @@ public class AssignmentController extends BaseController
         return success(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('business:assignment:insert')")
+    @Log(title = "任务", businessType = BusinessType.INSERT)
+    @GetMapping("/resetRedisAssignment")
+    public AjaxResult resetRedisAssignment() {
+
+        if (userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            return success(taskProducer.checkAndUpdateTasks());
+        }
+        return error("校准接口，无权访问");
+    }
+
     @PreAuthorize("@ss.hasPermi('business:assignment:list')")
     @GetMapping("/listTraining")
     public AjaxResult listTraining()

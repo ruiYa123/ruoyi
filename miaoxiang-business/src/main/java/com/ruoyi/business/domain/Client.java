@@ -1,5 +1,6 @@
 package com.ruoyi.business.domain;
 
+import lombok.Getter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -36,6 +37,19 @@ public class Client extends BaseEntity
 
     @Excel(name = "激活状态")
     private Integer active;
+
+    @Getter
+    public enum StateEnum {
+        ACTIVATE(1),
+        DEACTIVATE(0);
+
+        private final int value;
+
+        StateEnum(int value) {
+            this.value = value;
+        }
+
+    }
 
     public void setId(Long id)
     {

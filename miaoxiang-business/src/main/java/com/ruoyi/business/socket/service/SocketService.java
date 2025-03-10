@@ -88,24 +88,29 @@ public class SocketService {
         CompletableFuture<Boolean> result = new CompletableFuture<>();
         scheduler.scheduleWithFixedDelay(new Runnable() {
             int attempt = 0;
-            final int MAX_ATTEMPTS = 2;
+            final int MAX_ATTEMPTS = 3;
 
             @Override
             public void run() {
                 attempt++;
                 PrintWriter out = serviceRegistry.getPrintWriter(clientName);
-                log.info(out.toString());
+                log.info("获取 {} 的printWriter" ,clientName);
                 if (out != null) {
                     out.println(message);
                     log.info("发送消息：{}", message);
                     result.complete(true);
                     scheduler.shutdown();
                 } else if (attempt >= MAX_ATTEMPTS) {
-//                    log.warn("未找到指定客户端: {} after {} attempts, message:{}", clientKey, MAX_ATTEMPTS, message);
-                    ClientOffLineEventHandler clientOffLineEventHandler = new ClientOffLineEventHandler();
-                    clientOffLineEventHandler.handleDisconnect(clientName);
-                    result.complete(false);
-                    scheduler.shutdown();
+                    log.warn("未找到指定客户端: {} after {} attempts, message:{}", clientName, MAX_ATTEMPTS, message);
+                    try {
+                        serviceRegistry.unregister(clientName);
+                        log.warn("下线操作完毕");
+                        result.complete(false);
+                        scheduler.shutdown();
+                    } catch (Exception e) {
+                        log.info(e.getMessage());
+                    }
+
                 }
             }
         }, 0, 5, TimeUnit.SECONDS);

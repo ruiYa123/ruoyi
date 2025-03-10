@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 
+import static com.ruoyi.business.domain.Client.StateEnum.ACTIVATE;
 import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.GET_CLIENT_STATE;
 
 @Slf4j
@@ -31,7 +32,7 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
     public void handle(String jsonMessage, ClientStatus clientStatus) {
         log.info("返回客户端状态信息: {}", jsonMessage);
         MCGetClientStateFeedBack response = JsonUtil.fromJson(jsonMessage, MCGetClientStateFeedBack.class);
-        if (response.getClientState().getState() == 0) {
+        if (response.getClientState().getState() == ACTIVATE.getValue()) {
             clientInfoManager.registerClient(response.getClientState().getName());
         }
 

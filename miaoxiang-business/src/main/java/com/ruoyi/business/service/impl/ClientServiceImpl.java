@@ -95,6 +95,7 @@ public class ClientServiceImpl implements IClientService
 
     @Override
     public void offLineClient(Client client) {
+        log.info("现在下线{}", client.getName());
         Client clientSearchVO = new Client();
         if (client.getName() != null) {
             clientSearchVO.setName(client.getName());
@@ -103,7 +104,7 @@ public class ClientServiceImpl implements IClientService
             clientSearchVO.setPort(client.getPort());
         }
         Client clientResult = clientMapper.selectClient(clientSearchVO);
-        if (clientResult != null && clientResult.getState() != 0) {
+        if (clientResult != null && clientResult.getState() != 2) {
             log.info("与{}断开连接", clientResult.getName());
             clientResult.setState(2);
             clientMapper.updateClient(clientResult);

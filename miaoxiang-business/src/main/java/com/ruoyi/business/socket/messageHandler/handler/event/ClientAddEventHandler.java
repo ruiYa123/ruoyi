@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static com.ruoyi.business.domain.Client.StateEnum.ACTIVATE;
 import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIENT_ADD;
 
 @Slf4j
@@ -28,7 +29,7 @@ public class ClientAddEventHandler extends AbstractMessageHandler {
     @Override
     public void handle(String jsonMessage, ClientStatus clientStatus) {
         ClientAddEvent message = JsonUtil.fromJson(jsonMessage, ClientAddEvent.class);
-        if (message.getState() == 0) {
+        if (message.getState() == ACTIVATE.getValue()) {
             clientInfoManager.registerClient(message.getName());
         }
         log.info("{} 客户端上线，状态：{}", message.getName(), message.getState());
