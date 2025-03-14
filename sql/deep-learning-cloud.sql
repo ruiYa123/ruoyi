@@ -54,7 +54,7 @@ CREATE TABLE `assignment_train`  (
                                      `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键ID',
                                      `assignment_id` bigint NOT NULL COMMENT '任务ID',
                                      `client_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '训练此任务的训练机',
-                                     `state` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '状态',
+                                     `state` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci COMMENT '状态',
                                      `progress` decimal(5, 2) NOT NULL COMMENT '进度',
                                      `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '备注',
                                      `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',

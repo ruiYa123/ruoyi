@@ -66,6 +66,7 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
 
         log.info("处理客户端训练完成: {}", message.getName());
         setClientLog(message.getName(), jsonMessage);
+        setTrainLog(jsonMessage, clientStatus, message.getProjectName(), message.getAssignmentName());
         getTrainStateCommandHandler.request(message.getName());
     }
 
