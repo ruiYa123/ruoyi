@@ -52,26 +52,54 @@ public class ClientHandler extends Thread {
             while ((bytesRead = inputStream.read(buffer)) != -1) {
                 completeMessage.append(new String(buffer, 0, bytesRead, StandardCharsets.UTF_8));
 
+                // 尝试提取完整的 JSON 对象
                 while (true) {
                     String jsonData = completeMessage.toString();
-                    if (JsonUtil.isValidJson(jsonData)) {
-                        log.info("Received JSON data from client {}: {}", this.clientStatus.getClient().getName(), jsonData);
-                        handleClientMessage(jsonData);
-                        completeMessage.setLength(0);
+                    int jsonEndIndex = findJsonEndIndex(jsonData);
+
+                    // 如果找到完整的 JSON 对象
+                    if (jsonEndIndex != -1) {
+                        String validJson = jsonData.substring(0, jsonEndIndex + 1);
+                        if (JsonUtil.isValidJson(jsonData)) {
+                            try {
+                                log.info("Received JSON data from client: {}", validJson);
+                                handleClientMessage(jsonData); // 处理 JSON 对象
+                            } catch (Exception e) {
+                                log.warn("Invalid JSON data received: {}", validJson);
+                            }
+                            completeMessage.delete(0, jsonEndIndex + 1);
+                        }
+
+                        // 清理已处理的部分
+
                     } else {
-                        break;
+                        break; // 如果没有完整的 JSON 对象，退出循环
                     }
                 }
             }
         } catch (IOException e) {
-            if ("Socket closed".equals(e.getMessage())) {
-                log.info("Socket客户端已关闭: {}", this.clientStatus.getClient().getName());
-            } else {
-                log.warn("IOException occurred while reading input for client {}: {}", this.clientStatus.getClient().getName(), e.getMessage());
-            }
+            log.warn("IOException occurred while reading input: {}", e.getMessage());
         } finally {
             cleanup();
         }
+    }
+
+    // 找到完整 JSON 对象的结束索引
+    private int findJsonEndIndex(String json) {
+        int openBraces = 0; // 用于跟踪嵌套层级
+        for (int i = 0; i < json.length(); i++) {
+            char currentChar = json.charAt(i);
+            if (currentChar == '{') {
+                openBraces++;
+            } else if (currentChar == '}') {
+                openBraces--;
+                // 如果找到了一个完整的 JSON 对象
+                if (openBraces == 0) {
+                    return i; // 返回结束索引
+                }
+            }
+        }
+        return -1; // 如果没有找到完整的 JSON 对象
     }
 
     private void handleClientMessage(String jsonData) {
