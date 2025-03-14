@@ -13,5 +13,11 @@ public class MCGetTrainStateFeedBack extends BaseMessage {
     public static class TrainState {
         @JsonProperty("Train_Percentage")
         private Double trainPercentage; // 0~100
+
+        @JsonProperty("ProjectName")
+        private String projectName;
+
+        @JsonProperty("AssignmentName")
+        private String assignmentName;
     }
 }

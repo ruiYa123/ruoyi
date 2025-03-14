@@ -2,6 +2,7 @@ package com.ruoyi.business.socket.messageHandler.handler.command;
 
 import com.ruoyi.business.domain.Assignment;
 import com.ruoyi.business.domain.ClientStatus;
+import com.ruoyi.business.domain.Project;
 import com.ruoyi.business.domain.TrainLog;
 import com.ruoyi.business.service.IAssignmentService;
 import com.ruoyi.business.service.IAssignmentTrainService;
@@ -49,17 +50,29 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
     public void handle(String jsonMessage, ClientStatus clientStatus) {
 
         MCGetTrainStateFeedBack response = JsonUtil.fromJson(jsonMessage, MCGetTrainStateFeedBack.class);
-        Assignment assignment = new Assignment();
-        assignment.setClientName(clientStatus.getClient().getName());
-        List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);
-        if (!assignments.isEmpty()) {
-            assignment = assignments.get(0);
-            clientStatus.setAssignmentId(assignment.getId());
-            clientStatus.setAssignmentName(assignment.getAssignmentName());
-        }
+        Assignment assignmentVO = new Assignment();
+        Project projectVO = new Project();
+//        assignment.setClientName(clientStatus.getClient().getName());
+//        List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);
+//        if (!assignments.isEmpty()) {
+//            assignment = assignments.get(0);
+//            clientStatus.setAssignmentId(assignment.getId());
+//            clientStatus.setAssignmentName(assignment.getAssignmentName());
+//        }
+        projectVO.setProjectName(response.getTrainState().getProjectName());
+        Project project = projectService.selectProjectList(projectVO).get(0);
+        assignmentVO.setProjectId(project.getId());
+        assignmentVO.setAssignmentName(response.getTrainState().getAssignmentName());
+        Assignment assignment = assignmentService.selectAssignmentList(assignmentVO).get(0);
         clientStatus.setMcGetTrainStateFeedBack(response);
         clientStatus.setAssignment(assignment);
-        Long trainId = assignmentTrainService.updateTrain(assignment.getId(), clientStatus.getClient().getName(), BigDecimal.valueOf(response.getTrainState().getTrainPercentage()), 1);
+        Long trainId = assignmentTrainService.updateTrain(
+                assignment.getId(),
+                clientStatus.getClient().getName(),
+                BigDecimal.valueOf(
+                        response.getTrainState().getTrainPercentage()
+                ),
+                1);
         TrainLog trainLog = new TrainLog();
         trainLog.setAssignmentTrainId(trainId);
         trainLog.setAssignmentId(assignment.getId());

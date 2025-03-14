@@ -34,7 +34,7 @@ server:
 socket:
   port: 3000
   scheduling:
-    rate: 30000
+    rate: 10000
 
 assignment:
   scheduling:

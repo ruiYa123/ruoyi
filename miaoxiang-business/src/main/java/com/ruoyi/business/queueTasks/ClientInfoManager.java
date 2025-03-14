@@ -1,9 +1,11 @@
 package com.ruoyi.business.queueTasks;
 
 import com.ruoyi.business.domain.Assignment;
+import com.ruoyi.business.domain.AssignmentTrain;
 import com.ruoyi.business.domain.Client;
 import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.service.IAssignmentService;
+import com.ruoyi.business.service.IAssignmentTrainService;
 import com.ruoyi.business.service.IClientService;
 import com.ruoyi.common.core.redis.RedisCache;
 import lombok.Getter;
@@ -30,6 +32,9 @@ public class ClientInfoManager {
 
     @Autowired
     private IAssignmentService assignmentService;
+
+    @Autowired
+    private IAssignmentTrainService assignmentTrainService;
 
     @Getter
     public enum ClientRedisKeys {
@@ -58,6 +63,7 @@ public class ClientInfoManager {
                         e.setState(0);
                         e.setClientName(null);
                         assignmentService.updateAssignment(assignment);
+                        assignmentTrainService.finishTrain(assignment.getId(), name, 2);
                     });
                 }
                 redisCache.addToSet(IDLE_CLIENTS.getKey(), name);

@@ -119,8 +119,7 @@ public abstract class AbstractMessageHandler implements BaseMessageHandler {
         List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);
         if (!assignments.isEmpty()) {
             assignment = assignments.get(0);
-            clientStatus.setAssignmentId(assignment.getId());
-            clientStatus.setAssignmentName(assignment.getAssignmentName());
+            clientStatus.setAssignment(assignment);
         }
         Long trainId = assignmentTrainService.selectAssignmentTrainById(assignment.getId()).getId();
         TrainLog trainLog = new TrainLog();

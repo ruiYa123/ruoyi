@@ -32,7 +32,7 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
     public void handle(String jsonMessage, ClientStatus clientStatus) {
         log.info("返回客户端状态信息: {}", jsonMessage);
         MCGetClientStateFeedBack response = JsonUtil.fromJson(jsonMessage, MCGetClientStateFeedBack.class);
-        if (response.getClientState().getState() == ACTIVATE.getValue()) {
+        if (response.getClientState().getState() == 0) {
             clientInfoManager.registerClient(response.getClientState().getName());
         }
 

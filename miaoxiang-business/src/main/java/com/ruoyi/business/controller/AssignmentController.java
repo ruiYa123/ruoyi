@@ -101,7 +101,7 @@ public class AssignmentController extends BaseController
             assignment.setDept(getDept());
         }
         startPage();
-        List<Assignment> list = new ArrayList<>();
+        List<Assignment> list;
         if (assignment.getState() == 2) {
             Long[] tasks = taskProducer.getTask();
             list = assignmentService.selectAssignmentListByIds(assignment, tasks);

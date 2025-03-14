@@ -8,8 +8,6 @@ import lombok.Data;
 public class ClientStatus {
 
     private Client client = new Client();
-    private Long assignmentId;
-    private String assignmentName;
     private Long projectId;
     private String projectName;
     private Double trainPercentage;
