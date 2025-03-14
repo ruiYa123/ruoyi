@@ -59,7 +59,7 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
         if (message.getTrainPara().getTrainComplete() == 1) {
             state = 0;
         }
-        assignment.setState(state);
+        assignment.setState(0);
         assignmentService.updateAssignment(assignment);
         assignmentTrainService.finishTrain(assignment.getId(), message.getName(), state);
         setTrainLog(jsonMessage, clientStatus, message.getProjectName(), message.getAssignmentName());
