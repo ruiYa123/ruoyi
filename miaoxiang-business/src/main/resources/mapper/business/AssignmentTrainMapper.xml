@@ -26,7 +26,7 @@
         <where>
             <if test="assignmentId != null"> and assignment_id = #{assignmentId}</if>
             <if test="clientName != null and clientName != ''"> and client_name = #{clientName}</if>
-            <if test="state != null and state != ''"> and state = #{state}</if>
+            <if test="state != null"> and state = #{state}</if>
             <if test="progress != null"> and progress = #{progress}</if>
             <if test="description != null and description != ''"> and description = #{description}</if>
         </where>
@@ -42,7 +42,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="assignmentId != null">assignment_id,</if>
             <if test="clientName != null and clientName != ''">client_name,</if>
-            <if test="state != null and state != ''">state,</if>
+            <if test="state != null">state,</if>
             <if test="progress != null">progress,</if>
             <if test="description != null">description,</if>
             <if test="createTime != null">create_time,</if>
@@ -68,7 +68,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="assignmentId != null">assignment_id = #{assignmentId},</if>
             <if test="clientName != null and clientName != ''">client_name = #{clientName},</if>
-            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="state != null">state = #{state},</if>
             <if test="progress != null">progress = #{progress},</if>
             <if test="description != null">description = #{description},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
