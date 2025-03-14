@@ -113,11 +113,6 @@ public class AssignmentTrainServiceImpl implements IAssignmentTrainService
             assignmentTrain.setState(state);
             assignmentTrain.setClientName(clientName);
             updateAssignmentTrain(assignmentTrain);
-        } else {
-            assignmentTrain.setState(state);
-            assignmentTrain.setProgress(progress);
-            assignmentTrain.setClientName(clientName);
-            insertAssignmentTrain(assignmentTrain);
         }
         return assignmentTrain.getId();
     }

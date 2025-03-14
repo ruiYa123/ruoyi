@@ -62,8 +62,8 @@ public class ClientInfoManager {
                     assignments.forEach(e -> {
                         e.setState(0);
                         e.setClientName(null);
-                        assignmentService.updateAssignment(assignment);
-                        assignmentTrainService.finishTrain(assignment.getId(), name, 2);
+                        assignmentService.updateAssignment(e);
+//                        assignmentTrainService.finishTrain(assignment.getId(), name, 0);
                     });
                 }
                 redisCache.addToSet(IDLE_CLIENTS.getKey(), name);
