@@ -60,20 +60,18 @@ public class ClientHandler extends Thread {
                     // 如果找到完整的 JSON 对象
                     if (jsonEndIndex != -1) {
                         String validJson = jsonData.substring(0, jsonEndIndex + 1);
-                        if (JsonUtil.isValidJson(jsonData)) {
+                        if (JsonUtil.isValidJson(validJson)) {
                             try {
                                 log.info("Received JSON data from client: {}", validJson);
-                                handleClientMessage(jsonData); // 处理 JSON 对象
+                                handleClientMessage(validJson); // 处理 JSON 对象
                             } catch (Exception e) {
                                 log.warn("Invalid JSON data received: {}", validJson);
                             }
                             completeMessage.delete(0, jsonEndIndex + 1);
                         }
 
-                        // 清理已处理的部分
-
                     } else {
-                        break; // 如果没有完整的 JSON 对象，退出循环
+                        break;
                     }
                 }
             }
