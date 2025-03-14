@@ -83,7 +83,7 @@ public class AssignmentTrainServiceImpl implements IAssignmentTrainService
     @Override
     public Long finishTrain(Long assignmentId, String clientName, Integer state) {
         AssignmentTrain assignmentTrain = new AssignmentTrain();
-        assignmentTrain.setState(1);
+        assignmentTrain.setState(0);
         assignmentTrain.setAssignmentId(assignmentId);
         List<AssignmentTrain> assignmentTrains = selectAssignmentTrainList(assignmentTrain);
         if (assignmentTrains != null && !assignmentTrains.isEmpty()) {
