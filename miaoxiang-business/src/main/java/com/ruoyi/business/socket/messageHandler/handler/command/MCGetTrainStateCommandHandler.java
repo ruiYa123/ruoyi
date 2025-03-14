@@ -73,13 +73,16 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
                         response.getTrainState().getTrainPercentage()
                 ),
                 1);
-        TrainLog trainLog = new TrainLog();
-        trainLog.setAssignmentTrainId(trainId);
-        trainLog.setAssignmentId(assignment.getId());
-        trainLog.setContent(jsonMessage);
-        trainLog.setCreateTime(DateUtils.getNowDate());
-        trainLogService.insertTrainLog(trainLog);
-        clientInfoManager.updateClientInfo(clientStatus);
+        if (trainId != null) {
+            TrainLog trainLog = new TrainLog();
+            trainLog.setAssignmentTrainId(trainId);
+            trainLog.setAssignmentId(assignment.getId());
+            trainLog.setContent(jsonMessage);
+            trainLog.setCreateTime(DateUtils.getNowDate());
+            trainLogService.insertTrainLog(trainLog);
+            clientInfoManager.updateClientInfo(clientStatus);
+        }
+
         log.info("返回客户端训练进度信息: {}", jsonMessage);
         setClientLog(clientStatus.getClient().getIp(), clientStatus.getClient().getPort(), jsonMessage);
     }

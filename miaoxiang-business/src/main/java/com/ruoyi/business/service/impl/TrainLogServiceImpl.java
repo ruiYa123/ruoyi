@@ -10,19 +10,19 @@ import com.ruoyi.business.service.ITrainLogService;
 
 /**
  * 训练日志Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2025-02-07
  */
 @Service
-public class TrainLogServiceImpl implements ITrainLogService 
+public class TrainLogServiceImpl implements ITrainLogService
 {
     @Autowired
     private TrainLogMapper trainLogMapper;
 
     /**
      * 查询训练日志
-     * 
+     *
      * @param id 训练日志主键
      * @return 训练日志
      */
@@ -34,7 +34,7 @@ public class TrainLogServiceImpl implements ITrainLogService
 
     /**
      * 查询训练日志列表
-     * 
+     *
      * @param trainLog 训练日志
      * @return 训练日志
      */
@@ -46,7 +46,7 @@ public class TrainLogServiceImpl implements ITrainLogService
 
     /**
      * 新增训练日志
-     * 
+     *
      * @param trainLog 训练日志
      * @return 结果
      */
@@ -59,7 +59,7 @@ public class TrainLogServiceImpl implements ITrainLogService
 
     /**
      * 修改训练日志
-     * 
+     * x
      * @param trainLog 训练日志
      * @return 结果
      */
@@ -72,7 +72,7 @@ public class TrainLogServiceImpl implements ITrainLogService
 
     /**
      * 批量删除训练日志
-     * 
+     *
      * @param ids 需要删除的训练日志主键
      * @return 结果
      */
@@ -84,7 +84,7 @@ public class TrainLogServiceImpl implements ITrainLogService
 
     /**
      * 删除训练日志信息
-     * 
+     *
      * @param id 训练日志主键
      * @return 结果
      */
