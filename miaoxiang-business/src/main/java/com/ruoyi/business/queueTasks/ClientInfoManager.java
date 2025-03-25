@@ -53,21 +53,22 @@ public class ClientInfoManager {
         for (String name : names) {
             Client client = new Client();
             client.setName(name);
-            if (clientService.selectClient(client).getActive() == ACTIVATE.getValue()) {
-                Assignment assignment = new Assignment();
-                assignment.setClientName(client.getName());
-                assignment.setState(1);
-                List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);
-                if (!assignments.isEmpty()) {
-                    assignments.forEach(e -> {
-                        e.setState(0);
-                        e.setClientName(null);
-                        assignmentService.updateAssignment(e);
+            Assignment assignment = new Assignment();
+            assignment.setClientName(client.getName());
+            assignment.setState(1);
+            List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);
+            if (!assignments.isEmpty()) {
+                assignments.forEach(e -> {
+                    e.setState(0);
+                    e.setClientName(null);
+                    assignmentService.updateAssignment(e);
 //                        assignmentTrainService.finishTrain(assignment.getId(), name, 0);
-                    });
-                }
+                });
+            }
+            if (clientService.selectClient(client).getActive() == ACTIVATE.getValue()) {
                 redisCache.addToSet(IDLE_CLIENTS.getKey(), name);
             }
+
         }
     }
 
