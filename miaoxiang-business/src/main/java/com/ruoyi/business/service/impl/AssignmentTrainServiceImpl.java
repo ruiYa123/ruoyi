@@ -83,7 +83,7 @@ public class AssignmentTrainServiceImpl implements IAssignmentTrainService
     @Override
     public Long finishTrain(Long assignmentId, String clientName, Integer state) {
         AssignmentTrain assignmentTrain = new AssignmentTrain();
-        assignmentTrain.setState(0);
+        assignmentTrain.setState(1);
         assignmentTrain.setAssignmentId(assignmentId);
         List<AssignmentTrain> assignmentTrains = selectAssignmentTrainList(assignmentTrain);
         if (assignmentTrains != null && !assignmentTrains.isEmpty()) {
@@ -104,13 +104,15 @@ public class AssignmentTrainServiceImpl implements IAssignmentTrainService
     @Override
     public Long updateTrain(Long assignmentId, String clientName,  BigDecimal progress, Integer state) {
         AssignmentTrain assignmentTrain = new AssignmentTrain();
-        assignmentTrain.setState(1);
+//        assignmentTrain.setState(1);
         assignmentTrain.setAssignmentId(assignmentId);
         List<AssignmentTrain> assignmentTrains = selectAssignmentTrainList(assignmentTrain);
         if (assignmentTrains != null && !assignmentTrains.isEmpty()) {
             assignmentTrain = assignmentTrains.get(assignmentTrains.size() - 1);
             assignmentTrain.setProgress(progress);
-            assignmentTrain.setState(state);
+            if (state != null) {
+                assignmentTrain.setState(state);
+            }
             assignmentTrain.setClientName(clientName);
             updateAssignmentTrain(assignmentTrain);
         }

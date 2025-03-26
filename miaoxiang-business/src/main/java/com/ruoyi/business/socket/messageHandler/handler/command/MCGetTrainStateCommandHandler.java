@@ -64,15 +64,18 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
         assignmentVO.setProjectId(project.getId());
         assignmentVO.setAssignmentName(response.getTrainState().getAssignmentName());
         Assignment assignment = assignmentService.selectAssignmentList(assignmentVO).get(0);
-        clientStatus.setMcGetTrainStateFeedBack(response);
-        clientStatus.setAssignment(assignment);
+        if (clientStatus.getMcGetClientStateFeedBack().getClientState().getState() == 1) {
+            clientStatus.setMcGetTrainStateFeedBack(response);
+            clientStatus.setAssignment(assignment);
+        }
+
         Long trainId = assignmentTrainService.updateTrain(
                 assignment.getId(),
                 clientStatus.getClient().getName(),
                 BigDecimal.valueOf(
                         response.getTrainState().getTrainPercentage()
                 ),
-                1);
+                null);
         if (trainId != null) {
             TrainLog trainLog = new TrainLog();
             trainLog.setAssignmentTrainId(trainId);

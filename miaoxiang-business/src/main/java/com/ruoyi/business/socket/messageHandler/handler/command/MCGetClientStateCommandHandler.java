@@ -35,8 +35,8 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
         MCGetClientStateFeedBack response = JsonUtil.fromJson(jsonMessage, MCGetClientStateFeedBack.class);
         if (response.getClientState().getState() == 0) {
             clientInfoManager.registerClient(response.getClientState().getName());
+            clientStatus.setMcGetTrainStateFeedBack(new MCGetTrainStateFeedBack());
         }
-        clientStatus.setMcGetTrainStateFeedBack(new MCGetTrainStateFeedBack());
         Client client = new Client();
         client.setState(response.getClientState().getState());
         client.setName(response.getClientState().getName());
