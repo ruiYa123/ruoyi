@@ -62,7 +62,7 @@ public class ClientInfoManager {
                     e.setState(0);
                     e.setClientName(null);
                     assignmentService.updateAssignment(e);
-//                        assignmentTrainService.finishTrain(assignment.getId(), name, 0);
+                    assignmentTrainService.finishTrain(assignment.getId(), name, 0);
                 });
             }
             if (clientService.selectClient(client).getActive() == ACTIVATE.getValue()) {
