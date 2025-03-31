@@ -11,7 +11,7 @@ public class ClientStatus {
     private Long projectId;
     private String projectName;
     private Double trainPercentage;
-    private Assignment assignment;
+//    private Assignment assignment;
 
     private MCGetClientStateFeedBack mcGetClientStateFeedBack = new MCGetClientStateFeedBack();
 

@@ -13,6 +13,7 @@ import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetTrainStateFe
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.JsonUtil;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,6 +36,25 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
 
     @Autowired
     private ITrainLogService trainLogService;
+
+    @Getter
+    public enum TrainProcessStatus {
+        COLLECT_LABEL("Collect_Label", "收集标签"),
+        DATASETS_PROCESS("Datasets_Process", "数据集处理"),
+        ADD_DATASETS("Add_Datasets", "添加数据集"),
+        TRAIN_MODEL("Train_Model", "训练模型"),
+        TRANSFORM_MODEL("Transform_Model", "转换模型"),
+        SUCCESS("Success", "训练成功"),
+        FAIL("Fail", "训练失败");
+
+        private final String value;
+        private final String description;
+
+        TrainProcessStatus(String value, String description) {
+            this.value = value;
+            this.description = description;
+        }
+    }
 
     @Scheduled(initialDelay = 2000, fixedRateString = "${socket.scheduling.rate}")
     public void requestTrainState() {
@@ -66,28 +86,25 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
         Assignment assignment = assignmentService.selectAssignmentList(assignmentVO).get(0);
         if (clientStatus.getMcGetClientStateFeedBack().getClientState().getState() == 1) {
             clientStatus.setMcGetTrainStateFeedBack(response);
-            clientStatus.setAssignment(assignment);
+//            clientStatus.setAssignment(assignment);
+        }
+        if (response.getTrainState().getTrainProcess().equals(TrainProcessStatus.TRAIN_MODEL.getValue())) {
+            clientInfoManager.setProgressChart(response);
+            if (response.getTrainState().getTrainPercentage() == 0) {
+                setClientLog(clientStatus.getMcGetClientStateFeedBack().getClientState().getName(), jsonMessage);
+                setTrainLog(assignment.getId(), clientStatus);
+            }
+        } else {
+            clientInfoManager.deleteProgressChart(
+                    response.getTrainState().getProjectName(),
+                    response.getTrainState().getAssignmentName()
+            );
+            setClientLog(clientStatus.getMcGetClientStateFeedBack().getClientState().getName(), jsonMessage);
+            setTrainLog(assignment.getId(), clientStatus);
         }
 
-        Long trainId = assignmentTrainService.updateTrain(
-                assignment.getId(),
-                clientStatus.getClient().getName(),
-                BigDecimal.valueOf(
-                        response.getTrainState().getTrainPercentage()
-                ),
-                null);
-        if (trainId != null) {
-            TrainLog trainLog = new TrainLog();
-            trainLog.setAssignmentTrainId(trainId);
-            trainLog.setAssignmentId(assignment.getId());
-            trainLog.setContent(jsonMessage);
-            trainLog.setCreateTime(DateUtils.getNowDate());
-            trainLogService.insertTrainLog(trainLog);
-            clientInfoManager.updateClientInfo(clientStatus);
-        }
 
         log.info("返回客户端训练进度信息: {}", jsonMessage);
-        setClientLog(clientStatus.getClient().getIp(), clientStatus.getClient().getPort(), jsonMessage);
     }
 
     public void request(String clientName) {
@@ -98,6 +115,26 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
                 JsonUtil.toJson(request)
         );
     }
+
+    private void setTrainLog(Long assignmentId, ClientStatus clientStatus) {
+        Long trainId = assignmentTrainService.updateTrain(
+                assignmentId,
+                clientStatus.getClient().getName(),
+                BigDecimal.valueOf(
+                        clientStatus.getMcGetTrainStateFeedBack().getTrainState().getTrainPercentage()
+                ),
+                null);
+        if (trainId != null) {
+            TrainLog trainLog = new TrainLog();
+            trainLog.setAssignmentTrainId(trainId);
+            trainLog.setAssignmentId(assignmentId);
+            trainLog.setContent(JsonUtil.toJson(clientStatus.getMcGetTrainStateFeedBack()));
+            trainLog.setCreateTime(DateUtils.getNowDate());
+            trainLogService.insertTrainLog(trainLog);
+            clientInfoManager.updateClientInfo(clientStatus);
+        }
+    }
+
     @Override
     public String getCommand() {
         return GET_TRAIN_STATE.getCommandStr();

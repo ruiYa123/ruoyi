@@ -7,17 +7,21 @@ import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.service.IAssignmentService;
 import com.ruoyi.business.service.IAssignmentTrainService;
 import com.ruoyi.business.service.IClientService;
+import com.ruoyi.business.socket.messageHandler.handler.command.MCGetTrainStateCommandHandler;
+import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetTrainStateFeedBack;
 import com.ruoyi.common.core.redis.RedisCache;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.ruoyi.business.domain.Client.StateEnum.ACTIVATE;
-import static com.ruoyi.business.queueTasks.ClientInfoManager.ClientRedisKeys.CLIENTS_STATUS;
-import static com.ruoyi.business.queueTasks.ClientInfoManager.ClientRedisKeys.IDLE_CLIENTS;
+import static com.ruoyi.business.queueTasks.ClientInfoManager.ClientRedisKeys.*;
+import static com.ruoyi.business.queueTasks.ClientInfoManager.ClientRedisKeys.getTrainProcessKey;
 
 
 @Slf4j
@@ -39,12 +43,19 @@ public class ClientInfoManager {
     @Getter
     public enum ClientRedisKeys {
         CLIENTS_STATUS("CLIENTS_STATUS"),
-        IDLE_CLIENTS("IDLE_CLIENTS");
+        IDLE_CLIENTS("IDLE_CLIENTS"),
+        TRAIN_PROCESS("TRAIN_PROCESS");
 
         private final String key;
 
         ClientRedisKeys(String key) {
             this.key = key;
+        }
+
+        static String getTrainProcessKey(String projectName, String assignmentName) {
+            return TRAIN_PROCESS.key + ":"
+                    + projectName + ":"
+                    + assignmentName;
         }
     }
 
@@ -90,5 +101,24 @@ public class ClientInfoManager {
             log.error(e.getMessage(), e);
         }
         return objectFromHash;
+    }
+
+    public void setProgressChart(MCGetTrainStateFeedBack mcGetTrainStateFeedBack) {
+        MCGetTrainStateFeedBack.TrainState trainState = mcGetTrainStateFeedBack.getTrainState();
+        if (trainState.getTrainProcess()
+                .equals(MCGetTrainStateCommandHandler.TrainProcessStatus.TRAIN_MODEL.getValue())) {
+            redisCache.setCacheMapValue(
+                    getTrainProcessKey(trainState.getProjectName(), trainState.getAssignmentName()),
+                    trainState.getTrainPercentage().toString(),
+                    Arrays.asList(trainState.getLossCurve(), trainState.getPreCurve()));
+        }
+    }
+
+    public Map<String, List<Double>> getProcessChart(String projectName, String assignmentName) {
+        return redisCache.getCacheMap(getTrainProcessKey(projectName, assignmentName));
+    }
+
+    public void deleteProgressChart(String projectName, String assignmentName) {
+        redisCache.deleteObject(getTrainProcessKey(projectName, assignmentName));
     }
 }

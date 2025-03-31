@@ -12,7 +12,16 @@ public class MCGetTrainStateFeedBack extends BaseMessage {
     @Data
     public static class TrainState {
         @JsonProperty("Train_Percentage")
-        private Double trainPercentage; // 0~100
+        private Double trainPercentage;
+
+        @JsonProperty("TrainProcess")
+        private String trainProcess;
+
+        @JsonProperty("LossCurve")
+        private Double lossCurve;
+
+        @JsonProperty("PreCurve")
+        private Double preCurve;
 
         @JsonProperty("ProjectName")
         private String projectName;
