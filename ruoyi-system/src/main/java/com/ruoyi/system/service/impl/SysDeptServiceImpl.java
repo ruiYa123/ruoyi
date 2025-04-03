@@ -1,8 +1,6 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +18,7 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.mapper.SysDeptMapper;
 import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.service.ISysDeptService;
+
 
 /**
  * 部门管理 服务实现
@@ -48,6 +47,27 @@ public class SysDeptServiceImpl implements ISysDeptService
         return deptMapper.selectDeptList(dept);
     }
 
+    @Override
+    @DataScope(deptAlias = "d")
+    public List<SysDept> selectDeptList(SysDept dept, Long ancestorId)
+    {
+        List<SysDept> sysDepts = deptMapper.selectDeptList(dept);
+        sysDepts = getSysDeptsByAncestor(ancestorId, sysDepts);
+        return sysDepts;
+    }
+
+    private List<SysDept> getSysDeptsByAncestor(Long ancestorId, List<SysDept> sysDepts) {
+        if (ancestorId != null) {
+            sysDepts = sysDepts.stream().filter(e -> {
+                String ancestors = e.getAncestors();
+                return (ancestors != null && Arrays.asList(ancestors.split(",")).contains(ancestorId.toString()) ||
+                        Objects.equals(e.getDeptId(), ancestorId));
+            }).collect(Collectors.toList());
+        }
+        return sysDepts;
+    }
+
+
     /**
      * 查询部门树结构信息
      *
@@ -58,6 +78,15 @@ public class SysDeptServiceImpl implements ISysDeptService
     public List<TreeSelect> selectDeptTreeList(SysDept dept)
     {
         List<SysDept> depts = SpringUtils.getAopProxy(this).selectDeptList(dept);
+        return buildDeptTreeSelect(depts);
+    }
+
+    @Override
+    public List<TreeSelect> selectDeptTreeList(SysDept dept, Long ancestorId)
+    {
+        List<SysDept> depts = SpringUtils.getAopProxy(this).selectDeptList(dept);
+        depts = getSysDeptsByAncestor(ancestorId, depts);
+
         return buildDeptTreeSelect(depts);
     }
 

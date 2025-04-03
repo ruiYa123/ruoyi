@@ -1,8 +1,11 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.TreeSelect;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,6 +56,22 @@ public class SysUserController extends BaseController
     @Autowired
     private ISysPostService postService;
 
+    private Long getDept() {
+        if(!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
+            List<Long> deptList = Arrays.stream(ancestors.split(","))
+                    .map(Long::parseLong) // 将字符串转换为整数
+                    .collect(Collectors.toList());
+            if (deptList.size() > 1) {
+                return deptList.get(1);
+            } else {
+                return getDeptId();
+            }
+        }
+        return null;
+    }
+
+
     /**
      * 获取用户列表
      */
@@ -61,6 +80,9 @@ public class SysUserController extends BaseController
     public TableDataInfo list(SysUser user)
     {
         startPage();
+        if (user.getDeptId() == null) {
+            user.setDeptId(getDept());
+        }
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);
     }
@@ -262,6 +284,7 @@ public class SysUserController extends BaseController
     @GetMapping("/deptTree")
     public AjaxResult deptTree(SysDept dept)
     {
-        return success(deptService.selectDeptTreeList(dept));
+        Long deptId = getDept();
+        return success(deptService.selectDeptTreeList(dept, deptId));
     }
 }

@@ -9,7 +9,7 @@ import com.ruoyi.common.xss.Xss;
 
 /**
  * 通知公告表 sys_notice
- * 
+ *
  * @author ruoyi
  */
 public class SysNotice extends BaseEntity
@@ -31,6 +31,8 @@ public class SysNotice extends BaseEntity
     /** 公告状态（0正常 1关闭） */
     private String status;
 
+    private Long deptId;
+
     public Long getNoticeId()
     {
         return noticeId;
@@ -39,6 +41,16 @@ public class SysNotice extends BaseEntity
     public void setNoticeId(Long noticeId)
     {
         this.noticeId = noticeId;
+    }
+
+    public Long getDepteId()
+    {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId)
+    {
+        this.deptId = deptId;
     }
 
     public void setNoticeTitle(String noticeTitle)

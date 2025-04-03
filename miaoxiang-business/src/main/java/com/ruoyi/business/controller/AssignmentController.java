@@ -11,6 +11,7 @@ import com.github.pagehelper.PageHelper;
 import com.ruoyi.business.domain.AssignmentTrain;
 import com.ruoyi.business.domain.Project;
 import com.ruoyi.business.domain.response.TrainingAssignment;
+import com.ruoyi.business.queueTasks.ClientInfoManager;
 import com.ruoyi.business.queueTasks.TaskConsumer;
 import com.ruoyi.business.queueTasks.TaskProducer;
 import com.ruoyi.business.service.IAssignmentTrainService;
@@ -75,6 +76,9 @@ public class AssignmentController extends BaseController
     @Autowired
     private MCStopTrainCommandHandler mcStopTrainCommandHandler;
 
+    @Autowired
+    private ClientInfoManager clientInfoManager;
+
 
     private Long getDept() {
         if(!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
@@ -121,6 +125,15 @@ public class AssignmentController extends BaseController
         List<Assignment> list = assignmentService.selectAssignmentList(assignment);
         Collections.reverse(list);
         return success(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('business:assignment:list')")
+    @GetMapping("/progress/{projectName}/{assignmentName}")
+    public AjaxResult getProgress(@PathVariable("projectName") String projecname,
+                                  @PathVariable("assignmentName") String assignmentName)
+    {
+
+        return success(clientInfoManager.getProcessChart(projecname,assignmentName));
     }
 
     @PreAuthorize("@ss.hasPermi('business:assignment:insert')")

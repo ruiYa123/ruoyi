@@ -1,6 +1,10 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.ruoyi.system.service.ISysUserService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,14 +38,32 @@ public class SysDeptController extends BaseController
     @Autowired
     private ISysDeptService deptService;
 
+    @Autowired
+    private ISysUserService userService;
+
+    private Long getDept() {
+        if(!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
+            String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
+            List<Long> deptList = Arrays.stream(ancestors.split(","))
+                    .map(Long::parseLong) // 将字符串转换为整数
+                    .collect(Collectors.toList());
+            if (deptList.size() > 1) {
+                return deptList.get(1);
+            } else {
+                return getDeptId();
+            }
+        }
+        return null;
+    }
+
     /**
      * 获取部门列表
      */
-//    @PreAuthorize("@ss.hasPermi('system:dept:list')")
+    @PreAuthorize("@ss.hasPermi('system:dept:list')")
     @GetMapping("/list")
     public AjaxResult list(SysDept dept)
     {
-        List<SysDept> depts = deptService.selectDeptList(dept);
+        List<SysDept> depts = deptService.selectDeptList(dept, getDept());
         return success(depts);
     }
 
