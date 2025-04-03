@@ -14,12 +14,13 @@ import org.springframework.stereotype.Component;
 
 import static com.ruoyi.business.domain.Client.StateEnum.ACTIVATE;
 import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.GET_CLIENT_STATE;
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.REPORT_CLIENT_STATE;
 
 @Slf4j
 @Component
 public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
 
-    @Scheduled(initialDelay = 2000, fixedRateString = "${socket.scheduling.rate}")
+//    @Scheduled(initialDelay = 2000, fixedRateString = "${socket.scheduling.rate}")
     public void requestClientState() {
         getClients().forEach(client -> {
             if (client.getState() == 2) {
@@ -58,6 +59,6 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
     }
 
     public String getCommand() {
-        return GET_CLIENT_STATE.getCommandStr();
+        return REPORT_CLIENT_STATE.getCommandStr();
     }
 }

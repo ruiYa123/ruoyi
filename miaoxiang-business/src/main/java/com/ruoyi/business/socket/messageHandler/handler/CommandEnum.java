@@ -11,6 +11,8 @@ public enum CommandEnum {
     CLIENT_ERROR("Client_Error", "异常报警信息"),
     GET_CLIENT_STATE("GetClientState", "获取客户端状态信息"),
     GET_TRAIN_STATE("GetTrainState", "获取训练进度详细信息"),
+    REPORT_TRAIN_STATE("ReportTrainState", "报告训练状态"),
+    REPORT_CLIENT_STATE("ReportClientState", "报告客户端状态"),
     START_TRAIN("StartTrain", "开始客户端训练"),
     STOP_TRAIN("StopTrain", "停止客户端训练"),
     PAUSE_TRAIN("PauseTrain", "暂停客户端训练"),
