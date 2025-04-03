@@ -8,6 +8,7 @@ import com.ruoyi.business.service.IAssignmentService;
 import com.ruoyi.business.service.IAssignmentTrainService;
 import com.ruoyi.business.service.ITrainLogService;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
+import com.ruoyi.business.socket.messageHandler.handler.command.MCGetTrainStateCommandHandler;
 import com.ruoyi.business.socket.messageHandler.model.command.MCGetTrainStateCommand;
 import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetTrainStateFeedBack;
 import com.ruoyi.common.utils.DateUtils;
@@ -67,14 +68,22 @@ public class MCReportTrainStateEventHandler extends AbstractMessageHandler {
         assignmentVO.setProjectId(project.getId());
         assignmentVO.setAssignmentName(response.getTrainState().getAssignmentName());
         Assignment assignment = assignmentService.selectAssignmentList(assignmentVO).get(0);
+        Long trainId = assignmentTrainService.updateTrain(
+                assignment.getId(),
+                clientStatus.getClient().getName(),
+                BigDecimal.valueOf(
+                        clientStatus.getMcGetTrainStateFeedBack().getTrainState().getTrainPercentage()
+                ),
+                null);
         if (clientStatus.getMcGetClientStateFeedBack().getClientState().getState() == 1) {
             clientStatus.setMcGetTrainStateFeedBack(response);
+//            clientStatus.setAssignment(assignment);
         }
-        if (response.getTrainState().getTrainProcess().equals(TrainProcessStatus.TRAIN_MODEL.getValue())) {
+        if (response.getTrainState().getTrainProcess().equals(MCGetTrainStateCommandHandler.TrainProcessStatus.TRAIN_MODEL.getValue())) {
             clientInfoManager.setProgressChart(response);
             if (response.getTrainState().getTrainPercentage() == 0) {
                 setClientLog(clientStatus.getMcGetClientStateFeedBack().getClientState().getName(), jsonMessage);
-                setTrainLog(assignment.getId(), clientStatus);
+                setTrainLog(trainId, assignment.getId(), clientStatus);
             }
         } else {
             clientInfoManager.deleteProgressChart(
@@ -82,22 +91,14 @@ public class MCReportTrainStateEventHandler extends AbstractMessageHandler {
                     response.getTrainState().getAssignmentName()
             );
             setClientLog(clientStatus.getMcGetClientStateFeedBack().getClientState().getName(), jsonMessage);
-            setTrainLog(assignment.getId(), clientStatus);
+            setTrainLog(trainId, assignment.getId(), clientStatus);
         }
 
 
         log.info("返回客户端训练进度信息: {}", jsonMessage);
     }
-    
 
-    private void setTrainLog(Long assignmentId, ClientStatus clientStatus) {
-        Long trainId = assignmentTrainService.updateTrain(
-                assignmentId,
-                clientStatus.getClient().getName(),
-                BigDecimal.valueOf(
-                        clientStatus.getMcGetTrainStateFeedBack().getTrainState().getTrainPercentage()
-                ),
-                null);
+    private void setTrainLog(Long trainId, Long assignmentId, ClientStatus clientStatus) {
         if (trainId != null) {
             TrainLog trainLog = new TrainLog();
             trainLog.setAssignmentTrainId(trainId);

@@ -84,6 +84,13 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
         assignmentVO.setProjectId(project.getId());
         assignmentVO.setAssignmentName(response.getTrainState().getAssignmentName());
         Assignment assignment = assignmentService.selectAssignmentList(assignmentVO).get(0);
+        Long trainId = assignmentTrainService.updateTrain(
+                assignment.getId(),
+                clientStatus.getClient().getName(),
+                BigDecimal.valueOf(
+                        clientStatus.getMcGetTrainStateFeedBack().getTrainState().getTrainPercentage()
+                ),
+                null);
         if (clientStatus.getMcGetClientStateFeedBack().getClientState().getState() == 1) {
             clientStatus.setMcGetTrainStateFeedBack(response);
 //            clientStatus.setAssignment(assignment);
@@ -92,7 +99,7 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
             clientInfoManager.setProgressChart(response);
             if (response.getTrainState().getTrainPercentage() == 0) {
                 setClientLog(clientStatus.getMcGetClientStateFeedBack().getClientState().getName(), jsonMessage);
-                setTrainLog(assignment.getId(), clientStatus);
+                setTrainLog(trainId, assignment.getId(), clientStatus);
             }
         } else {
             clientInfoManager.deleteProgressChart(
@@ -100,7 +107,7 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
                     response.getTrainState().getAssignmentName()
             );
             setClientLog(clientStatus.getMcGetClientStateFeedBack().getClientState().getName(), jsonMessage);
-            setTrainLog(assignment.getId(), clientStatus);
+            setTrainLog(trainId, assignment.getId(), clientStatus);
         }
 
 
@@ -116,14 +123,8 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
         );
     }
 
-    private void setTrainLog(Long assignmentId, ClientStatus clientStatus) {
-        Long trainId = assignmentTrainService.updateTrain(
-                assignmentId,
-                clientStatus.getClient().getName(),
-                BigDecimal.valueOf(
-                        clientStatus.getMcGetTrainStateFeedBack().getTrainState().getTrainPercentage()
-                ),
-                null);
+    private void setTrainLog(Long trainId, Long assignmentId, ClientStatus clientStatus) {
+
         if (trainId != null) {
             TrainLog trainLog = new TrainLog();
             trainLog.setAssignmentTrainId(trainId);
