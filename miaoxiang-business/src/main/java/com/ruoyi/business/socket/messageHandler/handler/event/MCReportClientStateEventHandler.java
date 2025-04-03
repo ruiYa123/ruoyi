@@ -1,33 +1,19 @@
-package com.ruoyi.business.socket.messageHandler.handler.command;
+package com.ruoyi.business.socket.messageHandler.handler.event;
 
 import com.ruoyi.business.domain.Client;
 import com.ruoyi.business.domain.ClientStatus;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
-import com.ruoyi.business.socket.messageHandler.model.command.MCGetClientStateCommand;
 import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetClientStateFeedBack;
 import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetTrainStateFeedBack;
 import com.ruoyi.common.utils.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-
-import static com.ruoyi.business.domain.Client.StateEnum.ACTIVATE;
-import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.GET_CLIENT_STATE;
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.REPORT_CLIENT_STATE;
 
 @Slf4j
 @Component
-public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
-
-    @Scheduled(initialDelay = 2000, fixedRateString = "${socket.scheduling.rate}")
-    public void requestClientState() {
-        getClients().forEach(client -> {
-            if (client.getState() == 2) {
-                return;
-            }
-            request(client.getName());
-        });
-    }
+public class MCReportClientStateEventHandler extends AbstractMessageHandler {
 
     @Override
     public void handle(String jsonMessage, ClientStatus clientStatus) {
@@ -48,16 +34,8 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
         setClientLog(clientStatus.getClient().getIp(), clientStatus.getClient().getPort(), jsonMessage);
     }
 
-    public void request(String clientName) {
-        MCGetClientStateCommand request = new MCGetClientStateCommand();
-        request.setClientNames(clientName);
-        socketService.sendMessageToClientByAddress(
-                clientName,
-                JsonUtil.toJson(request)
-        );
-    }
 
     public String getCommand() {
-        return GET_CLIENT_STATE.getCommandStr();
+        return REPORT_CLIENT_STATE.getCommandStr();
     }
 }

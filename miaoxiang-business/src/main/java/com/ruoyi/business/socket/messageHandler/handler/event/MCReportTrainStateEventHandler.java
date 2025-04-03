@@ -1,4 +1,4 @@
-package com.ruoyi.business.socket.messageHandler.handler.command;
+package com.ruoyi.business.socket.messageHandler.handler.event;
 
 import com.ruoyi.business.domain.Assignment;
 import com.ruoyi.business.domain.ClientStatus;
@@ -12,7 +12,6 @@ import com.ruoyi.business.socket.messageHandler.model.command.MCGetTrainStateCom
 import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetTrainStateFeedBack;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.JsonUtil;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +19,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.GET_TRAIN_STATE;
+import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.REPORT_TRAIN_STATE;
 
 @Slf4j
 @Component
-public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
+public class MCReportTrainStateEventHandler extends AbstractMessageHandler {
 
     @Autowired
     private IAssignmentService assignmentService;
@@ -56,15 +55,6 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
         }
     }
 
-    @Scheduled(initialDelay = 2000, fixedRateString = "${socket.scheduling.rate}")
-    public void requestTrainState() {
-        getClients().forEach(client -> {
-            if (client.getState() == 2) {
-                return;
-            }
-            request(client.getName());
-        });
-    }
 
     @Override
     public void handle(String jsonMessage, ClientStatus clientStatus) {
@@ -72,13 +62,6 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
         MCGetTrainStateFeedBack response = JsonUtil.fromJson(jsonMessage, MCGetTrainStateFeedBack.class);
         Assignment assignmentVO = new Assignment();
         Project projectVO = new Project();
-//        assignment.setClientName(clientStatus.getClient().getName());
-//        List<Assignment> assignments = assignmentService.selectAssignmentList(assignment);
-//        if (!assignments.isEmpty()) {
-//            assignment = assignments.get(0);
-//            clientStatus.setAssignmentId(assignment.getId());
-//            clientStatus.setAssignmentName(assignment.getAssignmentName());
-//        }
         projectVO.setProjectName(response.getTrainState().getProjectName());
         Project project = projectService.selectProjectList(projectVO).get(0);
         assignmentVO.setProjectId(project.getId());
@@ -86,7 +69,6 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
         Assignment assignment = assignmentService.selectAssignmentList(assignmentVO).get(0);
         if (clientStatus.getMcGetClientStateFeedBack().getClientState().getState() == 1) {
             clientStatus.setMcGetTrainStateFeedBack(response);
-//            clientStatus.setAssignment(assignment);
         }
         if (response.getTrainState().getTrainProcess().equals(TrainProcessStatus.TRAIN_MODEL.getValue())) {
             clientInfoManager.setProgressChart(response);
@@ -137,6 +119,6 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
 
     @Override
     public String getCommand() {
-        return GET_TRAIN_STATE.getCommandStr();
+        return REPORT_TRAIN_STATE.getCommandStr();
     }
 }
