@@ -77,7 +77,6 @@ public class MCReportTrainStateEventHandler extends AbstractMessageHandler {
                 null);
         if (clientStatus.getMcGetClientStateFeedBack().getClientState().getState() == 1) {
             clientStatus.setMcGetTrainStateFeedBack(response);
-//            clientStatus.setAssignment(assignment);
         }
         if (response.getTrainState().getTrainProcess().equals(MCGetTrainStateCommandHandler.TrainProcessStatus.TRAIN_MODEL.getValue())) {
             clientInfoManager.setProgressChart(response);
