@@ -45,7 +45,8 @@ public class MCReportTrainStateEventHandler extends AbstractMessageHandler {
         TRAIN_MODEL("Train_Model", "训练模型"),
         TRANSFORM_MODEL("Transform_Model", "转换模型"),
         SUCCESS("Success", "训练成功"),
-        FAIL("Fail", "训练失败");
+        FAIL("Fail", "训练失败"),
+        CLIENT_IDLE("Client_Idle", "训练结束");
 
         private final String value;
         private final String description;
@@ -53,6 +54,15 @@ public class MCReportTrainStateEventHandler extends AbstractMessageHandler {
         TrainProcessStatus(String value, String description) {
             this.value = value;
             this.description = description;
+        }
+
+        public static String getDescriptionByValue(String value) {
+            for (TrainProcessStatus status : TrainProcessStatus.values()) {
+                if (status.value.equals(value)) {
+                    return status.description; // 返回对应的 description
+                }
+            }
+            return null;
         }
     }
 
@@ -72,12 +82,10 @@ public class MCReportTrainStateEventHandler extends AbstractMessageHandler {
                 assignment.getId(),
                 clientStatus.getClient().getName(),
                 BigDecimal.valueOf(
-                        clientStatus.getMcGetTrainStateFeedBack().getTrainState().getTrainPercentage()
+                        response.getTrainState().getTrainPercentage()
                 ),
                 null);
-        if (clientStatus.getMcGetClientStateFeedBack().getClientState().getState() == 1) {
-            clientStatus.setMcGetTrainStateFeedBack(response);
-        }
+        clientStatus.setMcGetTrainStateFeedBack(response);
         if (response.getTrainState().getTrainProcess().equals(MCGetTrainStateCommandHandler.TrainProcessStatus.TRAIN_MODEL.getValue())) {
             clientInfoManager.setProgressChart(response);
             if (response.getTrainState().getTrainPercentage() == 0) {
@@ -93,7 +101,7 @@ public class MCReportTrainStateEventHandler extends AbstractMessageHandler {
             setTrainLog(trainId, assignment.getId(), clientStatus);
         }
 
-
+        clientInfoManager.updateClientInfo(clientStatus);
         log.info("返回客户端训练进度信息: {}", jsonMessage);
     }
 
@@ -105,7 +113,6 @@ public class MCReportTrainStateEventHandler extends AbstractMessageHandler {
             trainLog.setContent(JsonUtil.toJson(clientStatus.getMcGetTrainStateFeedBack()));
             trainLog.setCreateTime(DateUtils.getNowDate());
             trainLogService.insertTrainLog(trainLog);
-            clientInfoManager.updateClientInfo(clientStatus);
         }
     }
 

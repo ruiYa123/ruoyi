@@ -8,6 +8,7 @@ import com.ruoyi.business.service.IAssignmentService;
 import com.ruoyi.business.service.IAssignmentTrainService;
 import com.ruoyi.business.service.ITrainLogService;
 import com.ruoyi.business.socket.messageHandler.handler.AbstractMessageHandler;
+import com.ruoyi.business.socket.messageHandler.handler.event.MCReportTrainStateEventHandler;
 import com.ruoyi.business.socket.messageHandler.model.command.MCGetTrainStateCommand;
 import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetTrainStateFeedBack;
 import com.ruoyi.common.utils.DateUtils;
@@ -45,7 +46,8 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
         TRAIN_MODEL("Train_Model", "训练模型"),
         TRANSFORM_MODEL("Transform_Model", "转换模型"),
         SUCCESS("Success", "训练成功"),
-        FAIL("Fail", "训练失败");
+        FAIL("Fail", "训练失败"),
+        CLIENT_IDLE("Client_Idle", "训练结束");
 
         private final String value;
         private final String description;
@@ -88,13 +90,10 @@ public class MCGetTrainStateCommandHandler extends AbstractMessageHandler {
                 assignment.getId(),
                 clientStatus.getClient().getName(),
                 BigDecimal.valueOf(
-                        clientStatus.getMcGetTrainStateFeedBack().getTrainState().getTrainPercentage()
+                        response.getTrainState().getTrainPercentage()
                 ),
                 null);
-        if (clientStatus.getMcGetClientStateFeedBack().getClientState().getState() == 1) {
-            clientStatus.setMcGetTrainStateFeedBack(response);
-//            clientStatus.setAssignment(assignment);
-        }
+        clientStatus.setMcGetTrainStateFeedBack(response);
         if (response.getTrainState().getTrainProcess().equals(TrainProcessStatus.TRAIN_MODEL.getValue())) {
             clientInfoManager.setProgressChart(response);
             if (response.getTrainState().getTrainPercentage() == 0) {
