@@ -88,15 +88,7 @@ public class MCReportTrainStateEventHandler extends AbstractMessageHandler {
 
         log.info("返回客户端训练进度信息: {}", jsonMessage);
     }
-
-    public void request(String clientName) {
-        MCGetTrainStateCommand request = new MCGetTrainStateCommand();
-        request.setClientName(clientName);
-        socketService.sendMessageToClientByAddress(
-                clientName,
-                JsonUtil.toJson(request)
-        );
-    }
+    
 
     private void setTrainLog(Long assignmentId, ClientStatus clientStatus) {
         Long trainId = assignmentTrainService.updateTrain(
