@@ -17,10 +17,10 @@ public class MCGetTrainStateFeedBack extends BaseMessage {
         @JsonProperty("Train_Process")
         private String trainProcess;
 
-        @JsonProperty("LossCurve")
+        @JsonProperty("Loss_Curve")
         private Double lossCurve;
 
-        @JsonProperty("PreCurve")
+        @JsonProperty("Pre_Curve")
         private Double preCurve;
 
         @JsonProperty("ProjectName")
