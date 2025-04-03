@@ -31,7 +31,6 @@ public class MCReportClientStateEventHandler extends AbstractMessageHandler {
         clientService.addClient(client);
         clientStatus.setMcGetClientStateFeedBack(response);
         clientInfoManager.updateClientInfo(clientStatus);
-        setClientLog(clientStatus.getClient().getIp(), clientStatus.getClient().getPort(), jsonMessage);
     }
 
 
