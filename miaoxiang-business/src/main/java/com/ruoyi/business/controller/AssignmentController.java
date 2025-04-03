@@ -135,6 +135,15 @@ public class AssignmentController extends BaseController
 
         return success(clientInfoManager.getProcessChart(projecname,assignmentName));
     }
+    @PreAuthorize("@ss.hasPermi('business:assignment:list')")
+    @GetMapping("/progressState/{clientName}")
+    public AjaxResult getProgressState(@PathVariable("clientName") String clientName)
+    {
+
+        return success(clientInfoManager.getClientInfo(clientName)
+                .getMcGetClientStateFeedBack().getClientState().getTrainState());
+    }
+
 
     @PreAuthorize("@ss.hasPermi('business:assignment:insert')")
     @Log(title = "任务", businessType = BusinessType.INSERT)
