@@ -101,7 +101,7 @@ public class SysNoticeController extends BaseController
     public AjaxResult add(@Validated @RequestBody SysNotice notice)
     {
         notice.setCreateBy(getUsername());
-        notice.setDeptId(getDeptId());
+        notice.setDeptId(getDept());
         return toAjax(noticeService.insertNotice(notice));
     }
 
