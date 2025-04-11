@@ -12,14 +12,12 @@ import com.ruoyi.business.domain.AssignmentTrain;
 import com.ruoyi.business.domain.Project;
 import com.ruoyi.business.domain.response.TrainingAssignment;
 import com.ruoyi.business.queueTasks.ClientInfoManager;
-import com.ruoyi.business.queueTasks.TaskConsumer;
 import com.ruoyi.business.queueTasks.TaskProducer;
 import com.ruoyi.business.service.IAssignmentTrainService;
 import com.ruoyi.business.service.IProjectService;
 import com.ruoyi.business.socket.messageHandler.handler.command.MCChangeTrainParamCommandHandler;
 import com.ruoyi.business.socket.messageHandler.handler.command.MCStopTrainCommandHandler;
-import com.ruoyi.common.core.domain.entity.SysDept;
-import com.ruoyi.common.core.page.PageDomain;
+
 import com.ruoyi.common.exception.UtilException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.service.ISysDeptService;
