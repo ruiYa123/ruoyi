@@ -105,6 +105,7 @@ public class ClientInfoManager {
 
     public void setProgressChart(MCGetTrainStateFeedBack mcGetTrainStateFeedBack) {
         MCGetTrainStateFeedBack.TrainState trainState = mcGetTrainStateFeedBack.getTrainState();
+        log.info("trainstate: {}", trainState);
         if (trainState.getTrainProcess()
                 .equals(MCGetTrainStateCommandHandler.TrainProcessStatus.TRAIN_MODEL.getValue())) {
             redisCache.setCacheMapValue(

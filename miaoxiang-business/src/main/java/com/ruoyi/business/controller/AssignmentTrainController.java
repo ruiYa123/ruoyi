@@ -9,6 +9,7 @@ import com.ruoyi.business.domain.response.TrainDetail;
 import com.ruoyi.business.queueTasks.ClientInfoManager;
 import com.ruoyi.business.service.IAssignmentService;
 import com.ruoyi.business.service.IProjectService;
+import com.ruoyi.business.socket.messageHandler.handler.event.MCReportTrainStateEventHandler;
 import com.ruoyi.business.socket.messageHandler.model.feedBack.MCGetTrainStateFeedBack;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,10 +98,13 @@ public class AssignmentTrainController extends BaseController
         MCGetTrainStateFeedBack.TrainState trainState =
                 clientInfoManager.getClientInfo(clientName).getMcGetTrainStateFeedBack().getTrainState();
         TrainDetail trainDetail = new TrainDetail();
-        trainDetail.setJsonData(
-                clientInfoManager.getProcessChart(project.getProjectName(), assignment.getAssignmentName()));
-        trainDetail.setTrainProcess(trainState.getTrainProcess());
-        trainDetail.setProgress(trainState.getTrainPercentage());
+        if (trainState != null) {
+            trainDetail.setJsonData(
+                    clientInfoManager.getProcessChart(project.getProjectName(), assignment.getAssignmentName()));
+            trainDetail.setTrainProcess(MCReportTrainStateEventHandler.TrainProcessStatus.getDescriptionByValue(trainState.getTrainProcess()));
+            trainDetail.setProgress(trainState.getTrainPercentage());
+        }
+
         return success(trainDetail);
     }
 
