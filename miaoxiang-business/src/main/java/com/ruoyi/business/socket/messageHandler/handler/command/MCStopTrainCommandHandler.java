@@ -74,7 +74,7 @@ public class MCStopTrainCommandHandler extends AbstractMessageHandler {
                 Email email = new Email();
                 email.setSendTo(sysUser.getEmail());
                 email.setSubject("深度云训练平台任务" + (state == 0 ? "完成" : "中断"));
-                email.setContent("您的训练任务：" + assignment.getAssignmentName() + "已" + (state == 0 ? "完成" : "中断") + "， 请及时查看");
+                email.setContent("您的训练任务：" + assignment.getAssignmentName() + "， 已" + (state == 0 ? "完成" : "中断") + "， 请及时查看");
                 emailService.sendEmail(email);
             }
         } catch (Exception e) {

@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 
-import static com.ruoyi.business.domain.Client.StateEnum.ACTIVATE;
 import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.GET_CLIENT_STATE;
 
 @Slf4j
