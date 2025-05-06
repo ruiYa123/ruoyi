@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.ruoyi.business.domain.Client.StateEnum.ACTIVATE;
+import static com.ruoyi.business.domain.Client.StateEnum.DEACTIVATE;
 import static com.ruoyi.business.socket.messageHandler.handler.CommandEnum.CLIENT_ADD;
 
 @Slf4j
@@ -35,6 +36,7 @@ public class ClientAddEventHandler extends AbstractMessageHandler {
         log.info("{} 客户端上线，状态：{}", message.getName(), message.getState());
         Client client = new Client();
         BeanUtils.copyProperties(message, client);
+        client.setActive(DEACTIVATE.getValue());
         clientService.addClient(client);
         setClientLog(client.getName(), jsonMessage);
         ClientStatus clientInfo = clientInfoManager.getClientInfo(client.getName());

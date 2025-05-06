@@ -85,6 +85,7 @@ public class ClientServiceImpl implements IClientService
             if(client.getState() == null) {
                 client.setState(clientResult.getState());
             }
+            client.setActive(clientResult.getActive());
             client.setUpdateTime(DateUtils.getNowDate());
             clientMapper.updateClient(client);
         }

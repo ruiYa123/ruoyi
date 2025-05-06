@@ -44,6 +44,10 @@ public class AssignmentServiceImpl implements IAssignmentService
         return assignmentMapper.selectAssignmentList(assignment);
     }
 
+    public List<Assignment> selectAssignmentByProjectIds(Long[] projectIds) {
+        return assignmentMapper.selectAssignmentByProjectIds(projectIds);
+    }
+
     @Override
     public List<Assignment> selectAssignmentListByIds(Assignment assignment, Long[] ids)
     {
@@ -87,6 +91,10 @@ public class AssignmentServiceImpl implements IAssignmentService
         return assignmentMapper.deleteAssignmentByIds(ids);
     }
 
+    public int deleteAssignmentByProjectIds(Long[] ids)
+    {
+        return assignmentMapper.deleteAssignmentByProjectIds(ids);
+    }
     /**
      * 删除任务信息
      *

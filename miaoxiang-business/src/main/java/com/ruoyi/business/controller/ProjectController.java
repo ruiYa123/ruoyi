@@ -1,10 +1,16 @@
 package com.ruoyi.business.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.business.domain.Assignment;
+import com.ruoyi.business.queueTasks.TaskProducer;
+import com.ruoyi.business.service.IAssignmentService;
+import com.ruoyi.business.service.IAssignmentTrainService;
+import com.ruoyi.common.exception.UtilException;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,6 +50,15 @@ public class ProjectController extends BaseController
 
     @Autowired
     private ISysUserService sysUserService;
+
+    @Autowired
+    private IAssignmentService assignmentService;
+
+    @Autowired
+    private TaskProducer taskProducer;
+
+    @Autowired
+    private IAssignmentTrainService assignmentTrainService;
 
     /**
      * 查询项目列表
@@ -151,6 +166,18 @@ public class ProjectController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
+        List<Assignment> assignments = assignmentService.selectAssignmentByProjectIds(ids);
+        List<Long> assignmentIds = new ArrayList<>();
+        for (Assignment assignment : assignments) {
+            if(assignment.getState() == 1) {
+                throw new UtilException("任务：（" + assignment.getAssignmentName() + "）正在训练，请停止训练后再删除项目");
+            } else if (assignment.getState() == 2){
+                taskProducer.removeTask(assignment.getId());
+            }
+            assignmentIds.add(assignment.getId());
+        }
+        assignmentService.deleteAssignmentByIds(assignmentIds.toArray(new Long[0]));
+        assignmentTrainService.deleteAssignmentTrainByAssignmentIds(assignmentIds.toArray(new Long[0]));
         return toAjax(projectService.deleteProjectByIds(ids));
     }
 }

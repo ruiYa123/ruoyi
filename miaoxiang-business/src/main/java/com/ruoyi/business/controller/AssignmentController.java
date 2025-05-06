@@ -235,18 +235,16 @@ public class AssignmentController extends BaseController
     {
         assignment.setCreateBy(getUsername());
         assignment.setState(3);
-        if (!userService.selectUserRoleGroup(getUsername()).contains("超级管理员")) {
-            String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
-            List<Long> deptList = Arrays.stream(ancestors.split(","))
-                    .map(Long::parseLong)
-                    .collect(Collectors.toList());
-            if (deptList.size() > 1) {
-                assignment.setDept(deptList.get(1));
-            } else {
-                assignment.setDept(getDeptId());
-            }
+        String ancestors = deptService.selectDeptById(getDeptId()).getAncestors();
+        List<Long> deptList = Arrays.stream(ancestors.split(","))
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+        if (deptList.size() > 1) {
+            assignment.setDept(deptList.get(1));
+        } else {
+            assignment.setDept(getDeptId());
         }
-        return toAjax(assignmentService.insertAssignment(assignment));
+    return toAjax(assignmentService.insertAssignment(assignment));
     }
 
     @PreAuthorize("@ss.hasPermi('business:assignment:query')")

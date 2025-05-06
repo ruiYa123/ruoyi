@@ -44,7 +44,6 @@ public class MCGetClientStateCommandHandler extends AbstractMessageHandler {
         clientService.addClient(client);
         clientStatus.setMcGetClientStateFeedBack(response);
         clientInfoManager.updateClientInfo(clientStatus);
-        setClientLog(clientStatus.getClient().getIp(), clientStatus.getClient().getPort(), jsonMessage);
     }
 
     public void request(String clientName) {

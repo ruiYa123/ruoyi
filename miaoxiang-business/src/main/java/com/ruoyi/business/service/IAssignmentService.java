@@ -27,6 +27,8 @@ public interface IAssignmentService
      */
     public List<Assignment> selectAssignmentList(Assignment assignment);
 
+    public List<Assignment> selectAssignmentByProjectIds(Long[] projectIds);
+
     public List<Assignment> selectAssignmentListByIds(Assignment assignment, Long[] ids);
     /**
      * 新增任务
@@ -51,6 +53,9 @@ public interface IAssignmentService
      * @return 结果
      */
     public int deleteAssignmentByIds(Long[] ids);
+
+    public int deleteAssignmentByProjectIds(Long[] ids);
+
 
     /**
      * 删除任务信息

@@ -73,6 +73,15 @@
         </where>
     </select>
 
+    <!-- 根据项目ID集合查询任务列表 -->
+    <select id="selectAssignmentByProjectIds" parameterType="Long" resultMap="AssignmentResult">
+        <include refid="selectAssignmentVo"/>
+        WHERE project_id IN
+        <foreach item="projectId" collection="array" open="(" separator="," close=")">
+            #{projectId}
+        </foreach>
+    </select>
+
     <select id="selectAssignmentListByIds" resultMap="AssignmentResult">
         <include refid="selectAssignmentVo"/>
         <where>
@@ -205,6 +214,14 @@
         delete from assignment where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
+        </foreach>
+    </delete>
+
+
+    <delete id="deleteAssignmentByProjectIds" parameterType="String">
+        delete from assignment where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{projectId}
         </foreach>
     </delete>
 </mapper>

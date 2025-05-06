@@ -28,6 +28,8 @@ public interface AssignmentMapper
      */
     public List<Assignment> selectAssignmentList(Assignment assignment);
 
+    public List<Assignment> selectAssignmentByProjectIds(Long[] projectIds);
+
     public List<Assignment> selectAssignmentListByIds(@Param("assignment") Assignment assignment, @Param("ids") Long[] ids);
 
     /**
@@ -61,6 +63,8 @@ public interface AssignmentMapper
      * @return 结果
      */
     public int deleteAssignmentByIds(Long[] ids);
+
+    public int deleteAssignmentByProjectIds(Long[] projectIds);
 
     public List<Integer> getStateCounts(Assignment assignment);
 }
